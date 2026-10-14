@@ -118,7 +118,11 @@ export const Header: React.FC<HeaderProps> = ({
     {
       key: 'profile',
       icon: <UserIcon size={16} />,
-      label: 'My Profile',
+      label: (
+        <Link href="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
+          My Profile
+        </Link>
+      ),
     },
     {
       key: 'settings',
