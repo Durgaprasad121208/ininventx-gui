@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Layout, Avatar, Dropdown, Badge, Popover, type MenuProps } from 'antd';
+import { Layout, Avatar, Dropdown, Badge, Popover, Breadcrumb, type MenuProps } from 'antd';
 import {
   Bell,
   Sun,
@@ -95,7 +95,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const handleMarkAllAsRead = () => {
     setUnreadCount(0);
-    setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
+    setNotifications((prev) => (prev || []).map((n) => ({ ...n, unread: false })));
   };
 
   // User Dropdown items
@@ -106,10 +106,10 @@ export const Header: React.FC<HeaderProps> = ({
       label: (
         <div style={{ padding: '2px 0' }}>
           <div style={{ fontWeight: 600, color: 'var(--color-text-primary, #ffffff)', fontSize: 12 }}>
-            {user.name}
+            {user?.name || 'User'}
           </div>
           <div style={{ fontSize: 10.5, color: 'var(--color-text-secondary, #94a3b8)' }}>
-            {user.role} · {user.company}
+            {user?.role || 'Employee'} · {user?.company || 'MANTIX'}
           </div>
         </div>
       ),
@@ -156,7 +156,7 @@ export const Header: React.FC<HeaderProps> = ({
         )}
       </div>
       <div className={styles.notificationsList}>
-        {notifications.map((item) => (
+        {(notifications || []).map((item) => (
           <div key={item.id} className={styles.notificationItem}>
             <div>{item.icon}</div>
             <div className={styles.notificationContent}>
@@ -169,6 +169,10 @@ export const Header: React.FC<HeaderProps> = ({
     </div>
   );
 
+  const safeBreadcrumbItems = Array.isArray(breadcrumbItems) && breadcrumbItems.length > 0
+    ? breadcrumbItems
+    : [{ label: 'Home', href: '/user-dashboard' }, { label: 'Dashboard' }];
+
   return (
     <AntdHeader
       className={`${styles.header} ${className || ''}`}
@@ -177,7 +181,7 @@ export const Header: React.FC<HeaderProps> = ({
         ...style,
       }}
     >
-      {/* Left: Sidebar Toggle & Breadcrumb Navigation */}
+      {/* Left: Sidebar Toggle & Breadcrumb Navigation using Ant Design Breadcrumb */}
       <div className={styles.leftSection}>
         {onMenuToggle && (
           <button
@@ -195,37 +199,26 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         )}
 
-        <nav aria-label="Breadcrumb" className={styles.breadcrumbWrapper}>
-          {breadcrumbItems.map((item, index) => {
-            const isLast = index === breadcrumbItems.length - 1;
-            return (
-              <React.Fragment key={`${item.label}-${index}`}>
-                {index > 0 && (
-                  <span className={styles.breadcrumbSeparator} aria-hidden="true">
-                    <ChevronRight size={14} />
-                  </span>
-                )}
-                {item.href && !isLast ? (
-                  <Link
-                    href={item.href}
-                    className={styles.breadcrumbItem}
-                  >
+        <Breadcrumb
+          separator={<ChevronRight size={13} style={{ color: '#64748b' }} />}
+          className={styles.breadcrumbWrapper}
+          items={safeBreadcrumbItems.map((item, index) => {
+            const isLast = index === safeBreadcrumbItems.length - 1;
+            return {
+              key: `${item?.label || index}`,
+              title:
+                item?.href && !isLast ? (
+                  <Link href={item.href} className={styles.breadcrumbItem}>
                     {item.label}
                   </Link>
                 ) : (
-                  <span
-                    className={`${styles.breadcrumbItem} ${
-                      isLast ? styles.breadcrumbActive : ''
-                    }`}
-                    aria-current={isLast ? 'page' : undefined}
-                  >
-                    {item.label}
+                  <span className={isLast ? styles.breadcrumbActive : styles.breadcrumbItem}>
+                    {item?.label}
                   </span>
-                )}
-              </React.Fragment>
-            );
+                ),
+            };
           })}
-        </nav>
+        />
       </div>
 
       {/* Right: Actions (Notification, Theme, User Profile) */}

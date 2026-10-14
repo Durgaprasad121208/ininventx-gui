@@ -123,13 +123,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Menu Navigation Items */}
       <div className={styles.menuContainer}>
-        {sections.map((section) => (
+        {(sections || []).map((section) => (
           <div key={section.title} className={styles.menuSection}>
             {(!collapsed || isDrawer) && (
               <span className={styles.sectionTitle}>{section.title}</span>
             )}
             <ul className={styles.menuList}>
-              {section.items.map((item: MenuItem) => {
+              {(section?.items || []).map((item: MenuItem) => {
                 const active = isItemActive(item.key);
                 const content = (
                   <Link

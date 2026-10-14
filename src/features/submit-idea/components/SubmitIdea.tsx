@@ -189,232 +189,236 @@ export const SubmitIdea: React.FC = () => {
       <Row gutter={[20, 20]} align="top">
         {/* Left Column: Form Details & Category */}
         <Col xs={24} lg={16} xl={16}>
-          {/* Card 1: The Idea */}
-          <Card className={styles.formCard} variant="borderless">
-            <h2 className={styles.cardTitle}>The idea</h2>
+          <div className={styles.leftColWrapper}>
+            {/* Card 1: The Idea */}
+            <Card className={styles.formCard} variant="borderless">
+              <h2 className={styles.cardTitle}>The idea</h2>
 
-            {/* Title Field */}
-            <div className={styles.fieldGroup}>
-              <label htmlFor="idea-title" className={styles.fieldLabel}>
-                Title <span className={styles.requiredStar}>*</span>
-              </label>
-              <Input
-                id="idea-title"
-                placeholder="e.g. Predictive maintenance for packaging lines"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className={styles.textInput}
-              />
-            </div>
-
-            {/* Description Field */}
-            <div className={styles.fieldGroup}>
-              <label htmlFor="idea-description" className={styles.fieldLabel}>
-                Description <span className={styles.requiredStar}>*</span>
-              </label>
-              <div className={styles.textAreaWrapper}>
-                <TextArea
-                  id="idea-description"
-                  placeholder="What is it, who benefits, and how would it work?"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  rows={4}
-                  className={styles.textAreaInput}
+              {/* Title Field */}
+              <div className={styles.fieldGroup}>
+                <label htmlFor="idea-title" className={styles.fieldLabel}>
+                  Title <span className={styles.requiredStar}>*</span>
+                </label>
+                <Input
+                  id="idea-title"
+                  placeholder="e.g. Predictive maintenance for packaging lines"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className={styles.textInput}
                 />
-                <div className={styles.charCounter}>{description.length} chars</div>
               </div>
-            </div>
 
-            {/* Problem Statement & Expected Business Value */}
-            <Row gutter={[14, 14]}>
-              <Col xs={24} sm={12}>
-                <div className={styles.fieldGroup}>
-                  <label htmlFor="idea-problem" className={styles.fieldLabel}>
-                    Problem statement <span className={styles.optionalTag}>(optional)</span>
-                  </label>
+              {/* Description Field */}
+              <div className={styles.fieldGroup}>
+                <label htmlFor="idea-description" className={styles.fieldLabel}>
+                  Description <span className={styles.requiredStar}>*</span>
+                </label>
+                <div className={styles.textAreaWrapper}>
                   <TextArea
-                    id="idea-problem"
-                    value={problemStatement}
-                    onChange={(e) => setProblemStatement(e.target.value)}
-                    rows={3}
+                    id="idea-description"
+                    placeholder="What is it, who benefits, and how would it work?"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows={4}
                     className={styles.textAreaInput}
                   />
+                  <div className={styles.charCounter}>{description.length} chars</div>
                 </div>
-              </Col>
+              </div>
 
-              <Col xs={24} sm={12}>
-                <div className={styles.fieldGroup}>
-                  <label htmlFor="idea-value" className={styles.fieldLabel}>
-                    Expected business value <span className={styles.optionalTag}>(optional)</span>
-                  </label>
-                  <TextArea
-                    id="idea-value"
-                    value={expectedValue}
-                    onChange={(e) => setExpectedValue(e.target.value)}
-                    rows={3}
-                    className={styles.textAreaInput}
-                  />
-                </div>
-              </Col>
-            </Row>
-          </Card>
+              {/* Problem Statement & Expected Business Value */}
+              <Row gutter={[14, 14]} style={{ marginTop: 4, marginBottom: 0 }}>
+                <Col xs={24} sm={12}>
+                  <div className={styles.lastFieldGroup}>
+                    <label htmlFor="idea-problem" className={styles.fieldLabel}>
+                      Problem statement <span className={styles.optionalTag}>(optional)</span>
+                    </label>
+                    <TextArea
+                      id="idea-problem"
+                      value={problemStatement}
+                      onChange={(e) => setProblemStatement(e.target.value)}
+                      rows={3}
+                      className={styles.textAreaInput}
+                    />
+                  </div>
+                </Col>
 
-          {/* Card 2: Primary Category */}
-          <Card className={styles.formCard} variant="borderless">
-            <h2 className={styles.cardTitle}>
-              Primary category <span className={styles.requiredStar}>*</span>
-            </h2>
-            <p className={styles.cardSubtitle}>
-              Categories are outcome-based and open to everyone across all three companies.
-            </p>
+                <Col xs={24} sm={12}>
+                  <div className={styles.lastFieldGroup}>
+                    <label htmlFor="idea-value" className={styles.fieldLabel}>
+                      Expected business value <span className={styles.optionalTag}>(optional)</span>
+                    </label>
+                    <TextArea
+                      id="idea-value"
+                      value={expectedValue}
+                      onChange={(e) => setExpectedValue(e.target.value)}
+                      rows={3}
+                      className={styles.textAreaInput}
+                    />
+                  </div>
+                </Col>
+              </Row>
+            </Card>
 
-            <Row gutter={[10, 10]}>
-              {PRIMARY_CATEGORIES.map((cat) => {
-                const isSelected = selectedCategory === cat.title;
+            {/* Card 2: Primary Category */}
+            <Card className={styles.formCard} variant="borderless">
+              <h2 className={styles.cardTitle}>
+                Primary category <span className={styles.requiredStar}>*</span>
+              </h2>
+              <p className={styles.cardSubtitle}>
+                Categories are outcome-based and open to everyone across all three companies.
+              </p>
 
-                return (
-                  <Col key={cat.id} xs={24} sm={12}>
-                    <div
-                      className={`${styles.categoryCard} ${
-                        isSelected ? styles.categoryCardSelected : ''
-                      }`}
-                      onClick={() => setSelectedCategory(cat.title)}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          setSelectedCategory(cat.title);
-                        }
-                      }}
-                    >
-                      <div className={styles.radioIndicator}>
-                        {isSelected && <div className={styles.radioDot} />}
+              <Row gutter={[10, 10]}>
+                {PRIMARY_CATEGORIES.map((cat) => {
+                  const isSelected = selectedCategory === cat.title;
+
+                  return (
+                    <Col key={cat.id} xs={24} sm={12}>
+                      <div
+                        className={`${styles.categoryCard} ${
+                          isSelected ? styles.categoryCardSelected : ''
+                        }`}
+                        onClick={() => setSelectedCategory(cat.title)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            setSelectedCategory(cat.title);
+                          }
+                        }}
+                      >
+                        <div className={styles.radioIndicator}>
+                          {isSelected && <div className={styles.radioDot} />}
+                        </div>
+
+                        <div className={styles.categoryContent}>
+                          <div className={styles.categoryTitle}>{cat.title}</div>
+                          <div className={styles.categoryDescription}>{cat.description}</div>
+                        </div>
                       </div>
-
-                      <div className={styles.categoryContent}>
-                        <div className={styles.categoryTitle}>{cat.title}</div>
-                        <div className={styles.categoryDescription}>{cat.description}</div>
-                      </div>
-                    </div>
-                  </Col>
-                );
-              })}
-            </Row>
-          </Card>
+                    </Col>
+                  );
+                })}
+              </Row>
+            </Card>
+          </div>
         </Col>
 
         {/* Right Column: Poster, Attachments & Action Buttons */}
         <Col xs={24} lg={8} xl={8}>
-          {/* Card 1: Poster Upload */}
-          <Card className={styles.formCard} variant="borderless">
-            <h2 className={styles.cardTitle}>Poster</h2>
-            <p className={styles.cardSubtitle}>PNG/JPG/WEBP, up to 20 MB.</p>
+          <div className={styles.rightColWrapper}>
+            {/* Card 1: Poster Upload */}
+            <Card className={styles.formCard} variant="borderless">
+              <h2 className={styles.cardTitle}>Poster</h2>
+              <p className={styles.cardSubtitle}>PNG/JPG/WEBP, up to 20 MB.</p>
 
-            <input
-              type="file"
-              ref={posterInputRef}
-              accept="image/png,image/jpeg,image/webp"
-              style={{ display: 'none' }}
-              onChange={handlePosterSelect}
-            />
+              <input
+                type="file"
+                ref={posterInputRef}
+                accept="image/png,image/jpeg,image/webp"
+                style={{ display: 'none' }}
+                onChange={handlePosterSelect}
+              />
 
-            {posterUrl ? (
-              <div className={styles.posterPreviewWrapper}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={posterUrl} alt="Poster preview" className={styles.posterPreviewImg} />
-                <button
-                  type="button"
-                  onClick={handleRemovePoster}
-                  className={styles.removePosterBtn}
-                  title="Remove poster"
+              {posterUrl ? (
+                <div className={styles.posterPreviewWrapper}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={posterUrl} alt="Poster preview" className={styles.posterPreviewImg} />
+                  <button
+                    type="button"
+                    onClick={handleRemovePoster}
+                    className={styles.removePosterBtn}
+                    title="Remove poster"
+                  >
+                    <Trash2 size={12} />
+                    <span>Remove</span>
+                  </button>
+                </div>
+              ) : (
+                <div
+                  className={styles.uploadDropzone}
+                  onClick={() => posterInputRef.current?.click()}
+                  role="button"
+                  tabIndex={0}
                 >
-                  <Trash2 size={12} />
-                  <span>Remove</span>
-                </button>
-              </div>
-            ) : (
-              <div
-                className={styles.uploadDropzone}
-                onClick={() => posterInputRef.current?.click()}
-                role="button"
-                tabIndex={0}
+                  <ImageIcon size={24} className={styles.uploadIcon} />
+                  <span className={styles.uploadText}>Choose poster image</span>
+                </div>
+              )}
+            </Card>
+
+            {/* Card 2: Attachments */}
+            <Card className={styles.formCard} variant="borderless">
+              <h2 className={styles.cardTitle}>Attachments</h2>
+              <p className={styles.cardSubtitle}>.pdf .docx .pptx .xlsx .png .jpg .jpeg .zip</p>
+
+              <input
+                type="file"
+                ref={attachmentInputRef}
+                multiple
+                accept=".pdf,.docx,.pptx,.xlsx,.png,.jpg,.jpeg,.zip"
+                style={{ display: 'none' }}
+                onChange={handleAttachmentSelect}
+              />
+
+              <button
+                type="button"
+                className={styles.addFilesBtn}
+                onClick={() => attachmentInputRef.current?.click()}
               >
-                <ImageIcon size={24} className={styles.uploadIcon} />
-                <span className={styles.uploadText}>Choose poster image</span>
-              </div>
-            )}
-          </Card>
+                <Plus size={14} />
+                <span>Add files</span>
+              </button>
 
-          {/* Card 2: Attachments */}
-          <Card className={styles.formCard} variant="borderless">
-            <h2 className={styles.cardTitle}>Attachments</h2>
-            <p className={styles.cardSubtitle}>.pdf .docx .pptx .xlsx .png .jpg .jpeg .zip</p>
-
-            <input
-              type="file"
-              ref={attachmentInputRef}
-              multiple
-              accept=".pdf,.docx,.pptx,.xlsx,.png,.jpg,.jpeg,.zip"
-              style={{ display: 'none' }}
-              onChange={handleAttachmentSelect}
-            />
-
-            <button
-              type="button"
-              className={styles.addFilesBtn}
-              onClick={() => attachmentInputRef.current?.click()}
-            >
-              <Plus size={14} />
-              <span>Add files</span>
-            </button>
-
-            {attachments.length > 0 && (
-              <div className={styles.attachmentList}>
-                {attachments.map((att) => (
-                  <div key={att.id} className={styles.attachmentItem}>
-                    <div className={styles.attachmentInfo} title={att.name}>
-                      <Paperclip size={12} style={{ flexShrink: 0 }} />
-                      <span>{att.name}</span>
-                      <span style={{ color: '#64748b', fontSize: '9.5px' }}>
-                        ({formatFileSize(att.size)})
-                      </span>
+              {attachments.length > 0 && (
+                <div className={styles.attachmentList}>
+                  {attachments.map((att) => (
+                    <div key={att.id} className={styles.attachmentItem}>
+                      <div className={styles.attachmentInfo} title={att.name}>
+                        <Paperclip size={12} style={{ flexShrink: 0 }} />
+                        <span>{att.name}</span>
+                        <span style={{ color: '#64748b', fontSize: '9.5px' }}>
+                          ({formatFileSize(att.size)})
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveAttachment(att.id)}
+                        className={styles.attachmentRemoveBtn}
+                        title="Remove file"
+                      >
+                        <X size={12} />
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveAttachment(att.id)}
-                      className={styles.attachmentRemoveBtn}
-                      title="Remove file"
-                    >
-                      <X size={12} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
 
-            <p className={styles.helperNote}>
-              Demo mode stores file names only — files are not uploaded.
-            </p>
-          </Card>
+              <p className={styles.helperNote}>
+                Demo mode stores file names only — files are not uploaded.
+              </p>
+            </Card>
 
-          {/* Card 3: Action Buttons */}
-          <Card className={styles.actionCard} variant="borderless">
-            <SubmitButton
-              onClick={handleSubmit}
-              loading={isSubmitting}
-              className={styles.fullWidthBtn}
-            >
-              Submit idea
-            </SubmitButton>
+            {/* Card 3: Action Buttons */}
+            <Card className={styles.actionCard} variant="borderless">
+              <SubmitButton
+                onClick={handleSubmit}
+                loading={isSubmitting}
+                className={styles.fullWidthBtn}
+              >
+                Submit idea
+              </SubmitButton>
 
-            <DarkButton onClick={handleSaveDraft} className={styles.fullWidthBtn}>
-              Save as draft
-            </DarkButton>
+              <DarkButton onClick={handleSaveDraft} className={styles.fullWidthBtn}>
+                Save as draft
+              </DarkButton>
 
-            <p className={styles.actionDisclaimer}>
-              Drafts are only visible to you. Submitted ideas are visible to all participants.
-            </p>
-          </Card>
+              <p className={styles.actionDisclaimer}>
+                Drafts are only visible to you. Submitted ideas are visible to all participants.
+              </p>
+            </Card>
+          </div>
         </Col>
       </Row>
     </div>

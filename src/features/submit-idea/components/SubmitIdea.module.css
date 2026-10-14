@@ -5,17 +5,19 @@
 .submitContainer {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 22px;
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
+  padding-bottom: 48px;
 }
 
 /* 1. Page Header */
 .headerSection {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 5px;
+  margin-bottom: 4px;
 }
 
 .pageTitle {
@@ -27,46 +29,70 @@
 }
 
 .pageSubtitle {
-  font-size: 11.5px;
+  font-size: 12px;
   color: #94a3b8;
   max-width: 720px;
   margin-top: 2px;
+  line-height: 1.5;
 }
 
-/* 2. Form Cards & Structure */
+/* 2. Column Flex Wrappers for Guaranteed Card Gap */
+.leftColWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.rightColWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* 3. Form Cards & Structure */
 .formCard {
   background: #08101e !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 10px !important;
-  margin-bottom: 16px;
+  border-radius: 12px !important;
+  width: 100% !important;
+  margin-bottom: 0 !important;
 }
 
 .formCard :global(.ant-card-body) {
-  padding: 16px 18px !important;
+  padding: 24px 26px !important;
 }
 
 .cardTitle {
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 700;
   color: #ffffff;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   letter-spacing: -0.01em;
 }
 
 .cardSubtitle {
-  font-size: 11px;
+  font-size: 11.5px;
   color: #94a3b8;
-  margin-top: -8px;
-  margin-bottom: 14px;
-  line-height: 1.4;
+  margin-top: -6px;
+  margin-bottom: 18px;
+  line-height: 1.5;
 }
 
-/* 3. Form Inputs & Labels */
+/* 4. Form Inputs & Labels */
 .fieldGroup {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  margin-bottom: 14px;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.lastFieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 0 !important;
 }
 
 .fieldLabel {

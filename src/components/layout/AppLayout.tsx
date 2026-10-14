@@ -33,15 +33,16 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
 }) => {
   const pathname = usePathname();
   const effectivePath = currentPath || pathname || '/user-dashboard';
-  const effectiveBreadcrumbs: BreadcrumbItem[] = breadcrumbItems || (
-    effectivePath === '/browse-ideas'
+  const effectiveBreadcrumbs: BreadcrumbItem[] =
+    Array.isArray(breadcrumbItems) && breadcrumbItems.length > 0
+      ? breadcrumbItems
+      : effectivePath === '/browse-ideas'
       ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Browse ideas' }]
       : effectivePath === '/submit-idea'
       ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Submit idea' }]
       : effectivePath === '/my-ideas'
       ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'My ideas' }]
-      : [{ label: 'Home', href: '/user-dashboard' }, { label: 'Dashboard' }]
-  );
+      : [{ label: 'Home', href: '/user-dashboard' }, { label: 'Dashboard' }];
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState<boolean>(false);
   const [isMobileOrTablet, setIsMobileOrTablet] = useState<boolean>(false);
