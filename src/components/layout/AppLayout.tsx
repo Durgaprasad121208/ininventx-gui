@@ -48,6 +48,14 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Guidelines' }]
       : effectivePath === '/profile'
       ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Profile' }]
+      : effectivePath.startsWith('/organizer/manage-ideas/')
+      ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Organizer', href: '/organizer/overview' }, { label: 'Manage ideas', href: '/organizer/manage-ideas' }, { label: 'Idea details' }]
+      : effectivePath === '/organizer/manage-ideas'
+      ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Organizer' }, { label: 'Manage ideas' }]
+      : effectivePath === '/idea-info' || effectivePath.startsWith('/idea-info')
+      ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Idea details' }]
+      : effectivePath.startsWith('/organizer')
+      ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Organizer' }, { label: 'Overview' }]
       : [{ label: 'Home', href: '/user-dashboard' }, { label: 'Dashboard' }];
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState<boolean>(false);

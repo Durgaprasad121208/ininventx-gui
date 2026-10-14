@@ -1,0 +1,505 @@
+/* ==========================================================================
+   Overview Page Styles (Organizer Overview)
+   ========================================================================== */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-bottom: 24px;
+}
+
+/* 1. Header Section */
+.headerSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.headerTextGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.topRoleTag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.pageTitle {
+  font-size: 26px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* 2. Top KPI Stat Cards Grid */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+.kpiCard {
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.kpiCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56, 189, 248, 0.35) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35) !important;
+}
+
+.kpiCard :global(.ant-card-body) {
+  padding: 18px 20px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kpiTopRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.kpiLabel {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.kpiIconCircle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38bdf8;
+  flex-shrink: 0;
+}
+
+.kpiValue {
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+/* 3. Middle Section: Bar Chart + Category Breakdown */
+.middleGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+}
+
+.overviewCard {
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  transition: border-color var(--transition-fast);
+  width: 100% !important;
+}
+
+.overviewCard :global(.ant-card-body) {
+  padding: 22px 24px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+}
+
+.cardTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+/* Chart Canvas Container */
+.chartContainer {
+  width: 100%;
+  height: 290px;
+  min-height: 290px;
+}
+
+/* Scrollable Container with Custom Sleek Scrollbar */
+.scrollableCardBody {
+  height: 290px;
+  max-height: 290px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(56, 189, 248, 0.35) rgba(255, 255, 255, 0.02);
+}
+
+.scrollableCardBody::-webkit-scrollbar {
+  width: 5px;
+}
+
+.scrollableCardBody::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+}
+
+.scrollableCardBody::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.35);
+  border-radius: 4px;
+}
+
+.scrollableCardBody::-webkit-scrollbar-thumb:hover {
+  background: #38bdf8;
+}
+
+/* Category Item Row */
+.categoryRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.categoryRow:last-child {
+  border-bottom: none;
+}
+
+.categoryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.categoryName {
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.categoryCount {
+  color: #94a3b8;
+  font-weight: 600;
+  font-size: 11.5px;
+}
+
+.progressTrack {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: #38bdf8;
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+/* 4. Bottom Row: 3 Cards (Company, Deadlines, Activity) */
+.bottomGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+/* Company Participation */
+.companyList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.companyRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.companyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12.5px;
+}
+
+.companyName {
+  color: #e2e8f0;
+  font-weight: 500;
+}
+
+.companyCount {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.companyProgressTrack {
+  width: 100%;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.companyProgressFill {
+  height: 100%;
+  background: #2dd4bf;
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+.companyCaption {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 14px;
+  line-height: 1.4;
+}
+
+/* Upcoming Deadlines Vertical Stepper */
+.deadlinesTimeline {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-left: 28px;
+  gap: 13px;
+}
+
+.deadlinesTimelineLine {
+  position: absolute;
+  left: 9px;
+  top: 10px;
+  bottom: 12px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.deadlineStep {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  gap: 2px;
+}
+
+.deadlineNode {
+  position: absolute;
+  left: -28px;
+  top: 2px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.deadlineNodeUpcoming {
+  color: #f59e0b;
+}
+
+.deadlineNodeCircle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #64748b;
+  background: #08101e;
+}
+
+.deadlineTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.deadlineTitle {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.deadlineBadge {
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 4px;
+  background: rgba(245, 158, 11, 0.16);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.deadlineDate {
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* Recent Activity List with Scrollbar */
+.activityScrollList {
+  flex: 1;
+  min-height: 0;
+  max-height: 260px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(56, 189, 248, 0.35) rgba(255, 255, 255, 0.02);
+}
+
+.activityScrollList::-webkit-scrollbar {
+  width: 5px;
+}
+
+.activityScrollList::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+}
+
+.activityScrollList::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.35);
+  border-radius: 4px;
+}
+
+.activityScrollList::-webkit-scrollbar-thumb:hover {
+  background: #38bdf8;
+}
+
+.activityItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.activityText {
+  font-size: 11.5px;
+  color: #cbd5e1;
+  line-height: 1.4;
+}
+
+.activityTime {
+  font-size: 10.5px;
+  color: #64748b;
+}
+
+/* ==========================================================================
+   Light Mode Overrides
+   ========================================================================== */
+:global([data-theme="light"]) .pageTitle,
+:global(body.light-theme) .pageTitle,
+:global([data-theme="light"]) .cardTitle,
+:global(body.light-theme) .cardTitle,
+:global([data-theme="light"]) .kpiValue,
+:global(body.light-theme) .kpiValue,
+:global([data-theme="light"]) .companyCount,
+:global(body.light-theme) .companyCount,
+:global([data-theme="light"]) .deadlineTitle,
+:global(body.light-theme) .deadlineTitle {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .kpiCard,
+:global(body.light-theme) .kpiCard,
+:global([data-theme="light"]) .overviewCard,
+:global(body.light-theme) .overviewCard {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+:global([data-theme="light"]) .categoryName,
+:global(body.light-theme) .categoryName,
+:global([data-theme="light"]) .companyName,
+:global(body.light-theme) .companyName,
+:global([data-theme="light"]) .activityText,
+:global(body.light-theme) .activityText {
+  color: #334155 !important;
+}
+
+:global([data-theme="light"]) .deadlineNodeCircle,
+:global(body.light-theme) .deadlineNodeCircle {
+  background: #ffffff;
+  border-color: #94a3b8;
+}
+
+:global([data-theme="light"]) .deadlinesTimelineLine,
+:global(body.light-theme) .deadlinesTimelineLine {
+  background: #e2e8f0;
+}
+
+:global([data-theme="light"]) .categoryRow,
+:global(body.light-theme) .categoryRow {
+  border-bottom-color: #f1f5f9;
+}
+
+:global([data-theme="light"]) .progressTrack,
+:global(body.light-theme) .progressTrack,
+:global([data-theme="light"]) .companyProgressTrack,
+:global(body.light-theme) .companyProgressTrack {
+  background: #f1f5f9;
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 1200px) {
+  .bottomGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 1024px) {
+  .kpiGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .middleGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .bottomGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .kpiGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .headerSection {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chartContainer {
+    height: 240px;
+    min-height: 240px;
+  }
+}

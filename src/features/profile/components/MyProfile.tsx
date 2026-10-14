@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Card, Tooltip, message } from 'antd';
+import { Card, Tooltip, App } from 'antd';
 import { Inbox, Plus, Copy, ExternalLink, Calendar, CheckCircle } from 'lucide-react';
 import { SubmitButton, DarkButton } from '@/components/ui/app-button/AppButton';
 import { getUserProfile } from '../services/profileApi';
@@ -12,6 +12,7 @@ import type { MyIdeaItem } from '@/features/my-ideas/types/myIdeas.types';
 import styles from './MyProfile.module.css';
 
 export const MyProfile: React.FC = () => {
+  const { message } = App.useApp();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [myIdeas, setMyIdeas] = useState<MyIdeaItem[]>([]);
   const [loading, setLoading] = useState(true);

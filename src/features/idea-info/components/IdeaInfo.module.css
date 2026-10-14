@@ -1,0 +1,614 @@
+/* ==========================================================================
+   Idea Info Component Styles
+   ========================================================================== */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-bottom: 36px;
+}
+
+/* Back Link */
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #94a3b8;
+  font-size: 12px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+  width: fit-content;
+}
+
+.backLink:hover {
+  color: #29c9d1;
+}
+
+/* 1. Hero Banner Card */
+.heroBannerCard {
+  background: linear-gradient(135deg, #0a172a 0%, #060e1d 60%, #030814 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  position: relative;
+  overflow: hidden;
+  width: 100% !important;
+}
+
+.heroBannerCard :global(.ant-card-body) {
+  padding: 26px 28px !important;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+/* Subtle background ambient graphic */
+.heroBannerCard::after {
+  content: '';
+  position: absolute;
+  right: -40px;
+  top: -40px;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.12) 0%, rgba(6, 182, 212, 0.03) 50%, transparent 70%);
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.bannerBadgesRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.stageBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(14, 165, 233, 0.15);
+  border: 1px solid rgba(14, 165, 233, 0.35);
+  color: #38bdf8;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+}
+
+.statusApproved {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #10b981 !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+.demoContentTag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  letter-spacing: 0.5px;
+}
+
+.ideaTitle {
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-top: 10px;
+}
+
+.categorySubtitle {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+.bannerMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+  font-size: 12px;
+  color: #64748b;
+  flex-wrap: wrap;
+}
+
+.likesBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  transition: color var(--transition-fast);
+}
+
+.likesBtn:hover {
+  color: #ef4444;
+}
+
+/* 2. Stage Stepper Bar Card */
+.stepperCard {
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  width: 100% !important;
+}
+
+.stepperCard :global(.ant-card-body) {
+  padding: 16px 24px !important;
+}
+
+.stepperGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+.stepSegment {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.stepBar {
+  height: 4px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  width: 100%;
+  transition: background 0.3s ease;
+}
+
+.stepBarActive {
+  background: #2dd4bf !important;
+}
+
+.stepLabel {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.3s ease;
+}
+
+.stepLabelActive {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+/* 3. Main Two-Column Content Grid */
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: 20px;
+  align-items: start;
+  width: 100%;
+}
+
+.leftCol,
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* General Section Card */
+.sectionCard {
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  width: 100% !important;
+}
+
+.sectionCard :global(.ant-card-body) {
+  padding: 22px 24px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sectionTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.descriptionText {
+  font-size: 12.5px;
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+
+/* Stage History */
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.historyEntry {
+  border-left: 2px solid #0284c7;
+  padding-left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.historyAction {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.historyReason {
+  font-size: 11.5px;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.historyMeta {
+  font-size: 11px;
+  color: #64748b;
+  font-family: var(--font-family-mono, monospace);
+}
+
+/* Attachments */
+.attachmentsEmpty {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.attachmentItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+/* Category Pill at bottom */
+.categoryBottomPill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+/* Right Column: Organizer Review */
+.organizerReviewHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 2px;
+}
+
+.organizerReviewSubtitle {
+  font-size: 11px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+/* Promote Primary Button */
+.promotePrimaryBtn {
+  width: 100%;
+  height: 38px;
+  font-size: 12.5px;
+  font-weight: 600;
+  background: #0284c7;
+  border: none;
+  color: #ffffff;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.promotePrimaryBtn:hover {
+  background: #0369a1;
+}
+
+/* 2x2 Action Button Grid */
+.actionsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.actionBtn {
+  height: 34px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #cbd5e1;
+  font-size: 11.5px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.actionBtn:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.actionBtnReject {
+  background: #ef4444 !important;
+  border: none !important;
+  color: #ffffff !important;
+}
+
+.actionBtnReject:hover {
+  background: #dc2626 !important;
+}
+
+.actionBtnFull {
+  grid-column: span 2;
+}
+
+/* Administrative Metadata Form */
+.adminMetadataSection {
+  margin-top: 14px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.adminMetadataTitle {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.adminInput {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+}
+
+.adminInput:hover,
+.adminInput:focus {
+  border-color: #29c9d1 !important;
+}
+
+.adminInput::placeholder {
+  color: #64748b !important;
+}
+
+.adminTextarea {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  resize: vertical;
+}
+
+.adminTextarea:hover,
+.adminTextarea:focus {
+  border-color: #29c9d1 !important;
+}
+
+.adminTextarea::placeholder {
+  color: #64748b !important;
+}
+
+.saveMetaBtn {
+  align-self: flex-start;
+  height: 32px;
+  padding: 0 16px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  background: #08101e;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.saveMetaBtn:hover {
+  background: rgba(41, 201, 209, 0.15);
+  border-color: #29c9d1;
+  color: #29c9d1;
+}
+
+/* Team / Author Card */
+.teamCardTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.authorRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.ownerPill {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 4px;
+  background: rgba(14, 165, 233, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(14, 165, 233, 0.3);
+}
+
+.companyRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.companyDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.teamFooter {
+  padding-top: 10px;
+  margin-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* ==========================================================================
+   Light Mode Overrides
+   ========================================================================== */
+:global([data-theme="light"]) .ideaTitle,
+:global(body.light-theme) .ideaTitle,
+:global([data-theme="light"]) .sectionTitle,
+:global(body.light-theme) .sectionTitle,
+:global([data-theme="light"]) .historyAction,
+:global(body.light-theme) .historyAction,
+:global([data-theme="light"]) .adminMetadataTitle,
+:global(body.light-theme) .adminMetadataTitle,
+:global([data-theme="light"]) .teamCardTitle,
+:global(body.light-theme) .teamCardTitle,
+:global([data-theme="light"]) .authorRow,
+:global(body.light-theme) .authorRow {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .heroBannerCard,
+:global(body.light-theme) .heroBannerCard {
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%) !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+:global([data-theme="light"]) .stepperCard,
+:global(body.light-theme) .stepperCard,
+:global([data-theme="light"]) .sectionCard,
+:global(body.light-theme) .sectionCard {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+:global([data-theme="light"]) .descriptionText,
+:global(body.light-theme) .descriptionText {
+  color: #334155 !important;
+}
+
+:global([data-theme="light"]) .actionBtn,
+:global(body.light-theme) .actionBtn {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #334155;
+}
+
+:global([data-theme="light"]) .actionBtn:hover,
+:global(body.light-theme) .actionBtn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+:global([data-theme="light"]) .adminInput,
+:global(body.light-theme) .adminInput,
+:global([data-theme="light"]) .adminTextarea,
+:global(body.light-theme) .adminTextarea {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .stepLabelActive,
+:global(body.light-theme) .stepLabelActive {
+  color: #0f172a !important;
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .mainGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .ideaTitle {
+    font-size: 22px;
+  }
+
+  .stepperGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .actionsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .actionBtnFull {
+    grid-column: span 1;
+  }
+}

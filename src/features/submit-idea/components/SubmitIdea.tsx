@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Card, Row, Col, Input, message } from 'antd';
+import { Card, Row, Col, Input, App } from 'antd';
 import { useRouter } from 'next/navigation';
 import {
   Image as ImageIcon,
@@ -23,6 +23,7 @@ import styles from './SubmitIdea.module.css';
 const { TextArea } = Input;
 
 export const SubmitIdea: React.FC = () => {
+  const { message } = App.useApp();
   const router = useRouter();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');

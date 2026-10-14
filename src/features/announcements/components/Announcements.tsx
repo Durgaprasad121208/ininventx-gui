@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { Card, Input, message } from 'antd';
+import { Card, Input, App } from 'antd';
 import {
   Pin,
   AlertTriangle,
@@ -20,6 +20,7 @@ import type { AnnouncementItem, AnnouncementPriority } from '../types/announceme
 import styles from './Announcements.module.css';
 
 export const Announcements: React.FC = () => {
+  const { message } = App.useApp();
   const [announcements, setAnnouncements] = useState<AnnouncementItem[]>([]);
   const [activeFilter, setActiveFilter] = useState<'all' | 'pinned' | 'critical' | 'important'>('all');
   const [searchQuery, setSearchQuery] = useState('');

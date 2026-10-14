@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Card, Tooltip, message } from 'antd';
+import { Card, Tooltip, App } from 'antd';
 import { FileText, Download, CheckCircle, ShieldAlert } from 'lucide-react';
 import { getOfficialDocuments } from '../services/guidelinesApi';
 import type { OfficialDocument } from '../types/guidelines.types';
 import styles from './Guideliness.module.css';
 
 export const Guideliness: React.FC = () => {
+  const { message } = App.useApp();
   const [documents, setDocuments] = useState<OfficialDocument[]>([]);
 
   useEffect(() => {

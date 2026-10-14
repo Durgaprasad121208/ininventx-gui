@@ -1,0 +1,380 @@
+/* ==========================================================================
+   Manage Ideas Component Styles (Organizer)
+   ========================================================================== */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-bottom: 32px;
+}
+
+/* 1. Page Header */
+.headerSection {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.topRoleTag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.pageTitle {
+  font-size: 26px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.pageSubtitle {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 2px;
+  line-height: 1.5;
+}
+
+/* 2. Standalone Filters Toolbar (NO background card wrapper) */
+.filtersToolbar {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.searchInput {
+  height: 36px !important;
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  font-size: 12px !important;
+  color: #ffffff !important;
+  transition: all var(--transition-fast);
+  width: 100% !important;
+}
+
+.searchInput:hover,
+.searchInput:focus,
+.searchInput:focus-within {
+  border-color: rgba(41, 201, 209, 0.5) !important;
+  box-shadow: 0 0 0 2px rgba(41, 201, 209, 0.15) !important;
+}
+
+.searchInput :global(.ant-input) {
+  background: transparent !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+}
+
+.searchInput :global(.ant-input::placeholder) {
+  color: #64748b !important;
+}
+
+.filterSelect {
+  width: 100% !important;
+  height: 36px !important;
+}
+
+.filterSelect :global(.ant-select-selector) {
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  height: 36px !important;
+  font-size: 12px !important;
+  color: #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: all var(--transition-fast);
+}
+
+.filterSelect:hover :global(.ant-select-selector),
+.filterSelect:focus :global(.ant-select-selector),
+.filterSelect:global(.ant-select-focused) :global(.ant-select-selector) {
+  border-color: rgba(41, 201, 209, 0.5) !important;
+  box-shadow: 0 0 0 2px rgba(41, 201, 209, 0.15) !important;
+}
+
+.filterSelect :global(.ant-select-selection-item) {
+  color: #cbd5e1 !important;
+  font-size: 12px !important;
+  line-height: 34px !important;
+}
+
+.filterSelect :global(.ant-select-arrow) {
+  color: #64748b !important;
+}
+
+/* 3. Ant Design Table Wrapper (Borderless/Clean, No nested card) */
+.tableContainer {
+  width: 100%;
+  background: #08101e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Custom Ant Design Table Overrides */
+.tableContainer :global(.ant-table) {
+  background: transparent !important;
+  color: #cbd5e1 !important;
+  font-size: 12px !important;
+}
+
+.tableContainer :global(.ant-table-thead > tr > th) {
+  background: rgba(255, 255, 255, 0.02) !important;
+  color: #94a3b8 !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 10px 14px !important;
+  white-space: nowrap !important;
+}
+
+.tableContainer :global(.ant-table-thead > tr > th::before) {
+  display: none !important;
+}
+
+.tableContainer :global(.ant-table-tbody > tr > td) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+  padding: 10px 14px !important;
+  background: transparent !important;
+  transition: background var(--transition-fast);
+}
+
+.tableContainer :global(.ant-table-tbody > tr:hover > td) {
+  background: rgba(41, 201, 209, 0.04) !important;
+}
+
+/* Table Row Elements */
+.ideaTitleCell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ideaTitleText {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+.ideaTeamText {
+  font-size: 11px;
+  color: #64748b;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ownerCell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ownerName {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.ownerCompanyRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #64748b;
+}
+
+.companyDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Category Pill */
+.categoryBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  white-space: nowrap;
+}
+
+/* Stage Pill */
+.stageBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(14, 165, 233, 0.12);
+  border: 1px solid rgba(14, 165, 233, 0.25);
+  color: #38bdf8;
+  white-space: nowrap;
+}
+
+.stageCode {
+  font-size: 9.5px;
+  opacity: 0.7;
+}
+
+/* Status Pill */
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.statusApproved {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.statusDraft {
+  background: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.statusSubmitted {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.statusUnderReview {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.statusRejected {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.likesCount {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  text-align: center;
+}
+
+.createdDate {
+  font-size: 11px;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+/* Pagination Overrides */
+.tableContainer :global(.ant-pagination) {
+  margin: 12px 16px !important;
+}
+
+.tableContainer :global(.ant-pagination-item) {
+  background: transparent !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.tableContainer :global(.ant-pagination-item a) {
+  color: #94a3b8 !important;
+}
+
+.tableContainer :global(.ant-pagination-item-active) {
+  border-color: #29c9d1 !important;
+  background: rgba(41, 201, 209, 0.15) !important;
+}
+
+.tableContainer :global(.ant-pagination-item-active a) {
+  color: #29c9d1 !important;
+}
+
+/* ==========================================================================
+   Light Mode Overrides
+   ========================================================================== */
+:global([data-theme="light"]) .pageTitle,
+:global(body.light-theme) .pageTitle,
+:global([data-theme="light"]) .ideaTitleText,
+:global(body.light-theme) .ideaTitleText,
+:global([data-theme="light"]) .ownerName,
+:global(body.light-theme) .ownerName,
+:global([data-theme="light"]) .likesCount,
+:global(body.light-theme) .likesCount {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .pageSubtitle,
+:global(body.light-theme) .pageSubtitle,
+:global([data-theme="light"]) .ideaTeamText,
+:global(body.light-theme) .ideaTeamText,
+:global([data-theme="light"]) .ownerCompanyRow,
+:global(body.light-theme) .ownerCompanyRow,
+:global([data-theme="light"]) .createdDate,
+:global(body.light-theme) .createdDate {
+  color: #64748b !important;
+}
+
+:global([data-theme="light"]) .tableContainer,
+:global(body.light-theme) .tableContainer {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+:global([data-theme="light"]) .tableContainer :global(.ant-table-thead > tr > th),
+:global(body.light-theme) .tableContainer :global(.ant-table-thead > tr > th) {
+  background: #f8fafc !important;
+  color: #475569 !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
+:global([data-theme="light"]) .tableContainer :global(.ant-table-tbody > tr > td),
+:global(body.light-theme) .tableContainer :global(.ant-table-tbody > tr > td) {
+  border-bottom-color: #f1f5f9 !important;
+}
+
+:global([data-theme="light"]) .searchInput,
+:global(body.light-theme) .searchInput,
+:global([data-theme="light"]) .filterSelect :global(.ant-select-selector),
+:global(body.light-theme) .filterSelect :global(.ant-select-selector) {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .searchInput :global(.ant-input),
+:global(body.light-theme) .searchInput :global(.ant-input),
+:global([data-theme="light"]) .filterSelect :global(.ant-select-selection-item),
+:global(body.light-theme) .filterSelect :global(.ant-select-selection-item) {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .categoryBadge,
+:global(body.light-theme) .categoryBadge {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #334155;
+}
