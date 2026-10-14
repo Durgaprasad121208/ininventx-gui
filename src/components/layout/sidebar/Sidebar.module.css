@@ -1,0 +1,308 @@
+.sider {
+  position: sticky;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background-color: var(--color-header-bg, #050812) !important;
+  border-right: 1px solid var(--color-border, #151f33);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  transition: all var(--transition-normal);
+  user-select: none;
+}
+
+.sider :global(.ant-layout-sider-children) {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Hide desktop sider completely on mobile, iPad Mini & tablet viewports (<= 1024px) */
+@media (max-width: 1024px) {
+  .desktopSider {
+    display: none !important;
+  }
+}
+
+/* Container when rendered inside mobile drawer */
+.drawerSidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-header-bg, #050812);
+  user-select: none;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Logo & Brand Header
+   ========================================================================== */
+.brandHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 18px 16px;
+  text-decoration: none;
+}
+
+.logoIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.brandTextWrapper {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  min-width: 0;
+}
+
+.brandName {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+}
+
+.brandBracket {
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.brandHighlight {
+  color: #06b6d4;
+  font-weight: 800;
+}
+
+.brandTagline {
+  font-family: var(--font-family-mono, monospace);
+  font-size: 9.5px;
+  color: #64748b;
+  margin-top: 2px;
+  letter-spacing: -0.02em;
+}
+
+/* ==========================================================================
+   Navigation Menu Area
+   ========================================================================== */
+.menuContainer {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px 10px 16px;
+}
+
+.menuSection {
+  margin-bottom: 16px;
+}
+
+.sectionTitle {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  color: #475569;
+  text-transform: uppercase;
+  padding: 8px 10px 4px;
+  display: block;
+}
+
+.menuList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  position: relative;
+}
+
+.menuItem:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.menuItemActive {
+  background: rgba(14, 38, 64, 0.75) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-left-color: #06b6d4 !important;
+  box-shadow: none !important;
+}
+
+.menuItemActive .itemIcon {
+  color: #38bdf8 !important;
+}
+
+.itemIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  flex-shrink: 0;
+  transition: color var(--transition-fast);
+}
+
+.itemLabel {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemBadge {
+  font-size: 9px;
+  font-weight: 600;
+  padding: 1px 5px;
+  border-radius: 8px;
+  background: rgba(6, 182, 212, 0.2);
+  color: #38bdf8;
+  border: 1px solid rgba(6, 182, 212, 0.4);
+}
+
+/* ==========================================================================
+   Footer Area
+   ========================================================================== */
+.footerArea {
+  padding: 12px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin-top: auto;
+  line-height: 1.3;
+}
+
+.footerCompany {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: #64748b;
+  letter-spacing: -0.01em;
+}
+
+.footerTagline {
+  font-size: 9.5px;
+  font-style: italic;
+  color: #475569;
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   Collapsed Mode (76px width)
+   ========================================================================== */
+.siderCollapsed .brandTextWrapper,
+.siderCollapsed .brandTagline,
+.siderCollapsed .sectionTitle,
+.siderCollapsed .itemLabel,
+.siderCollapsed .itemBadge,
+.siderCollapsed .footerArea {
+  display: none !important;
+}
+
+.siderCollapsed .brandHeader {
+  justify-content: center;
+  padding: 20px 0 16px;
+}
+
+.siderCollapsed .menuItem {
+  justify-content: center;
+  padding: 10px 0;
+  border-left: none;
+  border-radius: 8px;
+}
+
+.siderCollapsed .menuItemActive {
+  background: rgba(6, 182, 212, 0.15) !important;
+  box-shadow: none !important;
+}
+
+/* ==========================================================================
+   Light Mode Overrides (active item #e0f2fe)
+   ========================================================================== */
+:global([data-theme="light"]) .menuItemActive,
+:global(body.light-theme) .menuItemActive {
+  background: #e0f2fe !important;
+  color: #0369a1 !important;
+  font-weight: 600 !important;
+  border-left-color: #0284c7 !important;
+  box-shadow: none !important;
+}
+
+:global([data-theme="light"]) .menuItemActive .itemIcon,
+:global(body.light-theme) .menuItemActive .itemIcon {
+  color: #0284c7 !important;
+}
+
+:global([data-theme="light"]) .siderCollapsed .menuItemActive,
+:global(body.light-theme) .siderCollapsed .menuItemActive {
+  background: #e0f2fe !important;
+  box-shadow: none !important;
+}
+
+:global([data-theme="light"]) .sider,
+:global(body.light-theme) .sider,
+:global([data-theme="light"]) .drawerSidebar,
+:global(body.light-theme) .drawerSidebar {
+  background-color: #ffffff !important;
+  border-right-color: #e2e8f0 !important;
+}
+
+:global([data-theme="light"]) .brandName,
+:global(body.light-theme) .brandName {
+  color: #0f172a;
+}
+
+:global([data-theme="light"]) .brandTagline,
+:global(body.light-theme) .brandTagline {
+  color: #64748b;
+}
+
+:global([data-theme="light"]) .sectionTitle,
+:global(body.light-theme) .sectionTitle {
+  color: #94a3b8;
+}
+
+:global([data-theme="light"]) .menuItem,
+:global(body.light-theme) .menuItem {
+  color: #475569;
+}
+
+:global([data-theme="light"]) .menuItem:hover,
+:global(body.light-theme) .menuItem:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+:global([data-theme="light"]) .itemIcon,
+:global(body.light-theme) .itemIcon {
+  color: #64748b;
+}
+
+:global([data-theme="light"]) .footerCompany,
+:global(body.light-theme) .footerCompany {
+  color: #64748b;
+}
+
+:global([data-theme="light"]) .footerTagline,
+:global(body.light-theme) .footerTagline {
+  color: #94a3b8;
+}

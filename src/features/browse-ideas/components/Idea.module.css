@@ -1,0 +1,487 @@
+/* ==========================================================================
+   Browse Ideas Page & Header Section
+   ========================================================================== */
+.browseContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.headerSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.galleryBadge {
+  font-family: var(--font-family-mono, monospace);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #06b6d4;
+  text-transform: uppercase;
+}
+
+.pageTitle {
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.pageSubtitle {
+  font-size: 11.5px;
+  color: #94a3b8;
+  max-width: 650px;
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   Filter & Search Toolbar (Using Antd Row/Col - No outer card)
+   ========================================================================== */
+.filterRow {
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.searchInput {
+  width: 100%;
+  height: 36px;
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 6px !important;
+  transition: all var(--transition-fast);
+}
+
+.searchInput:hover,
+.searchInput:focus-within {
+  border-color: rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.15) !important;
+}
+
+.searchInput :global(.ant-input) {
+  background: transparent !important;
+  font-size: 11.5px !important;
+  color: #ffffff !important;
+}
+
+.searchInput :global(.ant-input::placeholder) {
+  color: #64748b !important;
+}
+
+.searchIcon {
+  color: #64748b;
+  margin-right: 4px;
+  flex-shrink: 0;
+}
+
+.filterSelect {
+  width: 100% !important;
+  height: 36px !important;
+}
+
+.filterSelect :global(.ant-select-selector) {
+  height: 36px !important;
+  padding: 0 11px !important;
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 6px !important;
+  font-size: 11.5px !important;
+  color: #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.filterSelect:hover :global(.ant-select-selector),
+.filterSelect:focus :global(.ant-select-selector),
+.filterSelect :global(.ant-select-focused .ant-select-selector) {
+  border-color: rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.15) !important;
+}
+
+.filterSelect :global(.ant-select-selection-item) {
+  color: #ffffff !important;
+  font-size: 11.5px !important;
+  line-height: 34px !important;
+}
+
+.filterSelect :global(.ant-select-arrow) {
+  color: #64748b !important;
+  font-size: 11px !important;
+}
+
+/* ==========================================================================
+   Antd Idea Cards Grid
+   ========================================================================== */
+.ideasGrid {
+  width: 100%;
+}
+
+.ideaCard {
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.ideaCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56, 189, 248, 0.35) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+.ideaCard :global(.ant-card-body) {
+  padding: 0 !important;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Thumbnail Visual */
+.thumbnailWrapper {
+  position: relative;
+  width: 100%;
+  height: 125px;
+  background: #040e21;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.badgesOverlay {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
+}
+
+.stageBadge {
+  font-size: 8.5px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(6, 182, 212, 0.22);
+  color: #38bdf8;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(6, 182, 212, 0.4);
+}
+
+.demoBadge {
+  font-size: 8px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #94a3b8;
+  backdrop-filter: blur(8px);
+  letter-spacing: 0.5px;
+}
+
+/* Card Body Content */
+.cardContent {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.tagsRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 7px;
+  flex-wrap: wrap;
+}
+
+.categoryTag {
+  font-size: 8.5px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Status Badges */
+.statusTagSubmitted {
+  font-size: 8.5px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.statusTagDraft {
+  font-size: 8.5px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.statusTagChangesRequested {
+  font-size: 8.5px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.statusTagApproved {
+  font-size: 8.5px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.cardTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+
+.cardDescription {
+  font-size: 10.5px;
+  color: #94a3b8;
+  line-height: 1.45;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Author Section */
+.authorSection {
+  margin-top: auto;
+  padding-top: 9px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.authorName {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.teamRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9.5px;
+  color: #64748b;
+  flex-wrap: wrap;
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Card Footer */
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 10px;
+  color: #64748b;
+}
+
+.footerActionsRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.attachmentBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: #64748b;
+  font-size: 10px;
+}
+
+.likeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  color: #94a3b8;
+  border: none;
+  cursor: pointer;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  transition: all var(--transition-fast);
+}
+
+.likeBtn:hover {
+  color: #ef4444;
+}
+
+.likeBtnActive {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #ef4444 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+}
+
+/* Empty State */
+.emptyState {
+  padding: 40px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+/* ==========================================================================
+   Light Mode Overrides
+   ========================================================================== */
+:global([data-theme="light"]) .pageTitle,
+:global(body.light-theme) .pageTitle {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .pageSubtitle,
+:global(body.light-theme) .pageSubtitle {
+  color: #475569 !important;
+}
+
+:global([data-theme="light"]) .searchInput,
+:global(body.light-theme) .searchInput {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+:global([data-theme="light"]) .searchInput :global(.ant-input),
+:global(body.light-theme) .searchInput :global(.ant-input) {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .searchInput :global(.ant-input::placeholder),
+:global(body.light-theme) .searchInput :global(.ant-input::placeholder) {
+  color: #94a3b8 !important;
+}
+
+:global([data-theme="light"]) .filterSelect :global(.ant-select-selector),
+:global(body.light-theme) .filterSelect :global(.ant-select-selector) {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .filterSelect :global(.ant-select-selection-item),
+:global(body.light-theme) .filterSelect :global(.ant-select-selection-item) {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .filterSelect :global(.ant-select-arrow),
+:global(body.light-theme) .filterSelect :global(.ant-select-arrow) {
+  color: #94a3b8 !important;
+}
+
+:global([data-theme="light"]) .ideaCard,
+:global(body.light-theme) .ideaCard {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+:global([data-theme="light"]) .thumbnailWrapper,
+:global(body.light-theme) .thumbnailWrapper {
+  background: #f8fafc !important;
+  border-bottom-color: #f1f5f9 !important;
+}
+
+:global([data-theme="light"]) .cardTitle,
+:global(body.light-theme) .cardTitle {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .cardDescription,
+:global(body.light-theme) .cardDescription {
+  color: #475569 !important;
+}
+
+:global([data-theme="light"]) .authorName,
+:global(body.light-theme) .authorName {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .teamRow,
+:global(body.light-theme) .teamRow {
+  color: #64748b !important;
+}
+
+:global([data-theme="light"]) .cardFooter,
+:global(body.light-theme) .cardFooter {
+  color: #64748b !important;
+}
+
+:global([data-theme="light"]) .categoryTag,
+:global(body.light-theme) .categoryTag {
+  background: #f1f5f9 !important;
+  color: #334155 !important;
+  border-color: #e2e8f0 !important;
+}
+
+:global([data-theme="light"]) .authorSection,
+:global(body.light-theme) .authorSection {
+  border-top-color: #f1f5f9 !important;
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 768px) {
+  .headerSection {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filterSelect {
+    width: 100%;
+  }
+
+  .pageTitle {
+    font-size: 21px;
+  }
+}
