@@ -3,10 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
-import { Input, App } from 'antd';
+import { Input } from 'antd';
 import heroBg from '@/assets/hero-CoiAJZs0.jpg';
 import inventxLogoWhite from '@/assets/inventx-logo-white.png';
 import { EMPLOYEE, ORGANISER } from '@/lib/data/role';
+import { notify } from '@/lib/utils/notification';
 import styles from './Login.module.css';
 
 export interface LoginProps {
@@ -16,7 +17,6 @@ export interface LoginProps {
 export const Login: React.FC<LoginProps> = ({ initialMode }) => {
   const router = useRouter();
   const pathname = usePathname();
-  const { message } = App.useApp();
 
   const [mode, setMode] = useState<'signin' | 'register'>(
     initialMode || (pathname === '/register' ? 'register' : 'signin')
@@ -50,11 +50,11 @@ export const Login: React.FC<LoginProps> = ({ initialMode }) => {
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) {
-      message.warning('Please enter your work email');
+      notify.warning('Please enter your work email');
       return;
     }
     if (!password.trim()) {
-      message.warning('Please enter your password');
+      notify.warning('Please enter your password');
       return;
     }
 
@@ -69,7 +69,7 @@ export const Login: React.FC<LoginProps> = ({ initialMode }) => {
       } catch {
         // ignore
       }
-      message.success(`Signed in as ${isOrganizer ? 'Organizer' : 'Employee'}`);
+      notify.success(`Signed in as ${isOrganizer ? 'Organizer' : 'Employee'}`);
       router.push(isOrganizer ? '/organizer/overview' : '/user-dashboard');
     }, 600);
   };
@@ -77,11 +77,11 @@ export const Login: React.FC<LoginProps> = ({ initialMode }) => {
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName.trim()) {
-      message.warning('Please enter your full name');
+      notify.warning('Please enter your full name');
       return;
     }
     if (!regEmail.trim()) {
-      message.warning('Please enter your work email');
+      notify.warning('Please enter your work email');
       return;
     }
 
@@ -90,20 +90,20 @@ export const Login: React.FC<LoginProps> = ({ initialMode }) => {
     const hasAllowedDomain = allowedDomains.some((d) => emailLower.endsWith(d));
 
     if (!hasAllowedDomain) {
-      message.error('Only @enggis.com, @nexsys.co.in, @stability.co emails can register.');
+      notify.error('Only @enggis.com, @nexsys.co.in, @stability.co emails can register.');
       return;
     }
 
     if (!regPassword) {
-      message.warning('Please enter a password');
+      notify.warning('Please enter a password');
       return;
     }
     if (regPassword.length < 8) {
-      message.warning('Password must be at least 8 characters');
+      notify.warning('Password must be at least 8 characters');
       return;
     }
     if (regPassword !== confirmPassword) {
-      message.error('Passwords do not match');
+      notify.error('Passwords do not match');
       return;
     }
 
@@ -115,7 +115,7 @@ export const Login: React.FC<LoginProps> = ({ initialMode }) => {
       } catch {
         // ignore
       }
-      message.success('Account created successfully! Welcome to invent/X.');
+      notify.success('Account created successfully! Welcome to invent/X.');
       router.push('/user-dashboard');
     }, 600);
   };

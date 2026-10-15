@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 import { ConfigProvider, App } from 'antd';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
+import { NotificationProvider } from '@/lib/utils/notification';
 import { darkThemeConfig, lightThemeConfig } from './themeConfig';
 
 type ThemeMode = 'dark' | 'light';
@@ -81,7 +82,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       <AntdRegistry>
         <ConfigProvider theme={currentAntdTheme}>
           <App>
-            {children}
+            <NotificationProvider>
+              {children}
+            </NotificationProvider>
           </App>
         </ConfigProvider>
       </AntdRegistry>
