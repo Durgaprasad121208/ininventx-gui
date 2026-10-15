@@ -1,9 +1,11 @@
-import { DashboardData } from '../types/dashboard.types';
+import { GetAPIRequest } from '@/api-client/apiClient';
+import { DASHBOARD_ENDPOINT } from '@/constants/endpoints';
+import { DashboardData, BackendDashboardResponse } from '../types/dashboard.types';
 
 export const initialDashboardData: DashboardData = {
   hero: {
     hackathonBadge: 'THE ENGGIS GROUP INNOVATION HACKATHON',
-    userName: 'Priya',
+    userName: 'User',
     tagline: 'Bring your ideas. Build their impact.',
     subdescription: 'Turning engineering ideas into real-world, impactful solutions.',
     nextMilestone: {
@@ -14,16 +16,17 @@ export const initialDashboardData: DashboardData = {
   },
   stats: {
     myIdeasCount: 0,
+    myActiveIdeas: 0,
     myIdeasLimit: 5,
     likesReceived: 0,
-    ideasAcrossGroup: 10,
-    participants: 14,
+    ideasAcrossGroup: 0,
+    participants: 0,
   },
   stages: [
-    { id: 's1', stageName: 'S1 Idea Submission', count: 4, maxCount: 10 },
-    { id: 's2', stageName: 'S2 Screening', count: 4, maxCount: 10 },
-    { id: 's3', stageName: 'S3 Presentation', count: 1, maxCount: 10 },
-    { id: 's4', stageName: 'S4 Demo', count: 1, maxCount: 10 },
+    { id: 's1', stageName: 'S1 Idea Submission', count: 0, maxCount: 1 },
+    { id: 's2', stageName: 'S2 Screening', count: 0, maxCount: 1 },
+    { id: 's3', stageName: 'S3 Presentation', count: 0, maxCount: 1 },
+    { id: 's4', stageName: 'S4 Demo', count: 0, maxCount: 1 },
   ],
   deadlines: [
     {
@@ -122,13 +125,12 @@ export const initialDashboardData: DashboardData = {
 };
 
 /**
- * Simulates fetching dashboard data from an API endpoint with async promise.
+ * Fetch dashboard metrics from Spring Boot backend (GET /api/dashboard).
  */
-export const getDashboardData = async (): Promise<DashboardData> => {
-  return new Promise((resolve) => {
-    // Quick micro-delay to simulate API fetch
-    setTimeout(() => {
-      resolve(initialDashboardData);
-    }, 120);
+export const getDashboardData = async (): Promise<BackendDashboardResponse> => {
+  const response = await GetAPIRequest({
+    url: DASHBOARD_ENDPOINT,
   });
+  return response as BackendDashboardResponse;
 };
+

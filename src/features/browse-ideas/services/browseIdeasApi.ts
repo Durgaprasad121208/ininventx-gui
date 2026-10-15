@@ -1,118 +1,78 @@
-import { IdeaItem } from '../types/browseIdeas.types';
+import { GetAPIRequest } from '@/api-client/apiClient';
+import { IDEAS_ENDPOINT } from '@/constants/endpoints';
+import { BackendIdeasPageResponse, GetIdeasParams } from '../types/browseIdeas.types';
 
-export const initialBrowseIdeas: IdeaItem[] = [
-  {
-    id: 'idea-1',
-    title: 'Remote Support Subscription Bundle',
-    description:
-      'Packages secure remote OT support, scheduled monthly health-checks, and priority breakdown response into a predictable subscription model for clients.',
-    stage: 'S1 Idea Submission',
-    stageBadge: 'DEMO',
-    category: 'Customer & Business',
-    status: 'Submitted',
-    author: 'Aarav Mehta (Demo)',
-    company: 'MANTIX',
-    team: 'OptiOps',
-    teamDotColor: '#38bdf8',
-    date: '14 Oct 2026',
-    likes: 3,
-    hasLiked: false,
-    thumbnailType: 'handshake',
-  },
-  {
-    id: 'idea-2',
-    title: 'Proposal Drafting Accelerator',
-    description:
-      'Draft idea: reuse approved past proposal sections to assemble first drafts for new customer tenders and RFPs with automated clause verification.',
-    stage: 'S1 Idea Submission',
-    stageBadge: 'DEMO',
-    category: 'AI & Data Analytics',
-    status: 'Draft',
-    author: 'Vikram Sen (Demo)',
-    company: 'Nexsys',
-    team: 'Process Flow',
-    teamDotColor: '#10b981',
-    date: '14 Oct 2026',
-    likes: 0,
-    hasLiked: false,
-    thumbnailType: 'robotics',
-  },
-  {
-    id: 'idea-3',
-    title: 'Commissioning Checklist Copilot',
-    description:
-      'Generates loop-check and FAT checklists from I/O lists and P&ID diagrams to expedite brownfield commissioning by over 40%.',
-    stage: 'S1 Idea Submission',
-    stageBadge: 'DEMO',
-    category: 'AI & Data Analytics',
-    status: 'Submitted',
-    author: 'Neha Patel (Demo)',
-    company: 'MANTIX',
-    team: 'Automation Lab',
-    teamDotColor: '#38bdf8',
-    date: '13 Oct 2026',
-    likes: 2,
-    hasLiked: false,
-    thumbnailType: 'robotics',
-  },
-  {
-    id: 'idea-4',
-    title: 'Unified Group Skills Marketplace',
-    description:
-      'An internal marketplace where engineers from all three companies publish skills and request peer reviews on complex multi-disciplinary architectures.',
-    stage: 'S1 Idea Submission',
-    stageBadge: 'DEMO',
-    category: 'Product & Process',
-    status: 'Submitted',
-    author: 'Meera Pillai (Demo)',
-    company: 'Stability',
-    team: 'OneTeam',
-    teamDotColor: '#f59e0b',
-    date: '13 Oct 2026',
-    likes: 1,
-    hasLiked: false,
-    thumbnailType: 'handshake',
-  },
-  {
-    id: 'idea-5',
-    title: 'Automated Test Harness for PLC Logic',
-    description:
-      'Runs simulated I/O scenarios against exported PLC logic in a sandbox to catch edge conditions, race states, and interlock faults before site testing.',
-    stage: 'S2 Screening',
-    stageBadge: 'DEMO',
-    category: 'Modelling & Simulation',
-    status: 'Changes requested',
-    author: 'Kabir Rao (Demo)',
-    company: 'MANTIX',
-    team: 'Ladder Labs',
-    teamDotColor: '#38bdf8',
-    date: '12 Oct 2026',
-    likes: 2,
-    hasLiked: false,
-    thumbnailType: 'factory',
-  },
-  {
-    id: 'idea-6',
-    title: 'Energy Insights Portal for Customers',
-    description:
-      'A customer-facing portal that turns energy meter and process data into benchmarked emissions reduction targets and actionable optimization alerts.',
-    stage: 'S3 Presentation',
-    stageBadge: 'DEMO',
-    category: 'Energy & Sustainability',
-    status: 'Approved',
-    author: 'Sara Thomas (Demo)',
-    company: 'Stability',
-    team: 'WattWise',
-    teamDotColor: '#f59e0b',
-    date: '12 Oct 2026',
-    likes: 6,
-    hasLiked: true,
-    attachments: 1,
-    thumbnailType: 'leaf',
-  },
-];
+/**
+ * Fetch paginated ideas from Spring Boot backend (GET /api/ideas).
+ * Supports sort, page, size, and filters.
+ */
+export const getBrowseIdeas = async (
+  params?: GetIdeasParams
+): Promise<BackendIdeasPageResponse> => {
+  const query = new URLSearchParams();
 
-export const getBrowseIdeas = async (): Promise<IdeaItem[]> => {
-  // Simulate rapid API response
-  return Promise.resolve(initialBrowseIdeas);
+  query.set('sort', params?.sort || 'newest');
+  query.set('page', String(params?.page ?? 0));
+  query.set('size', String(params?.size ?? 20));
+
+  if (params?.category && params.category !== 'all') {
+    query.set('category', params.category);
+  }
+  if (params?.stage && params.stage !== 'all') {
+    query.set('stage', params.stage);
+  }
+  if (params?.search && params.search.trim()) {
+    query.set('search', params.search.trim());
+  }
+
+  const queryString = query.toString();
+  const url = queryString ? `${IDEAS_ENDPOINT}?${queryString}` : IDEAS_ENDPOINT;
+
+  try {
+    const res = await GetAPIRequest({ url });
+
+    if (res && typeof res === 'object') {
+      // If backend returns array directly
+      if (Array.isArray(res)) {
+        return {
+          content: res,
+          page: 0,
+          size: res.length,
+          totalElements: res.length,
+          totalPages: 1,
+        };
+      }
+      // If backend returns standard Spring Data Page (res.content)
+      if (Array.isArray((res as any).content)) {
+        return res as BackendIdeasPageResponse;
+      }
+      // If wrapped in res.data
+      if (Array.isArray((res as any).data)) {
+        return {
+          content: (res as any).data,
+          page: (res as any).page ?? 0,
+          size: (res as any).size ?? 20,
+          totalElements: (res as any).totalElements ?? (res as any).data.length,
+          totalPages: (res as any).totalPages ?? 1,
+        };
+      }
+    }
+
+    return {
+      content: [],
+      page: 0,
+      size: 20,
+      totalElements: 0,
+      totalPages: 0,
+    };
+  } catch (err) {
+    console.error('[browseIdeasApi] Failed to fetch ideas:', err);
+    return {
+      content: [],
+      page: 0,
+      size: 20,
+      totalElements: 0,
+      totalPages: 0,
+    };
+  }
 };

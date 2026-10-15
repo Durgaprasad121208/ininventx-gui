@@ -14,7 +14,7 @@
 .heroBanner {
   position: relative;
   background: radial-gradient(circle at 85% 25%, rgba(6, 182, 212, 0.14) 0%, transparent 55%),
-              linear-gradient(135deg, #02122b 0%, #050d1e 100%);
+    linear-gradient(135deg, #02122b 0%, #050d1e 100%);
   border: 1px solid rgba(56, 189, 248, 0.2);
   border-radius: 12px;
   padding: 28px 32px;
@@ -32,7 +32,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     linear-gradient(rgba(56, 189, 248, 0.04) 1px, transparent 1px),
     linear-gradient(90deg, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
   background-size: 26px 26px;
@@ -656,7 +656,7 @@
 :global([data-theme="light"]) .heroBanner,
 :global(body.light-theme) .heroBanner {
   background: radial-gradient(circle at 85% 25%, rgba(6, 182, 212, 0.08) 0%, transparent 60%),
-              linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
+    linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
   border-color: #bae6fd !important;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
 }

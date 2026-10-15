@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Row, Col, Card } from 'antd';
+import { Row, Col, Card, Spin } from 'antd';
 import {
     PlusCircle,
     ArrowRight,
@@ -13,10 +13,13 @@ import {
     Clock,
     Pin,
     Paperclip,
+    RefreshCw,
 } from 'lucide-react';
 import { SubmitButton, DarkButton } from '@/components/ui/app-button/AppButton';
-import { getDashboardData } from '../services/dashboardApi';
-import type { DashboardData } from '../types/dashboard.types';
+import { useSelector } from 'react-redux';
+import { type RootState } from '@/redux/store';
+import { getDashboardData, initialDashboardData } from '../services/dashboardApi';
+import type { BackendDashboardResponse } from '../types/dashboard.types';
 import styles from './Dashboard.module.css';
 
 // SVG Tech graphics for idea thumbnails
@@ -127,28 +130,67 @@ const MarketplaceThumbnail = () => (
 );
 
 export const Dashboard: React.FC = () => {
-    const [data, setData] = useState<DashboardData | null>(null);
+    const authState = useSelector((state: RootState) => state?.auth);
+    const reduxUser = authState?.user || ((authState as any)?.id ? (authState as any) : null);
+
+    const [isMounted, setIsMounted] = useState<boolean>(false);
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    const [localUser, setLocalUser] = useState<any>(null);
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            try {
+                const stored = localStorage.getItem('inventx_user');
+                if (stored) {
+                    setLocalUser(JSON.parse(stored));
+                }
+            } catch {
+                // ignore
+            }
+        }
+    }, []);
+
+    const activeUser =
+        reduxUser?.name || reduxUser?.email ? reduxUser : localUser;
+
+    const [metrics, setMetrics] = useState<BackendDashboardResponse | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
     const [likesMap, setLikesMap] = useState<Record<string, number>>({});
     const [hasLikedMap, setHasLikedMap] = useState<Record<string, boolean>>({});
 
-    useEffect(() => {
-        getDashboardData().then((res) => {
-            setData(res);
-            const initialLikes: Record<string, number> = {};
-            res.recentIdeas.forEach((idea) => {
-                initialLikes[idea.id] = idea.likes;
+    const fetchDashboardMetrics = () => {
+        setLoading(true);
+        getDashboardData()
+            .then((res: BackendDashboardResponse) => {
+                if (res && typeof res === 'object') {
+                    setMetrics(res);
+                }
+            })
+            .catch((err) => {
+                console.error('[Dashboard Error]:', err);
+            })
+            .finally(() => {
+                setLoading(false);
             });
-            setLikesMap(initialLikes);
+    };
+
+    useEffect(() => {
+        // Initialize likes map from ideas
+        const initialLikes: Record<string, number> = {};
+        initialDashboardData.recentIdeas.forEach((idea) => {
+            initialLikes[idea.id] = idea.likes;
         });
+        setLikesMap(initialLikes);
+
+        // Fetch live dashboard metrics directly
+        fetchDashboardMetrics();
     }, []);
 
-    if (!data) {
-        return (
-            <div style={{ padding: '60px', textAlign: 'center', color: '#94a3b8' }}>
-                Loading innovation dashboard...
-            </div>
-        );
-    }
+    const userName = isMounted
+        ? (activeUser?.name || 'User')
+        : 'User';
 
     const handleLike = (ideaId: string) => {
         const isLiked = hasLikedMap[ideaId];
@@ -171,37 +213,78 @@ export const Dashboard: React.FC = () => {
         }
     };
 
+    const totalIdeas = metrics?.totalIdeas ?? 0;
+    const maxStageScale = Math.max(totalIdeas, 1);
+
+    const stages = [
+        {
+            id: 's1',
+            stageName: 'S1 Idea Submission',
+            count: metrics?.byStage?.IDEA_SUBMISSION ?? 0,
+            maxCount: maxStageScale,
+        },
+        {
+            id: 's2',
+            stageName: 'S2 Screening',
+            count: metrics?.byStage?.SCREENING ?? 0,
+            maxCount: maxStageScale,
+        },
+        {
+            id: 's3',
+            stageName: 'S3 Presentation',
+            count: metrics?.byStage?.PRESENTATION ?? 0,
+            maxCount: maxStageScale,
+        },
+        {
+            id: 's4',
+            stageName: 'S4 Demo',
+            count: metrics?.byStage?.DEMO ?? 0,
+            maxCount: maxStageScale,
+        },
+    ];
+
     return (
-        <div className={styles.dashboardContainer}>
-            {/* 1. Hero Banner */}
-            <div className={styles.heroBanner}>
-                <div className={styles.heroLeft}>
-                    <div className={styles.heroBadge}>{data.hero.hackathonBadge}</div>
-                    <h1 className={styles.heroTitle}>Welcome back, {data.hero.userName}</h1>
-                    <div className={styles.heroTagline}>{data.hero.tagline}</div>
-                    <div className={styles.heroDescription}>{data.hero.subdescription}</div>
+        <Spin spinning={loading} size="large" classNames={{ root: styles.spinWrapper }}>
+            <div className={styles.dashboardContainer}>
+                {/* 1. Hero Banner */}
+                <div className={styles.heroBanner}>
+                    <div className={styles.heroLeft}>
+                        <div className={styles.heroBadge}>{initialDashboardData.hero.hackathonBadge}</div>
+                        <h1 className={styles.heroTitle} suppressHydrationWarning>
+                            Welcome back, {userName}
+                        </h1>
+                        <div className={styles.heroTagline}>{initialDashboardData.hero.tagline}</div>
+                        <div className={styles.heroDescription}>{initialDashboardData.hero.subdescription}</div>
 
-                    <div className={styles.heroActions}>
-                        <Link href="/submit-idea" style={{ textDecoration: 'none' }}>
-                            <SubmitButton icon={<PlusCircle size={15} strokeWidth={2.2} />}>
-                                Submit an idea
-                            </SubmitButton>
-                        </Link>
+                        <div className={styles.heroActions}>
+                            <Link href="/submit-idea" style={{ textDecoration: 'none' }}>
+                                <SubmitButton icon={<PlusCircle size={15} strokeWidth={2.2} />}>
+                                    Submit an idea
+                                </SubmitButton>
+                            </Link>
 
-                        <Link href="/browse-ideas" style={{ textDecoration: 'none' }}>
-                            <DarkButton icon={<ArrowRight size={14} />}>
-                                Browse ideas
+                            <Link href="/browse-ideas" style={{ textDecoration: 'none' }}>
+                                <DarkButton icon={<ArrowRight size={14} />}>
+                                    Browse ideas
+                                </DarkButton>
+                            </Link>
+
+                            <DarkButton
+                                icon={<RefreshCw size={14} className={loading ? styles.spinningIcon : ''} />}
+                                onClick={fetchDashboardMetrics}
+                                disabled={loading}
+                            >
+                                {loading ? 'Refreshing...' : 'Refresh'}
                             </DarkButton>
-                        </Link>
+                        </div>
                     </div>
-                </div>
 
                 {/* Next Milestone Card inside Hero */}
                 <div className={styles.milestoneCard}>
                     <div className={styles.milestoneHeader}>NEXT MILESTONE</div>
-                    <div className={styles.milestoneTitle}>{data.hero.nextMilestone.title}</div>
+                    <div className={styles.milestoneTitle}>{initialDashboardData.hero.nextMilestone.title}</div>
                     <div className={styles.milestoneDate}>
-                        {data.hero.nextMilestone.date} · {data.hero.nextMilestone.countdown}
+                        {initialDashboardData.hero.nextMilestone.date} · {initialDashboardData.hero.nextMilestone.countdown}
                     </div>
                 </div>
             </div>
@@ -218,10 +301,10 @@ export const Dashboard: React.FC = () => {
                         </div>
                         <div>
                             <div className={styles.statValue}>
-                                {data.stats.myIdeasCount}/{data.stats.myIdeasLimit}
+                                {metrics ? `${metrics.myIdeas}/5` : '0/5'}
                             </div>
                             <div className={styles.statSubtitle}>
-                                {data.stats.myIdeasLimit - data.stats.myIdeasCount} submissions left
+                                {metrics ? `${Math.max(5 - metrics.myIdeas, 0)} submissions left` : '5 submissions left'}
                             </div>
                         </div>
                     </Card>
@@ -235,7 +318,7 @@ export const Dashboard: React.FC = () => {
                                 <Heart size={18} strokeWidth={2} />
                             </div>
                         </div>
-                        <div className={styles.statValue}>{data.stats.likesReceived}</div>
+                        <div className={styles.statValue}>{metrics?.likesReceived ?? 0}</div>
                     </Card>
                 </Col>
 
@@ -247,19 +330,19 @@ export const Dashboard: React.FC = () => {
                                 <Megaphone size={18} strokeWidth={2} />
                             </div>
                         </div>
-                        <div className={styles.statValue}>{data.stats.ideasAcrossGroup}</div>
+                        <div className={styles.statValue}>{metrics?.totalIdeas ?? 0}</div>
                     </Card>
                 </Col>
 
                 <Col xs={24} sm={12} lg={6}>
                     <Card className={styles.statCard} variant="borderless">
                         <div className={styles.statCardHeader}>
-                            <span className={styles.statLabel}>PARTICIPANTS</span>
+                            <span className={styles.statLabel}>ACTIVE IDEAS</span>
                             <div className={styles.statIconBox}>
                                 <Users size={18} strokeWidth={2} />
                             </div>
                         </div>
-                        <div className={styles.statValue}>{data.stats.participants}</div>
+                        <div className={styles.statValue}>{metrics?.myActiveIdeas ?? 0}</div>
                     </Card>
                 </Col>
             </Row>
@@ -273,8 +356,8 @@ export const Dashboard: React.FC = () => {
                         </div>
 
                         <div className={styles.stagesList}>
-                            {data.stages.map((stage) => {
-                                const percent = Math.round((stage.count / stage.maxCount) * 100);
+                            {stages.map((stage) => {
+                                const percent = stage.maxCount > 0 ? Math.round((stage.count / stage.maxCount) * 100) : 0;
                                 return (
                                     <div key={stage.id} className={styles.stageRow}>
                                         <div className={styles.stageMeta}>
@@ -301,7 +384,7 @@ export const Dashboard: React.FC = () => {
                         </div>
 
                         <div className={styles.timelineList}>
-                            {data.deadlines.map((milestone) => (
+                            {initialDashboardData.deadlines.map((milestone) => (
                                 <div key={milestone.id} className={styles.timelineItem}>
                                     <div className={styles.timelineIndicator}>
                                         {milestone.isCurrent ? (
@@ -340,7 +423,7 @@ export const Dashboard: React.FC = () => {
                     </div>
 
                     <div className={styles.ideasGrid}>
-                        {data.recentIdeas.map((idea) => {
+                        {initialDashboardData.recentIdeas.map((idea) => {
                             const isLiked = hasLikedMap[idea.id];
                             const likesCount = likesMap[idea.id] ?? idea.likes;
 
@@ -420,7 +503,7 @@ export const Dashboard: React.FC = () => {
                     </div>
 
                     <div className={styles.announcementsList}>
-                        {data.announcements.map((ann) => (
+                        {initialDashboardData.announcements.map((ann) => (
                             <div key={ann.id} className={styles.announcementCard}>
                                 <div className={styles.announcementHeader}>
                                     <Pin size={14} className={styles.pinIcon} />
@@ -438,6 +521,7 @@ export const Dashboard: React.FC = () => {
                 </Col>
             </Row>
         </div>
+        </Spin>
     );
 };
 

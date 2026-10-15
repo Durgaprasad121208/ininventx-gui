@@ -1,5 +1,21 @@
+export interface BackendDashboardResponse {
+  myIdeas: number;
+  myActiveIdeas: number;
+  likesReceived: number;
+  totalIdeas: number;
+  byStage: {
+    IDEA_SUBMISSION: number;
+    SCREENING: number;
+    PRESENTATION: number;
+    DEMO: number;
+    [key: string]: number;
+  };
+  byCategory: Record<string, number>;
+}
+
 export interface UserStats {
   myIdeasCount: number;
+  myActiveIdeas?: number;
   myIdeasLimit: number;
   likesReceived: number;
   ideasAcrossGroup: number;
@@ -65,4 +81,6 @@ export interface DashboardData {
   deadlines: DeadlineMilestone[];
   recentIdeas: RecentIdea[];
   announcements: AnnouncementItem[];
+  byCategory?: Record<string, number>;
+  rawBackendData?: BackendDashboardResponse;
 }
