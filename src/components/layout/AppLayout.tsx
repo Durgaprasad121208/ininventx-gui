@@ -51,7 +51,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       : effectivePath.startsWith('/organizer/manage-ideas/')
       ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Organizer', href: '/organizer/overview' }, { label: 'Manage ideas', href: '/organizer/manage-ideas' }, { label: 'Idea details' }]
       : effectivePath === '/organizer/manage-ideas'
-      ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Organizer' }, { label: 'Manage ideas' }]
+      ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Organizer', href: '/organizer/overview' }, { label: 'Manage ideas' }]
+      : effectivePath === '/organizer/guidelines'
+      ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Organizer', href: '/organizer/overview' }, { label: 'Guidelines' }]
+      : effectivePath === '/organizer/announcements'
+      ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Organizer', href: '/organizer/overview' }, { label: 'Announcements' }]
       : effectivePath === '/idea-info' || effectivePath.startsWith('/idea-info')
       ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Idea details' }]
       : effectivePath.startsWith('/organizer')

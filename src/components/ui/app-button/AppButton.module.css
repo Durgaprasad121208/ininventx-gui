@@ -82,20 +82,36 @@
 
 /* 2. Cancel Button (Secondary / Cancel Action) */
 .cancelBtn {
-  border: 1px solid var(--color-border, #1e293b);
-  background-color: transparent;
-  color: var(--color-text-secondary, #94a3b8);
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  color: #f8fafc !important;
+  font-weight: 500;
 }
 
 .cancelBtn:hover:not(:disabled) {
-  border-color: #29c9d1;
-  color: #29c9d1;
-  background-color: rgba(41, 201, 209, 0.1);
+  border-color: rgba(255, 255, 255, 0.32) !important;
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.12) !important;
 }
 
 .cancelBtn:active:not(:disabled) {
-  border-color: #20b8c0;
-  color: #20b8c0;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  color: #ffffff !important;
+}
+
+/* Light mode adaptation for cancelBtn */
+:global(body.light-theme) .cancelBtn,
+:global([data-theme='light']) .cancelBtn {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #334155 !important;
+}
+
+:global(body.light-theme) .cancelBtn:hover:not(:disabled),
+:global([data-theme='light']) .cancelBtn:hover:not(:disabled) {
+  background-color: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+  color: #0f172a !important;
 }
 
 /* 3. Dark Button (Neutral Action e.g., Scan QR, Work Order, Browse) */

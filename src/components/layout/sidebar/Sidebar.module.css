@@ -51,11 +51,20 @@
 .logoIconWrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
+  justify-content: flex-start;
+  width: 32px;
+  height: 32px;
   flex-shrink: 0;
   position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.logoImgWrapper {
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .brandTextWrapper {

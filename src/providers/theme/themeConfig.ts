@@ -68,7 +68,8 @@ export const darkThemeConfig: ThemeConfig = {
     },
     Button: {
       colorPrimary: '#29c9d1',
-      colorText: '#050812',
+      colorText: '#ffffff',
+      colorTextLightSolid: '#050812',
       controlHeight: 32,
       fontSize: 12,
     },

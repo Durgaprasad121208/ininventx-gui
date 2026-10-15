@@ -10,6 +10,8 @@ import {
   type MenuSection,
 } from '@/lib/data/menuConfig';
 import { EMPLOYEE, type Role } from '@/lib/data/role';
+import Image from 'next/image';
+import inventxLogoWhite from '@/assets/inventx-logo-white.png';
 import styles from './Sidebar.module.css';
 
 const { Sider } = Layout;
@@ -55,68 +57,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
   // Shared inner content: Brand header + Menu items + Footer
   const renderSidebarContent = () => (
     <>
-      {/* Brand Header & Logo */}
+      {/* Brand Header & Logo using inventx-logo-white.png */}
       <Link
         href="/user-dashboard"
         className={styles.brandHeader}
         onClick={handleItemClick}
       >
-        <div className={styles.logoIconWrapper}>
-          <svg
-            width="32"
-            height="34"
-            viewBox="0 0 32 36"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            {/* Lightbulb outline */}
-            <path
-              d="M16 2C9.925 2 5 6.925 5 13C5 17.15 7.3 20.76 10.65 22.58C11.15 22.85 11.5 23.38 11.5 23.95V26.5C11.5 27.33 12.17 28 13 28H19C19.83 28 20.5 27.33 20.5 26.5V23.95C20.5 23.38 20.85 22.85 21.35 22.58C24.7 20.76 27 17.15 27 13C27 6.925 22.075 2 16 2Z"
-              stroke="#06b6d4"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+        {collapsed && !isDrawer ? (
+          <div className={styles.logoIconWrapper}>
+            <Image
+              src={inventxLogoWhite}
+              alt="invent/X"
+              style={{ width: 'auto', height: '32px', objectFit: 'cover', objectPosition: 'left' }}
+              priority
             />
-            {/* Bulb base */}
-            <path
-              d="M12.5 31H19.5M14 34H18"
-              stroke="#38bdf8"
-              strokeWidth="2"
-              strokeLinecap="round"
+          </div>
+        ) : (
+          <div className={styles.logoImgWrapper}>
+            <Image
+              src={inventxLogoWhite}
+              alt="invent/X"
+              style={{ width: 'auto', height: '36px', objectFit: 'contain' }}
+              priority
             />
-            {/* Inner <x> code symbol */}
-            <path
-              d="M11 11.5L9.5 13L11 14.5"
-              stroke="#f59e0b"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M21 11.5L22.5 13L21 14.5"
-              stroke="#f59e0b"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M14 11.5L18 14.5M18 11.5L14 14.5"
-              stroke="#38bdf8"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-            />
-          </svg>
-        </div>
-
-        {(!collapsed || isDrawer) && (
-          <div className={styles.brandTextWrapper}>
-            <div className={styles.brandName}>
-              <span className={styles.brandBracket}>&lt;</span>
-              <span>invent</span>
-              <span className={styles.brandHighlight}>/X</span>
-              <span className={styles.brandBracket}>&gt;</span>
-            </div>
-            <div className={styles.brandTagline}>// where ideas switch on</div>
           </div>
         )}
       </Link>

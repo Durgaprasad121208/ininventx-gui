@@ -110,13 +110,13 @@ export const inventxMenuSections: MenuSection[] = [
         roles: [EMPLOYEE, ORGANISER],
       },
       {
-        key: '/guidelines',
+        key: '/organizer/guidelines',
         label: 'Guidelines',
         icon: React.createElement(FileText, { size: ICON_SIZE, strokeWidth: 1.8 }),
         roles: [EMPLOYEE, ORGANISER],
       },
       {
-        key: '/announcements',
+        key: '/organizer/announcements',
         label: 'Announcements',
         icon: React.createElement(Megaphone, { size: ICON_SIZE, strokeWidth: 1.8 }),
         roles: [EMPLOYEE, ORGANISER],
