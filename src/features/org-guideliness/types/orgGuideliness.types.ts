@@ -12,10 +12,13 @@ export interface OrgGuidelineItem {
 
 export interface GuidelineInputDto {
   title: string;
-  description: string;
+  content: string;
+  published: boolean;
+  description?: string;
+  isPublished?: boolean;
   version?: string;
   publishDate?: string;
-  isPublished?: boolean;
+  sequenceOrder?: number;
 }
 
 export interface GuidelineFormData {

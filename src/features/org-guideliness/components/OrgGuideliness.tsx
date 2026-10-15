@@ -10,7 +10,6 @@ import {
   Upload as UploadIcon,
   X,
   File,
-  Calendar,
 } from 'lucide-react';
 import { useTheme } from '@/providers/theme/ThemeProvider';
 import { SubmitButton, CancelButton } from '@/components/ui/app-button/AppButton';
@@ -39,9 +38,7 @@ export const OrgGuideliness: React.FC = () => {
 
   // Form State
   const [formTitle, setFormTitle] = useState('');
-  const [formDescription, setFormDescription] = useState('');
-  const [formVersion, setFormVersion] = useState('1.0');
-  const [formDate, setFormDate] = useState('14-10-2026');
+  const [formContent, setFormContent] = useState('');
   const [formPublished, setFormPublished] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [formFile, setFormFile] = useState<{ name: string; size: string } | null>(null);
@@ -69,13 +66,7 @@ export const OrgGuideliness: React.FC = () => {
   const handleOpenNew = () => {
     setEditingItem(null);
     setFormTitle('');
-    setFormDescription('');
-    setFormVersion('1.0');
-    setFormDate(
-      new Date()
-        .toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
-        .replace(/\//g, '-')
-    );
+    setFormContent('');
     setFormPublished(false);
     setSelectedFile(null);
     setFormFile(null);
@@ -86,9 +77,7 @@ export const OrgGuideliness: React.FC = () => {
   const handleEdit = (item: OrgGuidelineItem) => {
     setEditingItem(item);
     setFormTitle(item.title);
-    setFormDescription(item.description);
-    setFormVersion(item.version.replace(/[^\d.]/g, '') || '1.0');
-    setFormDate(item.publishDate);
+    setFormContent(item.description || (item as any).content || '');
     setFormPublished(item.isPublished);
     setSelectedFile(null);
     setFormFile(item.fileName ? { name: item.fileName, size: item.fileSize || 'Attached' } : null);
@@ -152,10 +141,8 @@ export const OrgGuideliness: React.FC = () => {
 
     const inputData: GuidelineInputDto = {
       title: formTitle.trim(),
-      description: formDescription.trim(),
-      version: formVersion.startsWith('v') ? formVersion : `v${formVersion}`,
-      publishDate: formDate,
-      isPublished: formPublished,
+      content: formContent.trim(),
+      published: formPublished,
     };
 
     setSaving(true);
@@ -350,43 +337,17 @@ export const OrgGuideliness: React.FC = () => {
             />
           </div>
 
-          {/* Description */}
+          {/* Content */}
           <div className={styles.formField}>
-            <label className={styles.formLabel}>Description</label>
+            <label className={styles.formLabel}>Content</label>
             <TextArea
-              rows={3}
-              value={formDescription}
-              onChange={(e) => setFormDescription(e.target.value)}
-              placeholder="Brief description of the guideline..."
+              rows={4}
+              value={formContent}
+              onChange={(e) => setFormContent(e.target.value)}
+              placeholder="Guideline content..."
               className={styles.formTextarea}
               disabled={saving}
             />
-          </div>
-
-          {/* Version & Date */}
-          <div className={styles.formRowTwo}>
-            <div className={styles.formField}>
-              <label className={styles.formLabel}>Version</label>
-              <Input
-                value={formVersion}
-                onChange={(e) => setFormVersion(e.target.value)}
-                placeholder="1.0"
-                className={styles.formInput}
-                disabled={saving}
-              />
-            </div>
-
-            <div className={styles.formField}>
-              <label className={styles.formLabel}>Publish date</label>
-              <Input
-                value={formDate}
-                onChange={(e) => setFormDate(e.target.value)}
-                placeholder="14-10-2026"
-                suffix={<Calendar size={15} style={{ color: '#64748b' }} />}
-                className={styles.formInput}
-                disabled={saving}
-              />
-            </div>
           </div>
 
           {/* Published Toggle */}

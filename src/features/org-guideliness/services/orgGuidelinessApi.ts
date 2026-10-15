@@ -23,7 +23,7 @@ export const normalizeGuideline = (item: any): OrgGuidelineItem => {
   return {
     id: String(item.id || item.guidelineId || `guide-${Date.now()}`),
     title: item.title || '',
-    description: item.description || '',
+    description: item.content || item.description || '',
     version: item.version
       ? String(item.version).startsWith('v')
         ? item.version
@@ -35,7 +35,7 @@ export const normalizeGuideline = (item: any): OrgGuidelineItem => {
       item.fileName || item.filename || item.file?.name || item.attachmentName || undefined,
     fileSize: sizeVal,
     fileUrl: item.fileUrl || item.url || item.downloadUrl || undefined,
-    isPublished: item.isPublished ?? item.published ?? false,
+    isPublished: item.published ?? item.isPublished ?? false,
   };
 };
 
@@ -72,8 +72,13 @@ export const createGuidelineWithFile = async (
 ): Promise<OrgGuidelineItem> => {
   const formData = new FormData();
 
-  // Spring Boot @RequestPart("input") expects JSON part
-  const inputBlob = new Blob([JSON.stringify(input)], {
+  const inputPayload = {
+    title: input.title,
+    content: input.content || input.description || '',
+    published: input.published ?? input.isPublished ?? true,
+  };
+
+  const inputBlob = new Blob([JSON.stringify(inputPayload)], {
     type: 'application/json',
   });
   formData.append('input', inputBlob);
@@ -98,9 +103,15 @@ export const updateOrgGuideline = async (
   input: GuidelineInputDto,
   file?: File | null
 ): Promise<OrgGuidelineItem> => {
+  const inputPayload = {
+    title: input.title,
+    content: input.content || input.description || '',
+    published: input.published ?? input.isPublished ?? true,
+  };
+
   if (file) {
     const formData = new FormData();
-    const inputBlob = new Blob([JSON.stringify(input)], {
+    const inputBlob = new Blob([JSON.stringify(inputPayload)], {
       type: 'application/json',
     });
     formData.append('input', inputBlob);
@@ -123,7 +134,7 @@ export const updateOrgGuideline = async (
 
   const res = await PutAPIRequest({
     url: `${ORGANIZER_GUIDELINES_ENDPOINT}/${id}`,
-    data: input,
+    data: inputPayload,
   });
 
   return normalizeGuideline(res);
