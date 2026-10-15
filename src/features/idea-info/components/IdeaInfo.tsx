@@ -546,7 +546,7 @@ export const IdeaInfo: React.FC<IdeaInfoProps> = ({ ideaId }) => {
     return (
       <div className={styles.loadingContainer}>
         <Spin size="large" />
-        <span style={{ color: '#94a3b8', fontSize: 13, marginTop: 12 }}>
+        <span className={styles.loadingText}>
           Loading idea details...
         </span>
       </div>

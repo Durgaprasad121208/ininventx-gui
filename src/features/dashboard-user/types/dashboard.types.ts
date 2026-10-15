@@ -1,16 +1,47 @@
+export interface BackendRecentIdea {
+  id: string;
+  title: string;
+  summary?: string;
+  category?: string;
+  stage?: string;
+  status?: string;
+  likeCount?: number;
+  createdAt?: string;
+  author?: string;
+  authorName?: string;
+  company?: string;
+  team?: string;
+  attachments?: number;
+  attachmentsCount?: number;
+  imageThumbnail?: string;
+  stageBadge?: string;
+}
+
+export interface BackendAnnouncement {
+  id: string;
+  title: string;
+  content?: string;
+  publishedAt?: string;
+  pinned?: boolean;
+  type?: 'critical' | 'important' | 'info';
+  date?: string;
+}
+
 export interface BackendDashboardResponse {
   myIdeas: number;
   myActiveIdeas: number;
   likesReceived: number;
   totalIdeas: number;
   byStage: {
-    IDEA_SUBMISSION: number;
-    SCREENING: number;
-    PRESENTATION: number;
-    DEMO: number;
-    [key: string]: number;
+    IDEA_SUBMISSION?: number;
+    SCREENING?: number;
+    PRESENTATION?: number;
+    DEMO?: number;
+    [key: string]: number | undefined;
   };
   byCategory: Record<string, number>;
+  recentIdeas?: BackendRecentIdea[];
+  announcements?: BackendAnnouncement[];
 }
 
 export interface UserStats {

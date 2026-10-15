@@ -1,14 +1,12 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Card, Input, InputNumber, App, Popconfirm } from 'antd';
-import { RotateCcw } from 'lucide-react';
+import { InputNumber, App } from 'antd';
 import { SubmitButton } from '@/components/ui/app-button/AppButton';
 import {
   getSettings,
   saveProgrammeRules,
   saveJudgingCriteria,
-  resetDemoData,
 } from '../services/settingsApi';
 import type { ProgrammeRules, JudgingCriterion } from '../types/settings.types';
 import styles from './Settings.module.css';
@@ -21,14 +19,12 @@ export const Settings: React.FC = () => {
     maxTeamSize: 4,
   });
   const [criteria, setCriteria] = useState<JudgingCriterion[]>([]);
-  const [apiMode, setApiMode] = useState<string>('demo');
   const [savingCriteria, setSavingCriteria] = useState(false);
 
   useEffect(() => {
     getSettings().then((data) => {
       setRules(data.programmeRules);
       setCriteria(data.judgingCriteria);
-      setApiMode(data.apiMode);
     });
   }, []);
 
@@ -42,12 +38,6 @@ export const Settings: React.FC = () => {
     saveProgrammeRules({ ...rules, [field]: val }).then(() => {
       message.success(`Updated ${field === 'maxIdeasPerUser' ? 'max ideas' : 'max team size'} to ${val}`);
     });
-  };
-
-  const handleCriterionLabelChange = (id: string, newLabel: string) => {
-    setCriteria((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, label: newLabel } : item))
-    );
   };
 
   const handleCriterionWeightChange = (id: string, newWeight: number | null) => {
@@ -71,18 +61,6 @@ export const Settings: React.FC = () => {
       message.error('Failed to save judging criteria weights');
     } finally {
       setSavingCriteria(false);
-    }
-  };
-
-  const handleResetDemoData = async () => {
-    try {
-      await resetDemoData();
-      const fresh = await getSettings();
-      setRules(fresh.programmeRules);
-      setCriteria(fresh.judgingCriteria);
-      message.success('Demo data reset to initial state');
-    } catch {
-      message.error('Failed to reset demo data');
     }
   };
 
@@ -140,11 +118,9 @@ export const Settings: React.FC = () => {
         <div className={styles.criteriaList}>
           {criteria.map((item) => (
             <div key={item.id} className={styles.criterionRow}>
-              <Input
-                value={item.label}
-                onChange={(e) => handleCriterionLabelChange(item.id, e.target.value)}
-                className={styles.criterionNameInput}
-              />
+              <div className={styles.criterionLabelBox}>
+                <span>{item.label}</span>
+              </div>
               <div className={styles.criterionWeightWrapper}>
                 <InputNumber
                   min={0}
@@ -175,33 +151,6 @@ export const Settings: React.FC = () => {
           >
             Save weights
           </SubmitButton>
-        </div>
-      </div>
-
-      {/* 4. Card 3: API Connection */}
-      <div className={styles.settingsCard}>
-        <div className={styles.cardHeader}>
-          <h2 className={styles.cardTitle}>API connection</h2>
-        </div>
-
-        <div className={styles.apiSection}>
-          <div className={styles.apiModeText}>
-            Mode: <span className={styles.apiModeValue}>{apiMode}</span>
-          </div>
-
-          <Popconfirm
-            title="Reset demo data?"
-            description="This will restore all default guidelines, announcements, ideas, and settings."
-            onConfirm={handleResetDemoData}
-            okText="Reset"
-            cancelText="Cancel"
-            okButtonProps={{ danger: true }}
-          >
-            <button type="button" className={styles.resetBtn}>
-              <RotateCcw size={14} />
-              <span>Reset demo data</span>
-            </button>
-          </Popconfirm>
         </div>
       </div>
     </div>

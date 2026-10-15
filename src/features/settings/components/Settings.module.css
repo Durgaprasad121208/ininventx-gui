@@ -128,6 +128,21 @@
   gap: 12px;
 }
 
+.criterionLabelBox {
+  flex: 1;
+  background: #08101e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #f1f5f9;
+  padding: 8px 16px;
+  letter-spacing: -0.01em;
+}
+
 .criterionNameInput {
   flex: 1;
   background: #050a14 !important;
@@ -282,6 +297,13 @@
 :global([data-theme="light"]) .ruleInput input,
 :global(body.light-theme) .ruleInput input {
   color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .criterionLabelBox,
+:global(body.light-theme) .criterionLabelBox {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
 }
 
 :global([data-theme="light"]) .criterionNameInput,

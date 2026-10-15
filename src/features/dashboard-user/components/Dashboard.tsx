@@ -20,8 +20,87 @@ import { useSelector } from 'react-redux';
 import { type RootState } from '@/redux/store';
 import { getDashboardData, initialDashboardData } from '../services/dashboardApi';
 import { likeIdea, unlikeIdea } from '@/features/browse-ideas/services/browseIdeasApi';
-import type { BackendDashboardResponse } from '../types/dashboard.types';
+import type {
+    BackendDashboardResponse,
+    BackendRecentIdea,
+    BackendAnnouncement,
+} from '../types/dashboard.types';
 import styles from './Dashboard.module.css';
+
+const CATEGORY_MAP: Record<string, string> = {
+    INDUSTRIAL_AUTOMATION: 'Industrial Automation & Control',
+    DIGITAL_MANUFACTURING: 'Digital Manufacturing & Smart Factories',
+    DIGITAL_TWINS: 'Digital Twins',
+    MODELLING_SIMULATION: 'Modelling & Simulation',
+    AR_VR: 'Augmented & Virtual Reality (AR/VR)',
+    AI_DATA_ANALYTICS: 'Artificial Intelligence & Data Analytics',
+    ROBOTICS: 'Robotics & Intelligent Systems',
+    PRODUCT_PROCESS_INNOVATION: 'Product & Process Innovation',
+    QUALITY_RELIABILITY: 'Quality & Reliability',
+    ENERGY_SUSTAINABILITY: 'Energy Efficiency & Sustainability',
+    SAFETY_ERGONOMICS: 'Safety & Ergonomics',
+    CUSTOMER_BUSINESS_SOLUTIONS: 'Customer & Business Solutions',
+    CUSTOMER_BUSINESS: 'Customer & Business Solutions',
+    PRODUCT_PROCESS: 'Product & Process Innovation',
+    AI_DATA: 'AI & Data Analytics',
+};
+
+const formatCategory = (cat?: string): string => {
+    if (!cat) return 'General';
+    const key = cat.toUpperCase().replace(/[^A-Z0-9]+/g, '_');
+    if (CATEGORY_MAP[key]) return CATEGORY_MAP[key];
+    return cat.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+};
+
+const formatStage = (stage?: string): string => {
+    if (!stage) return 'S1 Idea Submission';
+    const s = stage.toUpperCase().replace(/\s+/g, '_');
+    if (s.includes('DEMO') || s.includes('S4')) return 'S4 Demo';
+    if (s.includes('PRESENTATION') || s.includes('S3')) return 'S3 Presentation';
+    if (s.includes('SCREENING') || s.includes('S2')) return 'S2 Screening';
+    if (s.includes('SUBMISSION') || s.includes('S1')) return 'S1 Idea Submission';
+    return stage.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+};
+
+const formatStatus = (status?: string): string => {
+    if (!status) return 'Submitted';
+    const s = status.toUpperCase();
+    if (s === 'DRAFT') return 'Draft';
+    if (s === 'SUBMITTED') return 'Submitted';
+    if (s === 'UNDER_REVIEW') return 'Under Review';
+    if (s === 'ACCEPTED') return 'Accepted';
+    if (s === 'REJECTED') return 'Rejected';
+    return status.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+};
+
+const formatDate = (isoString?: string): string => {
+    if (!isoString) return 'Recently';
+    try {
+        const d = new Date(isoString);
+        if (isNaN(d.getTime())) return isoString;
+        return d.toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+        });
+    } catch {
+        return isoString;
+    }
+};
+
+const getCompanyDotColor = (company?: string): string => {
+    const c = (company || '').toLowerCase();
+    if (c.includes('nexsys')) return '#10b981';
+    if (c.includes('stability')) return '#f59e0b';
+    return '#38bdf8';
+};
+
+const THUMBNAIL_TYPES = ['handshake', 'robotics', 'marketplace'] as const;
+const getThumbnailTypeForIdea = (id: string, index: number) => {
+    if (!id) return THUMBNAIL_TYPES[index % THUMBNAIL_TYPES.length];
+    const sum = id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+    return THUMBNAIL_TYPES[Math.abs(sum) % THUMBNAIL_TYPES.length];
+};
 
 // SVG Tech graphics for idea thumbnails
 const HandshakeThumbnail = () => (
@@ -167,6 +246,17 @@ export const Dashboard: React.FC = () => {
             .then((res: BackendDashboardResponse) => {
                 if (res && typeof res === 'object') {
                     setMetrics(res);
+                    if (Array.isArray(res.recentIdeas)) {
+                        setLikesMap((prev) => {
+                            const updated = { ...prev };
+                            res.recentIdeas?.forEach((idea) => {
+                                if (updated[idea.id] === undefined) {
+                                    updated[idea.id] = idea.likeCount ?? 0;
+                                }
+                            });
+                            return updated;
+                        });
+                    }
                 }
             })
             .catch((err) => {
@@ -241,6 +331,24 @@ export const Dashboard: React.FC = () => {
         }
     };
 
+    const getStageCount = (stageKey: string, aliasKeys: string[] = []): number => {
+        if (!metrics?.byStage) return 0;
+        const allKeys = [stageKey, ...aliasKeys];
+        for (const k of allKeys) {
+            const val = metrics.byStage[k];
+            if (typeof val === 'number') return val;
+        }
+        // Case-insensitive lookup
+        const lowerKeys = allKeys.map((k) => k.toLowerCase().replace(/[^a-z0-9]/g, ''));
+        for (const [key, val] of Object.entries(metrics.byStage)) {
+            const normalized = key.toLowerCase().replace(/[^a-z0-9]/g, '');
+            if (lowerKeys.includes(normalized) && typeof val === 'number') {
+                return val;
+            }
+        }
+        return 0;
+    };
+
     const totalIdeas = metrics?.totalIdeas ?? 0;
     const maxStageScale = Math.max(totalIdeas, 1);
 
@@ -248,28 +356,38 @@ export const Dashboard: React.FC = () => {
         {
             id: 's1',
             stageName: 'S1 Idea Submission',
-            count: metrics?.byStage?.IDEA_SUBMISSION ?? 0,
+            count: getStageCount('IDEA_SUBMISSION', ['Idea Submission', 'S1', 'SUBMISSION']),
             maxCount: maxStageScale,
         },
         {
             id: 's2',
             stageName: 'S2 Screening',
-            count: metrics?.byStage?.SCREENING ?? 0,
+            count: getStageCount('SCREENING', ['Screening', 'S2']),
             maxCount: maxStageScale,
         },
         {
             id: 's3',
             stageName: 'S3 Presentation',
-            count: metrics?.byStage?.PRESENTATION ?? 0,
+            count: getStageCount('PRESENTATION', ['Presentation', 'S3']),
             maxCount: maxStageScale,
         },
         {
             id: 's4',
             stageName: 'S4 Demo',
-            count: metrics?.byStage?.DEMO ?? 0,
+            count: getStageCount('DEMO', ['Demo', 'S4']),
             maxCount: maxStageScale,
         },
     ];
+
+    const hasLiveIdeas = Array.isArray(metrics?.recentIdeas);
+    const recentIdeasList = hasLiveIdeas
+        ? (metrics?.recentIdeas ?? [])
+        : initialDashboardData.recentIdeas;
+
+    const hasLiveAnnouncements = Array.isArray(metrics?.announcements);
+    const announcementsToRender = hasLiveAnnouncements
+        ? (metrics?.announcements ?? [])
+        : initialDashboardData.announcements;
 
     return (
         <Spin spinning={loading} size="large" classNames={{ root: styles.spinWrapper }}>
@@ -451,78 +569,110 @@ export const Dashboard: React.FC = () => {
                     </div>
 
                     <div className={styles.ideasGrid}>
-                        {initialDashboardData.recentIdeas.map((idea) => {
-                            const isLiked = hasLikedMap[idea.id];
-                            const likesCount = likesMap[idea.id] ?? idea.likes;
-
-                            return (
-                                <div key={idea.id} className={styles.ideaCard}>
-                                    {/* Thumbnail Banner */}
-                                    <div className={styles.ideaThumbnailWrapper}>
-                                        {getThumbnail(idea.imageThumbnail)}
-                                        <div className={styles.ideaThumbnailBadges}>
-                                            <span className={styles.stageBadgePill}>{idea.stage}</span>
-                                            {idea.stageBadge && (
-                                                <span className={styles.demoBadgePill}>{idea.stageBadge}</span>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* Idea Card Body */}
-                                    <div className={styles.ideaBody}>
-                                        <div className={styles.tagsRow}>
-                                            <span className={styles.categoryTag}>{idea.category}</span>
-                                            <span className={styles.statusTag}>{idea.status}</span>
-                                        </div>
-
-                                        <h3 className={styles.ideaTitle}>{idea.title}</h3>
-                                        <p className={styles.ideaDescription}>{idea.description}</p>
-
-                                        <div className={styles.ideaAuthorSection}>
-                                            <span className={styles.authorName}>{idea.author}</span>
-                                            <div className={styles.teamMeta}>
-                                                <span
-                                                    className={styles.statusDot}
-                                                    style={{ backgroundColor: idea.teamDotColor }}
-                                                />
-                                                <span>{idea.company}</span>
-                                                <span>· {idea.team}</span>
-                                            </div>
-                                        </div>
-
-                                        <div className={styles.ideaFooter}>
-                                            <span>{idea.date}</span>
-                                            <div className={styles.ideaActionsRight}>
-                                                {idea.attachments && (
-                                                    <span
-                                                        style={{ display: 'inline-flex', alignItems: 'center', gap: 3 }}
-                                                    >
-                                                        <Paperclip size={13} />
-                                                        <span>{idea.attachments}</span>
-                                                    </span>
-                                                )}
-
-                                                <button
-                                                    type="button"
-                                                    className={styles.likeBtn}
-                                                    disabled={likeLoadingMap[idea.id]}
-                                                    onClick={() => handleLike(idea.id)}
-                                                    aria-label={`Like ${idea.title}`}
-                                                    style={{ color: isLiked ? '#ef4444' : undefined }}
-                                                >
-                                                    <Heart
-                                                        size={14}
-                                                        fill={isLiked ? '#ef4444' : 'none'}
-                                                        stroke={isLiked ? '#ef4444' : 'currentColor'}
-                                                    />
-                                                    <span>{likesCount}</span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
+                        {recentIdeasList.length === 0 ? (
+                            <div className={styles.emptyStateContainer}>
+                                <Lightbulb size={26} color="#06b6d4" />
+                                <div className={styles.emptyStateTitle}>No recent ideas yet</div>
+                                <div className={styles.emptyStateSubtitle}>
+                                    Be the first innovator to submit an idea for this hackathon!
                                 </div>
-                            );
-                        })}
+                                <Link href="/submit-idea" style={{ textDecoration: 'none' }}>
+                                    <SubmitButton icon={<PlusCircle size={14} />}>
+                                        Submit an idea
+                                    </SubmitButton>
+                                </Link>
+                            </div>
+                        ) : (
+                            recentIdeasList.map((rawIdea: any, idx: number) => {
+                                const isLiked = hasLikedMap[rawIdea.id];
+                                const likesCount = likesMap[rawIdea.id] ?? (rawIdea.likeCount ?? rawIdea.likes ?? 0);
+                                const title = rawIdea.title;
+                                const description = rawIdea.summary || rawIdea.description || 'No description provided.';
+                                const category = formatCategory(rawIdea.category);
+                                const stage = formatStage(rawIdea.stage);
+                                const status = formatStatus(rawIdea.status);
+                                const author = rawIdea.authorName || rawIdea.author || 'Innovator';
+                                const company = rawIdea.company || 'MANTIX';
+                                const team = rawIdea.team || 'Innovation Team';
+                                const teamDotColor = rawIdea.teamDotColor || getCompanyDotColor(company);
+                                const date = rawIdea.createdAt ? formatDate(rawIdea.createdAt) : (rawIdea.date || 'Recently');
+                                const attachments = rawIdea.attachmentsCount ?? rawIdea.attachments ?? 0;
+                                const thumbnailType = rawIdea.imageThumbnail || getThumbnailTypeForIdea(rawIdea.id, idx);
+                                const stageBadge = rawIdea.stageBadge;
+
+                                return (
+                                    <div key={rawIdea.id} className={styles.ideaCard}>
+                                        {/* Thumbnail Banner */}
+                                        <div className={styles.ideaThumbnailWrapper}>
+                                            {getThumbnail(thumbnailType)}
+                                            <div className={styles.ideaThumbnailBadges}>
+                                                <span className={styles.stageBadgePill}>{stage}</span>
+                                                {stageBadge && (
+                                                    <span className={styles.demoBadgePill}>{stageBadge}</span>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Idea Card Body */}
+                                        <div className={styles.ideaBody}>
+                                            <div className={styles.tagsRow}>
+                                                <span className={styles.categoryTag}>{category}</span>
+                                                <span className={styles.statusTag}>{status}</span>
+                                            </div>
+
+                                            <h3 className={styles.ideaTitle}>
+                                                <Link href="/browse-ideas" style={{ color: 'inherit', textDecoration: 'none' }}>
+                                                    {title}
+                                                </Link>
+                                            </h3>
+                                            <p className={styles.ideaDescription}>{description}</p>
+
+                                            <div className={styles.ideaAuthorSection}>
+                                                <span className={styles.authorName}>{author}</span>
+                                                <div className={styles.teamMeta}>
+                                                    <span
+                                                        className={styles.statusDot}
+                                                        style={{ backgroundColor: teamDotColor }}
+                                                    />
+                                                    <span>{company}</span>
+                                                    <span>· {team}</span>
+                                                </div>
+                                            </div>
+
+                                            <div className={styles.ideaFooter}>
+                                                <span>{date}</span>
+                                                <div className={styles.ideaActionsRight}>
+                                                    {attachments > 0 && (
+                                                        <span
+                                                            style={{ display: 'inline-flex', alignItems: 'center', gap: 3 }}
+                                                        >
+                                                            <Paperclip size={13} />
+                                                            <span>{attachments}</span>
+                                                        </span>
+                                                    )}
+
+                                                    <button
+                                                        type="button"
+                                                        className={styles.likeBtn}
+                                                        disabled={likeLoadingMap[rawIdea.id]}
+                                                        onClick={() => handleLike(rawIdea.id)}
+                                                        aria-label={`Like ${title}`}
+                                                        style={{ color: isLiked ? '#ef4444' : undefined }}
+                                                    >
+                                                        <Heart
+                                                            size={14}
+                                                            fill={isLiked ? '#ef4444' : 'none'}
+                                                            stroke={isLiked ? '#ef4444' : 'currentColor'}
+                                                        />
+                                                        <span>{likesCount}</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        )}
                     </div>
                 </Col>
 
@@ -532,20 +682,37 @@ export const Dashboard: React.FC = () => {
                     </div>
 
                     <div className={styles.announcementsList}>
-                        {initialDashboardData.announcements.map((ann) => (
-                            <div key={ann.id} className={styles.announcementCard}>
-                                <div className={styles.announcementHeader}>
-                                    <Pin size={14} className={styles.pinIcon} />
-                                    {ann.type === 'critical' ? (
-                                        <span className={styles.announcementBadgeCritical}>critical</span>
-                                    ) : (
-                                        <span className={styles.announcementBadgeImportant}>important</span>
-                                    )}
-                                    <span className={styles.announcementDate}>{ann.date}</span>
-                                </div>
-                                <div className={styles.announcementTitle}>{ann.title}</div>
+                        {announcementsToRender.length === 0 ? (
+                            <div className={styles.emptyAnnouncements}>
+                                <Pin size={16} className={styles.pinIcon} />
+                                <span>No announcements at this time.</span>
                             </div>
-                        ))}
+                        ) : (
+                            announcementsToRender.map((ann: any) => {
+                                const formattedDate = ann.publishedAt
+                                    ? formatDate(ann.publishedAt)
+                                    : (ann.date || 'Recently');
+                                const isPinned = Boolean(ann.pinned || ann.type === 'critical');
+
+                                return (
+                                    <div key={ann.id} className={styles.announcementCard}>
+                                        <div className={styles.announcementHeader}>
+                                            <Pin size={14} className={styles.pinIcon} />
+                                            {isPinned ? (
+                                                <span className={styles.announcementBadgeCritical}>pinned</span>
+                                            ) : (
+                                                <span className={styles.announcementBadgeImportant}>important</span>
+                                            )}
+                                            <span className={styles.announcementDate}>{formattedDate}</span>
+                                        </div>
+                                        <div className={styles.announcementTitle}>{ann.title}</div>
+                                        {ann.content && ann.content !== ann.title && (
+                                            <div className={styles.announcementContent}>{ann.content}</div>
+                                        )}
+                                    </div>
+                                );
+                            })
+                        )}
                     </div>
                 </Col>
             </Row>
