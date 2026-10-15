@@ -22,3 +22,7 @@ export const USERS_CONTROLLER = `${BASE_URL}/users`;
 // Announcements Endpoints
 export const ANNOUNCEMENTS_ENDPOINT = `${BASE_URL}/announcements`;
 
+// Organizer Endpoints
+export const ORGANIZER_IDEAS_ENDPOINT = `${BASE_URL}/organizer/ideas`;
+export const ORGANIZER_ANNOUNCEMENTS_ENDPOINT = `${BASE_URL}/organizer/announcements`;
+

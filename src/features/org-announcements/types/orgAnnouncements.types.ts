@@ -1,23 +1,46 @@
-export type AnnouncementStatus = 'published' | 'draft' | 'archived';
-export type AnnouncementPriority = 'normal' | 'critical' | 'important' | 'info';
+export type OrgAnnouncementState = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED' | string;
+export type OrgAnnouncementStatus = 'draft' | 'published' | 'archived' | string;
+export type OrgAnnouncementPriority = 'normal' | 'important' | 'critical' | string;
+
+export interface BackendOrgAnnouncementItem {
+  id: string;
+  title: string;
+  content: string;
+  state: OrgAnnouncementState;
+  publishAt?: string | null;
+  pinned: boolean;
+  createdAt: string;
+  updatedAt?: string;
+  author?: string;
+}
 
 export interface OrgAnnouncementItem {
   id: string;
   title: string;
   content: string;
-  status: AnnouncementStatus;
-  priority?: AnnouncementPriority;
+  state?: OrgAnnouncementState;
+  status?: OrgAnnouncementStatus;
+  publishAt?: string | null;
+  publishDate?: string;
+  pinned?: boolean;
   isPinned?: boolean;
-  publishDate: string;
-  author: string;
+  priority?: OrgAnnouncementPriority;
+  author?: string;
   link?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export interface AnnouncementFormData {
+export interface CreateAnnouncementRequest {
   title: string;
-  body: string;
-  priority: string;
-  publishTime: string;
-  link?: string;
-  pinToTop: boolean;
+  content: string;
+  pinned: boolean;
+  publishAt: string;
+}
+
+export interface UpdateAnnouncementRequest {
+  title: string;
+  content: string;
+  pinned: boolean;
+  publishAt: string;
 }

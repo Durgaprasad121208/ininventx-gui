@@ -145,6 +145,11 @@
   color: #f87171;
 }
 
+.statusArchived {
+  background: rgba(100, 116, 139, 0.18);
+  color: #94a3b8;
+}
+
 .pinnedIndicator {
   color: #38bdf8;
   display: inline-flex;
@@ -398,4 +403,54 @@
     padding-top: 10px;
     border-top: 1px solid rgba(255, 255, 255, 0.04);
   }
+}
+
+.emptyCard {
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  width: 100% !important;
+}
+
+.emptyCard :global(.ant-card-body) {
+  padding: 56px 24px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+}
+
+.emptyIconCircle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.emptyTitle {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.emptySubtitle {
+  font-size: 12px;
+  color: #64748b;
+  max-width: 420px;
+  line-height: 1.5;
+}
+
+.spinWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
 }

@@ -3,21 +3,64 @@ export type ManageIdeaStatus =
   | 'Draft'
   | 'Submitted'
   | 'Under review'
-  | 'Rejected';
+  | 'Rejected'
+  | 'Archived'
+  | 'Changes requested'
+  | string;
+
+export interface BackendOrganizerIdea {
+  id: string;
+  title: string;
+  summary?: string;
+  category: string;
+  stage: string;
+  status: string;
+  ownerId?: string;
+  ownerName?: string;
+  likeCount?: number;
+  likedByMe?: boolean;
+  createdAt: string;
+  updatedAt?: string;
+  company?: string;
+  team?: string;
+  attachmentsCount?: number;
+}
+
+export interface BackendOrganizerIdeasResponse {
+  content: BackendOrganizerIdea[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
+export interface OrganizerIdeasQueryParams {
+  q?: string;
+  category?: string;
+  company?: string;
+  stage?: string;
+  status?: string;
+  ownerId?: string;
+  sort?: string;
+  page?: number;
+  size?: number;
+}
 
 export interface ManageIdeaRecord {
   id: string;
   title: string;
+  summary?: string;
   team: string;
   attachmentsCount?: number;
   author: string;
-  company: 'MANTIX' | 'Nexsys Process Automations' | 'Stability' | string;
+  company: string;
   companyDotColor: string;
   category: string;
-  stageCode: string; // e.g. 'S1', 'S2', 'S4'
-  stageName: string; // e.g. 'Idea Submission', 'Screening', 'Demo'
-  status: ManageIdeaStatus;
+  stageCode: string;
+  stageName: string;
+  status: string;
   likes: number;
+  likedByMe?: boolean;
   createdAt: string;
 }
 

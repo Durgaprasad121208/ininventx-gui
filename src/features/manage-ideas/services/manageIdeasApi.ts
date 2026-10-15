@@ -1,122 +1,92 @@
-import { ManageIdeaRecord } from '../types/manageIdeas.types';
+import { GetAPIRequest } from '@/api-client/apiClient';
+import { ORGANIZER_IDEAS_ENDPOINT } from '@/constants/endpoints';
+import type {
+  BackendOrganizerIdeasResponse,
+  OrganizerIdeasQueryParams,
+} from '../types/manageIdeas.types';
 
-export const INITIAL_MANAGE_IDEAS: ManageIdeaRecord[] = [
-  {
-    id: 'manage-1',
-    title: 'Remote Support Subscription Bundle',
-    team: 'Always On',
-    author: 'Rohan Iyer (Demo)',
-    company: 'Nexsys Process Automations',
-    companyDotColor: '#10b981', // green/teal dot
-    category: 'Customer & Business',
-    stageCode: 'S4',
-    stageName: 'Demo',
-    status: 'Approved',
-    likes: 0,
-    createdAt: '14 Oct 2026',
-  },
-  {
-    id: 'manage-2',
-    title: 'Proposal Drafting Accelerator',
-    team: 'BidBoost',
-    author: 'Aarav Mehta (Demo)',
-    company: 'MANTIX',
-    companyDotColor: '#38bdf8', // blue/cyan dot
-    category: 'AI & Data Analytics',
-    stageCode: 'S1',
-    stageName: 'Idea Submission',
-    status: 'Draft',
-    likes: 0,
-    createdAt: '14 Oct 2026',
-  },
-  {
-    id: 'manage-3',
-    title: 'Commissioning Checklist Copilot',
-    team: 'Loop Closers',
-    attachmentsCount: 1,
-    author: 'Dev Kulkarni (Demo)',
-    company: 'Nexsys Process Automations',
-    companyDotColor: '#10b981',
-    category: 'AI & Data Analytics',
-    stageCode: 'S1',
-    stageName: 'Idea Submission',
-    status: 'Submitted',
-    likes: 2,
-    createdAt: '13 Oct 2026',
-  },
-  {
-    id: 'manage-4',
-    title: 'Unified Group Skills Marketplace',
-    team: 'SkillSphere',
-    author: 'Meera Pillai (Demo)',
-    company: 'Stability',
-    companyDotColor: '#f59e0b', // yellow/amber dot
-    category: 'Product & Process',
-    stageCode: 'S1',
-    stageName: 'Idea Submission',
-    status: 'Submitted',
-    likes: 1,
-    createdAt: '13 Oct 2026',
-  },
-  {
-    id: 'manage-5',
-    title: 'Shift Handover Digital Logbook',
-    team: 'Handover Heroes',
-    attachmentsCount: 2,
-    author: 'Aarav Mehta (Demo)',
-    company: 'MANTIX',
-    companyDotColor: '#38bdf8',
-    category: 'Smart Factories',
-    stageCode: 'S2',
-    stageName: 'Screening',
-    status: 'Under review',
-    likes: 4,
-    createdAt: '12 Oct 2026',
-  },
-  {
-    id: 'manage-6',
-    title: 'Centrifugal Pump Vibration Forecaster',
-    team: 'VibeCheck',
-    author: 'Vikram Sen (Demo)',
-    company: 'Stability',
-    companyDotColor: '#f59e0b',
-    category: 'Smart Factories',
-    stageCode: 'S2',
-    stageName: 'Screening',
-    status: 'Under review',
-    likes: 3,
-    createdAt: '11 Oct 2026',
-  },
-  {
-    id: 'manage-7',
-    title: 'Automated Thermal Imaging Inspection',
-    team: 'HeatSense',
-    author: 'Dev Kulkarni (Demo)',
-    company: 'Nexsys Process Automations',
-    companyDotColor: '#10b981',
-    category: 'Industrial Automation',
-    stageCode: 'S3',
-    stageName: 'Presentation',
-    status: 'Approved',
-    likes: 5,
-    createdAt: '08 Oct 2026',
-  },
-  {
-    id: 'manage-8',
-    title: 'Paper-to-Digital Batch Records',
-    team: 'PaperlessOps',
-    author: 'Priya Nair (Demo)',
-    company: 'MANTIX',
-    companyDotColor: '#38bdf8',
-    category: 'AI & Data Analytics',
-    stageCode: 'S1',
-    stageName: 'Idea Submission',
-    status: 'Rejected',
-    likes: 0,
-    createdAt: '06 Oct 2026',
-  },
-];
+/**
+ * Fetch organizer ideas from GET /api/organizer/ideas
+ * Supports search (q), category, company, stage, status, ownerId, sort, page, size.
+ */
+export const getOrganizerIdeas = async (
+  params?: OrganizerIdeasQueryParams
+): Promise<BackendOrganizerIdeasResponse> => {
+  const query = new URLSearchParams();
 
-export const getManageIdeas = async (): Promise<ManageIdeaRecord[]> => {
-  return INITIAL_MANAGE_IDEAS;
+  if (params?.q && params.q.trim()) {
+    query.set('q', params.q.trim());
+  }
+  if (params?.category && params.category !== 'all') {
+    query.set('category', params.category);
+  }
+  if (params?.company && params.company !== 'all') {
+    query.set('company', params.company);
+  }
+  if (params?.stage && params.stage !== 'all') {
+    query.set('stage', params.stage);
+  }
+  if (params?.status && params.status !== 'all') {
+    query.set('status', params.status);
+  }
+  if (params?.ownerId) {
+    query.set('ownerId', params.ownerId);
+  }
+  if (params?.sort) {
+    query.set('sort', params.sort);
+  }
+  if (typeof params?.page === 'number') {
+    query.set('page', String(params.page));
+  }
+  if (typeof params?.size === 'number') {
+    query.set('size', String(params.size));
+  }
+
+  const queryString = query.toString();
+  const url = queryString ? `${ORGANIZER_IDEAS_ENDPOINT}?${queryString}` : ORGANIZER_IDEAS_ENDPOINT;
+
+  try {
+    const res = await GetAPIRequest({ url });
+
+    if (res && typeof res === 'object') {
+      if (Array.isArray(res)) {
+        return {
+          content: res,
+          page: 0,
+          size: res.length,
+          totalElements: res.length,
+          totalPages: 1,
+        };
+      }
+      if (Array.isArray((res as any).content)) {
+        return res as BackendOrganizerIdeasResponse;
+      }
+      if (Array.isArray((res as any).data)) {
+        return {
+          content: (res as any).data,
+          page: (res as any).page ?? 0,
+          size: (res as any).size ?? 20,
+          totalElements: (res as any).totalElements ?? (res as any).data.length,
+          totalPages: (res as any).totalPages ?? 1,
+        };
+      }
+    }
+
+    return {
+      content: [],
+      page: 0,
+      size: params?.size ?? 20,
+      totalElements: 0,
+      totalPages: 0,
+    };
+  } catch (error) {
+    console.error('[manageIdeasApi] Failed to fetch organizer ideas:', error);
+    return {
+      content: [],
+      page: 0,
+      size: params?.size ?? 20,
+      totalElements: 0,
+      totalPages: 0,
+    };
+  }
 };

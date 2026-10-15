@@ -79,6 +79,11 @@
   color: #041c2c;
   letter-spacing: -0.5px;
   user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 24px;
 }
 
 /* Profile Info Column */
@@ -95,6 +100,7 @@
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+  min-height: 26px;
 }
 
 .userName {
@@ -103,6 +109,7 @@
   color: #ffffff;
   letter-spacing: -0.01em;
   line-height: 1.2;
+  min-height: 23px;
 }
 
 .roleBadge {
@@ -119,12 +126,13 @@
   text-transform: lowercase;
 }
 
-/* 2x2 Key-Value Details Grid */
+/* Key-Value Details Grid: Flexible 3-column or responsive */
 .detailsGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px 40px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px 36px;
 }
+
 
 .detailItem {
   display: flex;
@@ -145,6 +153,7 @@
   color: #ffffff;
   line-height: 1.4;
   word-break: break-word;
+  min-height: 18px;
 }
 
 /* 3. Section Title */
@@ -375,3 +384,18 @@
     width: 100%;
   }
 }
+
+.spinWrapper {
+  width: 100%;
+  display: block;
+  min-height: 160px;
+}
+
+.spinWrapper :global(.ant-spin-nested-loading) {
+  width: 100%;
+}
+
+.spinWrapper :global(.ant-spin-container) {
+  width: 100%;
+}
+

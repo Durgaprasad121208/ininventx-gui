@@ -13,11 +13,31 @@ import {
 } from 'lucide-react';
 import { useTheme } from '@/providers/theme/ThemeProvider';
 import { SubmitButton, CancelButton } from '@/components/ui/app-button/AppButton';
-import { getOrgAnnouncements } from '../services/orgAnnouncementsApi';
+import {
+  getOrgAnnouncements,
+  createOrgAnnouncement,
+  updateOrgAnnouncement,
+  changeOrgAnnouncementState,
+} from '../services/orgAnnouncementsApi';
 import type { OrgAnnouncementItem } from '../types/orgAnnouncements.types';
 import styles from './OrgAnnouncements.module.css';
 
 const { TextArea } = Input;
+
+/** Helper to convert DD-MM-YYYY HH:mm or other strings into an ISO string */
+const formatPublishAtForApi = (input: string): string => {
+  if (!input || !input.trim()) return new Date().toISOString();
+  const match = input.trim().match(/^(\d{1,2})-(\d{1,2})-(\d{4})(?:\s+(\d{1,2}):(\d{1,2}))?$/);
+  if (match) {
+    const [, day, month, year, hour = '0', minute = '0'] = match;
+    const d = new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute));
+    if (!isNaN(d.getTime())) {
+      return d.toISOString();
+    }
+  }
+  const parsed = new Date(input);
+  return !isNaN(parsed.getTime()) ? parsed.toISOString() : new Date().toISOString();
+};
 
 export const OrgAnnouncements: React.FC = () => {
   const { message } = App.useApp();
@@ -27,6 +47,7 @@ export const OrgAnnouncements: React.FC = () => {
   const [announcements, setAnnouncements] = useState<OrgAnnouncementItem[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<OrgAnnouncementItem | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form State
   const [formTitle, setFormTitle] = useState('');
@@ -61,84 +82,145 @@ export const OrgAnnouncements: React.FC = () => {
       item.priority === 'critical'
         ? 'Critical'
         : item.priority === 'important'
-        ? 'Important'
-        : 'Normal'
+          ? 'Important'
+          : 'Normal'
     );
-    setFormPublishTime(item.publishDate);
+    setFormPublishTime(item.publishDate || (item.publishAt ? String(item.publishAt) : ''));
     setFormLink(item.link || '');
-    setFormPinToTop(!!item.isPinned);
+    setFormPinToTop(Boolean(item.isPinned ?? item.pinned));
     setDrawerOpen(true);
   };
 
-  const handlePublish = (id: string) => {
-    setAnnouncements((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, status: 'published' } : item))
-    );
-    message.success('Announcement published successfully');
+  const handlePublish = async (id: string) => {
+    try {
+      await changeOrgAnnouncementState(id, 'PUBLISHED');
+      setAnnouncements((prev) =>
+        prev.map((item) =>
+          item.id === id ? { ...item, status: 'published', state: 'PUBLISHED' } : item
+        )
+      );
+      message.success('Announcement published successfully');
+    } catch (error: any) {
+      console.error('[OrgAnnouncements] Failed to publish announcement:', error);
+      message.error(error?.response?.data?.message || error?.message || 'Failed to publish announcement');
+    }
   };
 
-  const handleTogglePin = (id: string) => {
-    setAnnouncements((prev) =>
-      prev.map((item) => {
-        if (item.id === id) {
-          const nextPinned = !item.isPinned;
-          message.success(nextPinned ? 'Announcement pinned to top' : 'Announcement unpinned');
-          return { ...item, isPinned: nextPinned };
-        }
-        return item;
-      })
-    );
+  const handleTogglePin = async (id: string) => {
+    const item = announcements.find((a) => a.id === id);
+    if (!item) return;
+    const nextPinned = !(item.isPinned ?? item.pinned);
+    try {
+      await updateOrgAnnouncement(id, {
+        title: item.title,
+        content: item.content,
+        pinned: nextPinned,
+        publishAt: formatPublishAtForApi(item.publishAt || item.publishDate || ''),
+      });
+      setAnnouncements((prev) =>
+        prev.map((a) =>
+          a.id === id ? { ...a, isPinned: nextPinned, pinned: nextPinned } : a
+        )
+      );
+      message.success(nextPinned ? 'Announcement pinned to top' : 'Announcement unpinned');
+    } catch (error: any) {
+      console.error('[OrgAnnouncements] Failed to update pin status:', error);
+      message.error(error?.response?.data?.message || error?.message || 'Failed to update pin status');
+    }
   };
 
   const handleNotifyWhatsApp = (item: OrgAnnouncementItem) => {
     message.success(`WhatsApp notification triggered for: "${item.title}"`);
   };
 
-  const handleArchive = (id: string) => {
-    setAnnouncements((prev) => prev.filter((item) => item.id !== id));
-    message.success('Announcement moved to archive');
+  const handleArchive = async (id: string) => {
+    try {
+      await changeOrgAnnouncementState(id, 'ARCHIVED');
+      setAnnouncements((prev) =>
+        prev.map((item) =>
+          item.id === id ? { ...item, status: 'archived', state: 'ARCHIVED' } : item
+        )
+      );
+      message.success('Announcement moved to archive');
+    } catch (error: any) {
+      console.error('[OrgAnnouncements] Failed to archive announcement:', error);
+      message.error(error?.response?.data?.message || error?.message || 'Failed to archive announcement');
+    }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!formTitle.trim()) {
       message.warning('Please enter an announcement title');
       return;
     }
 
-    if (editingItem) {
-      setAnnouncements((prev) =>
-        prev.map((item) =>
-          item.id === editingItem.id
-            ? {
-                ...item,
-                title: formTitle,
-                content: formBody,
-                priority: formPriority.toLowerCase() as any,
-                publishDate: formPublishTime,
-                link: formLink || undefined,
-                isPinned: formPinToTop,
-              }
-            : item
-        )
-      );
-      message.success('Announcement updated successfully');
-    } else {
-      const newItem: OrgAnnouncementItem = {
-        id: `ann-org-${Date.now()}`,
-        title: formTitle,
-        content: formBody,
-        status: 'draft',
-        priority: formPriority.toLowerCase() as any,
-        publishDate: formPublishTime,
-        author: 'Priya Nair (Demo)',
-        link: formLink || undefined,
-        isPinned: formPinToTop,
-      };
-      setAnnouncements((prev) => [newItem, ...prev]);
-      message.success('New announcement saved as draft');
-    }
+    const isoPublishAt = formatPublishAtForApi(formPublishTime);
+    setIsSubmitting(true);
 
-    setDrawerOpen(false);
+    try {
+      if (editingItem) {
+        const updated = await updateOrgAnnouncement(editingItem.id, {
+          title: formTitle.trim(),
+          content: formBody.trim(),
+          pinned: formPinToTop,
+          publishAt: isoPublishAt,
+        });
+
+        setAnnouncements((prev) =>
+          prev.map((item) =>
+            item.id === editingItem.id
+              ? {
+                  ...item,
+                  ...(updated || {}),
+                  title: formTitle.trim(),
+                  content: formBody.trim(),
+                  priority: formPriority.toLowerCase(),
+                  publishDate: formPublishTime,
+                  publishAt: isoPublishAt,
+                  link: formLink || undefined,
+                  isPinned: formPinToTop,
+                  pinned: formPinToTop,
+                }
+              : item
+          )
+        );
+        message.success('Announcement updated successfully');
+      } else {
+        const created = await createOrgAnnouncement({
+          title: formTitle.trim(),
+          content: formBody.trim(),
+          pinned: formPinToTop,
+          publishAt: isoPublishAt,
+        });
+
+        const newItem: OrgAnnouncementItem = {
+          ...(created || {}),
+          id: created?.id || `ann-org-${Date.now()}`,
+          title: created?.title || formTitle.trim(),
+          content: created?.content || formBody.trim(),
+          status: created?.status || 'draft',
+          state: created?.state || 'DRAFT',
+          priority: formPriority.toLowerCase(),
+          publishDate: formPublishTime,
+          publishAt: created?.publishAt || isoPublishAt,
+          author: created?.author || 'Organizer',
+          link: formLink || undefined,
+          isPinned: formPinToTop,
+          pinned: formPinToTop,
+          createdAt: created?.createdAt || new Date().toISOString(),
+        };
+
+        setAnnouncements((prev) => [newItem, ...prev]);
+        message.success('New announcement saved as draft');
+      }
+
+      setDrawerOpen(false);
+    } catch (error: any) {
+      console.error('[OrgAnnouncements] Failed to save announcement:', error);
+      message.error(error?.response?.data?.message || error?.message || 'Failed to save announcement');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -159,105 +241,120 @@ export const OrgAnnouncements: React.FC = () => {
 
       {/* 2. Announcements List */}
       <div className={styles.announcementsList}>
-        {announcements.map((item) => (
-          <Card key={item.id} className={styles.announcementCard} variant="borderless">
-            <div className={styles.cardLeftCol}>
-              <div className={styles.titleRow}>
-                <span className={styles.cardTitle}>{item.title}</span>
+        {announcements.map((item) => {
+          const isArchived = item.status === 'archived' || item.state?.toUpperCase() === 'ARCHIVED';
 
-                {item.status === 'draft' && (
-                  <span className={`${styles.statusBadge} ${styles.statusDraft}`}>
-                    draft
-                  </span>
-                )}
+          return (
+            <Card key={item.id} className={styles.announcementCard} variant="borderless">
+              <div className={styles.cardLeftCol}>
+                <div className={styles.titleRow}>
+                  <span className={styles.cardTitle}>{item.title}</span>
 
-                {item.status === 'published' && (
-                  <span className={`${styles.statusBadge} ${styles.statusPublished}`}>
-                    published
-                  </span>
-                )}
+                  {(item.status === 'draft' || item.state?.toUpperCase() === 'DRAFT') && (
+                    <span className={`${styles.statusBadge} ${styles.statusDraft}`}>
+                      draft
+                    </span>
+                  )}
 
-                {item.priority === 'critical' && (
-                  <span className={`${styles.statusBadge} ${styles.statusCritical}`}>
-                    critical
-                  </span>
-                )}
+                  {(item.status === 'published' || item.state?.toUpperCase() === 'PUBLISHED') && (
+                    <span className={`${styles.statusBadge} ${styles.statusPublished}`}>
+                      published
+                    </span>
+                  )}
 
-                {item.isPinned && (
-                  <Pin size={14} className={styles.pinnedIndicator} />
-                )}
+                  {isArchived && (
+                    <span className={`${styles.statusBadge} ${styles.statusArchived}`}>
+                      archived
+                    </span>
+                  )}
+
+                  {item.priority === 'critical' && (
+                    <span className={`${styles.statusBadge} ${styles.statusCritical}`}>
+                      critical
+                    </span>
+                  )}
+
+                  {Boolean(item.isPinned ?? item.pinned) && (
+                    <Pin size={14} className={styles.pinnedIndicator} />
+                  )}
+                </div>
+
+                <p className={styles.cardDescription}>{item.content}</p>
+
+                <div className={styles.cardMeta}>
+                  <span>{item.publishDate || item.publishAt || 'Just now'}</span>
+                  {item.author && (
+                    <>
+                      <span>·</span>
+                      <span>{item.author}</span>
+                    </>
+                  )}
+                </div>
               </div>
 
-              <p className={styles.cardDescription}>{item.content}</p>
+              {/* Actions Right Col */}
+              <div className={styles.cardActionsCol}>
+                {(item.status === 'draft' || item.state?.toUpperCase() === 'DRAFT') && (
+                  <button
+                    type="button"
+                    className={styles.publishBtn}
+                    onClick={() => handlePublish(item.id)}
+                  >
+                    <Send size={13} />
+                    <span>Publish</span>
+                  </button>
+                )}
 
-              <div className={styles.cardMeta}>
-                <span>{item.publishDate}</span>
-                <span>·</span>
-                <span>{item.author}</span>
-              </div>
-            </div>
-
-            {/* Actions Right Col */}
-            <div className={styles.cardActionsCol}>
-              {item.status === 'draft' && (
                 <button
                   type="button"
-                  className={styles.publishBtn}
-                  onClick={() => handlePublish(item.id)}
+                  className={`${styles.actionPillBtn} ${item.isPinned ?? item.pinned ? styles.actionPillBtnActive : ''
+                    }`}
+                  onClick={() => handleTogglePin(item.id)}
                 >
-                  <Send size={13} />
-                  <span>Publish</span>
+                  <Pin size={13} />
+                  <span>{item.isPinned ?? item.pinned ? 'Unpin' : 'Pin'}</span>
                 </button>
-              )}
 
-              <button
-                type="button"
-                className={`${styles.actionPillBtn} ${
-                  item.isPinned ? styles.actionPillBtnActive : ''
-                }`}
-                onClick={() => handleTogglePin(item.id)}
-              >
-                <Pin size={13} />
-                <span>{item.isPinned ? 'Unpin' : 'Pin'}</span>
-              </button>
-
-              <button
-                type="button"
-                className={styles.actionPillBtn}
-                onClick={() => handleEdit(item)}
-              >
-                <Edit2 size={13} />
-                <span>Edit</span>
-              </button>
-
-              <button
-                type="button"
-                className={styles.actionPillBtn}
-                onClick={() => handleNotifyWhatsApp(item)}
-              >
-                <MessageCircle size={13} />
-                <span>Notify WhatsApp group</span>
-              </button>
-
-              <Popconfirm
-                title="Archive this announcement?"
-                description="It will no longer appear in the active announcements list."
-                onConfirm={() => handleArchive(item.id)}
-                okText="Archive"
-                cancelText="Cancel"
-              >
                 <button
                   type="button"
                   className={styles.actionPillBtn}
-                  aria-label="Archive announcement"
+                  onClick={() => handleEdit(item)}
                 >
-                  <Archive size={13} />
-                  <span>Archive</span>
+                  <Edit2 size={13} />
+                  <span>Edit</span>
                 </button>
-              </Popconfirm>
-            </div>
-          </Card>
-        ))}
+
+                <button
+                  type="button"
+                  className={styles.actionPillBtn}
+                  onClick={() => handleNotifyWhatsApp(item)}
+                >
+                  <MessageCircle size={13} />
+                  <span>Notify WhatsApp group</span>
+                </button>
+
+                {!isArchived && (
+                  <Popconfirm
+                    title="Archive this announcement?"
+                    description="It will be marked as archived."
+                    onConfirm={() => handleArchive(item.id)}
+                    okText="Archive"
+                    cancelText="Cancel"
+                  >
+                    <button
+                      type="button"
+                      className={styles.actionPillBtn}
+                      aria-label="Archive announcement"
+                    >
+                      <Archive size={13} />
+                      <span>Archive</span>
+                    </button>
+                  </Popconfirm>
+                )}
+              </div>
+            </Card>
+          );
+        })}
       </div>
 
       {/* 3. New / Edit Announcement Drawer (Screenshot 2) */}
@@ -290,10 +387,10 @@ export const OrgAnnouncements: React.FC = () => {
         }}
         footer={
           <div className={styles.drawerFooter}>
-            <CancelButton onClick={() => setDrawerOpen(false)}>
+            <CancelButton onClick={() => setDrawerOpen(false)} disabled={isSubmitting}>
               Cancel
             </CancelButton>
-            <SubmitButton onClick={handleSave}>
+            <SubmitButton onClick={handleSave} loading={isSubmitting}>
               Save
             </SubmitButton>
           </div>
