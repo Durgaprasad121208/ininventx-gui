@@ -95,13 +95,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </Link>
 
       {/* Menu Navigation Items */}
-      <div className={styles.menuContainer}>
+      <div className={styles.menuContainer} suppressHydrationWarning>
         {(sections || []).map((section) => (
-          <div key={section.title} className={styles.menuSection}>
+          <div key={section.title} className={styles.menuSection} suppressHydrationWarning>
             {(!collapsed || isDrawer) && (
-              <span className={styles.sectionTitle}>{section.title}</span>
+              <span className={styles.sectionTitle} suppressHydrationWarning>{section.title}</span>
             )}
-            <ul className={styles.menuList}>
+            <ul className={styles.menuList} suppressHydrationWarning>
               {(section?.items || []).map((item: MenuItem) => {
                 const active = isItemActive(item.key);
                 const content = (

@@ -31,11 +31,41 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   const authState = useSelector((state: RootState) => state?.auth);
   const reduxUser = authState?.user || ((authState as any)?.id ? (authState as any) : null);
 
-  const rawRole = (reduxUser?.role || propRole || EMPLOYEE).toUpperCase();
+  const [isMounted, setIsMounted] = useState<boolean>(false);
+  const [localRole, setLocalRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    setIsMounted(true);
+    try {
+      const storedRole = localStorage.getItem('inventx_user_role');
+      if (storedRole) {
+        setLocalRole(storedRole);
+      } else {
+        const storedUser = localStorage.getItem('inventx_user');
+        if (storedUser) {
+          const parsed = JSON.parse(storedUser);
+          if (parsed?.role) setLocalRole(parsed.role);
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const pathname = usePathname();
+  const isOrganizerRoute = Boolean(pathname?.startsWith('/organizer'));
+
+  // During SSR and initial client hydration, derive role from route or propRole
+  // so the server rendered tree matches the client initial render exactly.
+  // After mounting, use the rehydrated Redux auth state / localStorage.
+  const resolvedRole = isMounted
+    ? (reduxUser?.role || localRole || (isOrganizerRoute ? 'ORGANISER' : propRole) || EMPLOYEE)
+    : (isOrganizerRoute ? 'ORGANISER' : (propRole || EMPLOYEE));
+
+  const rawRole = String(resolvedRole).toUpperCase();
   const effectiveRole: Role =
     rawRole === 'ORGANIZER' || rawRole === 'ORGANISER' ? ORGANISER : EMPLOYEE;
 
-  const pathname = usePathname();
   const effectivePath = currentPath || pathname || '/user-dashboard';
   const effectiveBreadcrumbs: BreadcrumbItem[] =
     Array.isArray(breadcrumbItems) && breadcrumbItems.length > 0

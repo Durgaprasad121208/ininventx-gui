@@ -52,3 +52,20 @@ button {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.25);
 }
+
+/* Completely remove Next.js dev indicator badge */
+[data-nextjs-dev-indicator],
+[data-nextjs-dev-tools-button],
+nextjs-portal,
+#nextjs-dev-indicator,
+[data-nextjs-toast-wrapper],
+div:has(> svg > path[d*="M16 1.5"]) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+  z-index: -9999 !important;
+}

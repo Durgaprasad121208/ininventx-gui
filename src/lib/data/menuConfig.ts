@@ -47,7 +47,7 @@ export const inventxMenuSections: MenuSection[] = [
         key: '/user-dashboard',
         label: 'Dashboard',
         icon: React.createElement(LayoutGrid, { size: ICON_SIZE, strokeWidth: 1.8 }),
-        roles: [EMPLOYEE, ORGANISER],
+        roles: [EMPLOYEE],
       },
       {
         key: '/browse-ideas',
@@ -89,19 +89,19 @@ export const inventxMenuSections: MenuSection[] = [
   },
   {
     title: 'ORGANIZER',
-    roles: [EMPLOYEE, ORGANISER],
+    roles: [ORGANISER],
     items: [
       {
         key: '/organizer/overview',
         label: 'Overview',
         icon: React.createElement(Shield, { size: ICON_SIZE, strokeWidth: 1.8 }),
-        roles: [EMPLOYEE, ORGANISER],
+        roles: [ORGANISER],
       },
       {
         key: '/organizer/manage-ideas',
         label: 'Manage ideas',
         icon: React.createElement(Lightbulb, { size: ICON_SIZE, strokeWidth: 1.8 }),
-        roles: [EMPLOYEE, ORGANISER],
+        roles: [ORGANISER],
       },
       // {
       //   key: '/organizer/stages-dates',
@@ -113,25 +113,25 @@ export const inventxMenuSections: MenuSection[] = [
         key: '/organizer/guidelines',
         label: 'Guidelines',
         icon: React.createElement(FileText, { size: ICON_SIZE, strokeWidth: 1.8 }),
-        roles: [EMPLOYEE, ORGANISER],
+        roles: [ORGANISER],
       },
       {
         key: '/organizer/announcements',
         label: 'Announcements',
         icon: React.createElement(Megaphone, { size: ICON_SIZE, strokeWidth: 1.8 }),
-        roles: [EMPLOYEE, ORGANISER],
+        roles: [ORGANISER],
       },
       {
         key: '/organizer/users',
         label: 'Users',
         icon: React.createElement(Users, { size: ICON_SIZE, strokeWidth: 1.8 }),
-        roles: [EMPLOYEE, ORGANISER],
+        roles: [ORGANISER],
       },
       {
         key: '/organizer/settings',
         label: 'Settings',
         icon: React.createElement(Settings, { size: ICON_SIZE, strokeWidth: 1.8 }),
-        roles: [EMPLOYEE, ORGANISER],
+        roles: [ORGANISER],
       },
     ],
   },

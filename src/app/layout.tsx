@@ -13,6 +13,12 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "InventX - Plant & Asset Management",
   description: "Enterprise Plant, Asset & Operations Management Platform",
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: '/icon.svg',
+  },
 };
 
 export default function RootLayout({
