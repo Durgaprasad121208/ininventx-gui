@@ -11,7 +11,9 @@ import {
 } from '@/lib/data/menuConfig';
 import { EMPLOYEE, type Role } from '@/lib/data/role';
 import Image from 'next/image';
+import { useTheme } from '@/providers/theme/ThemeProvider';
 import inventxLogoWhite from '@/assets/inventx-logo-white.png';
+import inventxLogoDark from '@/assets/inventx-logo-dark.png';
 import styles from './Sidebar.module.css';
 
 const { Sider } = Layout;
@@ -38,6 +40,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   style,
 }) => {
   const pathname = usePathname();
+  const { themeMode } = useTheme();
+  const isLight = themeMode === 'light';
+  const logoSrc = isLight ? inventxLogoDark : inventxLogoWhite;
+
   const activePath = currentPath || pathname || '/submit-idea';
   const sections: MenuSection[] = getMenuSectionsForRole(role);
 
@@ -57,7 +63,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   // Shared inner content: Brand header + Menu items + Footer
   const renderSidebarContent = () => (
     <>
-      {/* Brand Header & Logo using inventx-logo-white.png */}
+      {/* Brand Header & Logo using theme-adaptive logo */}
       <Link
         href="/user-dashboard"
         className={styles.brandHeader}
@@ -66,7 +72,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {collapsed && !isDrawer ? (
           <div className={styles.logoIconWrapper}>
             <Image
-              src={inventxLogoWhite}
+              key={isLight ? 'logo-dark-collapsed' : 'logo-white-collapsed'}
+              src={logoSrc}
               alt="invent/X"
               style={{ width: 'auto', height: '32px', objectFit: 'cover', objectPosition: 'left' }}
               priority
@@ -75,7 +82,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         ) : (
           <div className={styles.logoImgWrapper}>
             <Image
-              src={inventxLogoWhite}
+              key={isLight ? 'logo-dark-expanded' : 'logo-white-expanded'}
+              src={logoSrc}
               alt="invent/X"
               style={{ width: 'auto', height: '36px', objectFit: 'contain' }}
               priority

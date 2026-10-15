@@ -42,10 +42,39 @@
   line-height: 1.5;
 }
 
-/* 2. Search Section */
+/* 2. Search & Filters Section */
+.filtersBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .searchWrapper {
   max-width: 380px;
   width: 100%;
+}
+
+.roleFilterSelect {
+  min-width: 160px;
+}
+
+.roleFilterSelect :global(.ant-select-selector) {
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 8px !important;
+  color: #ffffff !important;
+  height: 40px !important;
+  font-size: 13px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.roleFilterSelect:hover :global(.ant-select-selector),
+.roleFilterSelect:focus :global(.ant-select-selector),
+.roleFilterSelect:focus-within :global(.ant-select-selector) {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25) !important;
 }
 
 .searchInput {
@@ -300,3 +329,11 @@
   background: #f1f5f9 !important;
   border-color: #e2e8f0 !important;
 }
+
+:global([data-theme="light"]) .roleFilterSelect :global(.ant-select-selector),
+:global(body.light-theme) .roleFilterSelect :global(.ant-select-selector) {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+

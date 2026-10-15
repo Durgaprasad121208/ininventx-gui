@@ -1,103 +1,106 @@
 import { GetAPIRequest, PutAPIRequest } from '@/api-client/apiClient';
-import { USERS_CONTROLLER } from '@/constants/endpoints';
-import type { UserItem, UserRole } from '../types/users.types';
+import { ORGANIZER_USERS_ENDPOINT } from '@/constants/endpoints';
+import type {
+  UserItem,
+  GetOrganizerUsersParams,
+  OrganizerUsersResponse,
+} from '../types/users.types';
 
-export const mockUsers: UserItem[] = [
-  {
-    id: 'user-1',
-    name: 'Aarav Mehta (Demo)',
-    email: 'aarav.demo@example.com',
-    company: 'MANTIX',
-    department: 'OT Support',
-    role: 'Employee',
-    isCurrentUser: false,
-  },
-  {
-    id: 'user-2',
-    name: 'Priya Nair (Demo)',
-    email: 'priya.demo@example.com',
-    company: 'Nexsys Process Automations',
-    department: 'Innovation Office',
-    role: 'Organizer',
-    isCurrentUser: true, // Current logged-in organizer
-  },
-  {
-    id: 'user-3',
-    name: 'Rohan Iyer (Demo)',
-    email: 'rohan.demo@example.com',
-    company: 'Nexsys Process Automations',
-    department: 'Control Systems',
-    role: 'Employee',
-    isCurrentUser: false,
-  },
-  {
-    id: 'user-4',
-    name: 'Sara Thomas (Demo)',
-    email: 'sara.demo@example.com',
-    company: 'Stability',
-    department: 'Customer Success',
-    role: 'Employee',
-    isCurrentUser: false,
-  },
-  {
-    id: 'user-5',
-    name: 'Kabir Rao (Demo)',
-    email: 'kabir.demo@example.com',
-    company: 'MANTIX',
-    department: 'Software Engineering',
-    role: 'Employee',
-    isCurrentUser: false,
-  },
-  {
-    id: 'user-6',
-    name: 'Ananya Sharma (Demo)',
-    email: 'ananya.demo@example.com',
-    company: 'Stability',
-    department: 'Product Design',
-    role: 'Employee',
-    isCurrentUser: false,
-  },
-  {
-    id: 'user-7',
-    name: 'Vikram Patel (Demo)',
-    email: 'vikram.demo@example.com',
-    company: 'MANTIX',
-    department: 'Industrial IoT',
-    role: 'Employee',
-    isCurrentUser: false,
-  },
-  {
-    id: 'user-8',
-    name: 'Neha Kulkarni (Demo)',
-    email: 'neha.demo@example.com',
-    company: 'Nexsys Process Automations',
-    department: 'Robotics & AI',
-    role: 'Employee',
-    isCurrentUser: false,
-  },
-];
+const normalizeUserItem = (raw: any): UserItem => ({
+  id: String(raw?.id || ''),
+  name: String(raw?.name || 'Unnamed User'),
+  email: String(raw?.email || ''),
+  company: String(raw?.company || 'MANTIX'),
+  role: String(raw?.role || 'EMPLOYEE').toUpperCase(),
+  department: raw?.department ? String(raw.department) : undefined,
+  designation: raw?.designation ? String(raw.designation) : undefined,
+});
 
-export const getUsers = async (): Promise<UserItem[]> => {
+/**
+ * Fetch organizer users from Spring Boot backend (GET /api/organizer/users)
+ * Query params: q (string), role (string), page (int, default 0), size (int, default 20)
+ */
+export const getOrganizerUsers = async (
+  params?: GetOrganizerUsersParams
+): Promise<OrganizerUsersResponse> => {
   try {
-    const res = await GetAPIRequest({ url: USERS_CONTROLLER });
-    if (Array.isArray(res)) return res;
-    if (res?.data && Array.isArray(res.data)) return res.data;
-    return [...mockUsers];
+    const queryParams: Record<string, any> = {};
+    if (params?.q && params.q.trim()) {
+      queryParams.q = params.q.trim();
+    }
+    if (params?.role && params.role !== 'ALL') {
+      queryParams.role = params.role.toUpperCase();
+    }
+    if (typeof params?.page === 'number') {
+      queryParams.page = params.page;
+    }
+    if (typeof params?.size === 'number') {
+      queryParams.size = params.size;
+    }
+
+    const res = await GetAPIRequest({
+      url: ORGANIZER_USERS_ENDPOINT,
+      params: queryParams,
+    });
+
+    if (res && Array.isArray(res.content)) {
+      return {
+        content: res.content.map(normalizeUserItem),
+        page: Number(res.page || 0),
+        size: Number(res.size || (params?.size ?? 20)),
+        totalElements: Number(res.totalElements ?? res.content.length),
+        totalPages: Number(
+          res.totalPages || Math.ceil((res.totalElements || res.content.length) / (res.size || 20))
+        ),
+      };
+    }
+
+    if (Array.isArray(res)) {
+      return {
+        content: res.map(normalizeUserItem),
+        page: 0,
+        size: res.length,
+        totalElements: res.length,
+        totalPages: 1,
+      };
+    }
+
+    if (res && typeof res === 'object') {
+      const list = Array.isArray(res.data) ? res.data : Array.isArray(res.items) ? res.items : [];
+      return {
+        content: list.map(normalizeUserItem),
+        page: Number(res.page || 0),
+        size: Number(res.size || (params?.size ?? 20)),
+        totalElements: Number(res.totalElements ?? list.length),
+        totalPages: Number(res.totalPages || 1),
+      };
+    }
+
+    return {
+      content: [],
+      page: params?.page ?? 0,
+      size: params?.size ?? 20,
+      totalElements: 0,
+      totalPages: 0,
+    };
   } catch (error) {
-    console.warn('[usersApi] Backend unavailable, using mock users:', error);
-    return [...mockUsers];
+    console.error('[usersApi] Failed to fetch organizer users:', error);
+    throw error;
   }
 };
 
-export const updateUserRole = async (userId: string, newRole: UserRole): Promise<boolean> => {
+/**
+ * Update user role (PUT /api/organizer/users/{id})
+ */
+export const updateUserRole = async (userId: string, newRole: string): Promise<boolean> => {
   try {
     await PutAPIRequest({
-      url: `${USERS_CONTROLLER}/${userId}`,
-      data: { role: newRole },
+      url: `${ORGANIZER_USERS_ENDPOINT}/${userId}`,
+      data: { role: newRole.toUpperCase() },
     });
     return true;
   } catch (error) {
-    console.warn('[usersApi] Update user role fallback:', error);
-    return true;
+    console.error(`[usersApi] Failed to update role for user ${userId}:`, error);
+    throw error;
   }
 };
