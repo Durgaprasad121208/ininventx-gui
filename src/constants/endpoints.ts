@@ -19,3 +19,6 @@ export const IDEAS_ENDPOINT = `${BASE_URL}/ideas`;
 // Users Endpoints
 export const USERS_CONTROLLER = `${BASE_URL}/users`;
 
+// Announcements Endpoints
+export const ANNOUNCEMENTS_ENDPOINT = `${BASE_URL}/announcements`;
+

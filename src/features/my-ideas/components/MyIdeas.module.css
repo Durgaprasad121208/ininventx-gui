@@ -446,3 +446,18 @@
     font-size: 21px;
   }
 }
+
+.spinWrapper {
+  width: 100%;
+  display: block;
+  min-height: 240px;
+}
+
+.spinWrapper :global(.ant-spin-nested-loading) {
+  width: 100%;
+}
+
+.spinWrapper :global(.ant-spin-container) {
+  width: 100%;
+}
+

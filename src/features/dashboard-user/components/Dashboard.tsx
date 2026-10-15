@@ -19,6 +19,7 @@ import { SubmitButton, DarkButton } from '@/components/ui/app-button/AppButton';
 import { useSelector } from 'react-redux';
 import { type RootState } from '@/redux/store';
 import { getDashboardData, initialDashboardData } from '../services/dashboardApi';
+import { likeIdea, unlikeIdea } from '@/features/browse-ideas/services/browseIdeasApi';
 import type { BackendDashboardResponse } from '../types/dashboard.types';
 import styles from './Dashboard.module.css';
 
@@ -192,13 +193,40 @@ export const Dashboard: React.FC = () => {
         ? (activeUser?.name || 'User')
         : 'User';
 
-    const handleLike = (ideaId: string) => {
-        const isLiked = hasLikedMap[ideaId];
-        setHasLikedMap((prev) => ({ ...prev, [ideaId]: !isLiked }));
+    const [likeLoadingMap, setLikeLoadingMap] = useState<Record<string, boolean>>({});
+
+    const handleLike = async (ideaId: string) => {
+        if (likeLoadingMap[ideaId]) return;
+
+        const isLiked = Boolean(hasLikedMap[ideaId]);
+        const nextLiked = !isLiked;
+        const delta = nextLiked ? 1 : -1;
+
+        setLikeLoadingMap((prev) => ({ ...prev, [ideaId]: true }));
+        // Optimistic UI update
+        setHasLikedMap((prev) => ({ ...prev, [ideaId]: nextLiked }));
         setLikesMap((prev) => ({
             ...prev,
-            [ideaId]: (prev[ideaId] || 0) + (isLiked ? -1 : 1),
+            [ideaId]: Math.max(0, (prev[ideaId] || 0) + delta),
         }));
+
+        try {
+            if (nextLiked) {
+                await likeIdea(ideaId);
+            } else {
+                await unlikeIdea(ideaId);
+            }
+        } catch (err) {
+            console.error(`[Dashboard] Failed to toggle like for idea ${ideaId}:`, err);
+            // Revert on error
+            setHasLikedMap((prev) => ({ ...prev, [ideaId]: isLiked }));
+            setLikesMap((prev) => ({
+                ...prev,
+                [ideaId]: Math.max(0, (prev[ideaId] || 0) - delta),
+            }));
+        } finally {
+            setLikeLoadingMap((prev) => ({ ...prev, [ideaId]: false }));
+        }
     };
 
     const getThumbnail = (type: string) => {
@@ -477,6 +505,7 @@ export const Dashboard: React.FC = () => {
                                                 <button
                                                     type="button"
                                                     className={styles.likeBtn}
+                                                    disabled={likeLoadingMap[idea.id]}
                                                     onClick={() => handleLike(idea.id)}
                                                     aria-label={`Like ${idea.title}`}
                                                     style={{ color: isLiked ? '#ef4444' : undefined }}

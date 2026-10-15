@@ -8,13 +8,13 @@ import { SubmitButton, DarkButton } from '@/components/ui/app-button/AppButton';
 import { getUserProfile } from '../services/profileApi';
 import { getMyIdeas } from '@/features/my-ideas/services/myIdeasApi';
 import type { UserProfile } from '../types/profile.types';
-import type { MyIdeaItem } from '@/features/my-ideas/types/myIdeas.types';
+import type { BackendMyIdeaItem } from '@/features/my-ideas/types/myIdeas.types';
 import styles from './MyProfile.module.css';
 
 export const MyProfile: React.FC = () => {
   const { message } = App.useApp();
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [myIdeas, setMyIdeas] = useState<MyIdeaItem[]>([]);
+  const [myIdeas, setMyIdeas] = useState<BackendMyIdeaItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

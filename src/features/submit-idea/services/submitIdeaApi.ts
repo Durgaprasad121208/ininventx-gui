@@ -1,4 +1,11 @@
-import { CategoryOption, IdeaSubmission } from '../types/submitIdea.types';
+import { PostAPIRequest, fileUpload, PutfileUpload } from '@/api-client/apiClient';
+import { IDEAS_ENDPOINT } from '@/constants/endpoints';
+import {
+  CategoryOption,
+  IdeaSubmission,
+  IdeaCreateRequest,
+  IdeaCreateResponse,
+} from '../types/submitIdea.types';
 
 export const PRIMARY_CATEGORIES: CategoryOption[] = [
   {
@@ -63,7 +70,27 @@ export const PRIMARY_CATEGORIES: CategoryOption[] = [
   },
 ];
 
-const STORAGE_KEY = 'inventx_submitted_ideas';
+/**
+ * Strict mapping to OpenAPI IdeaDto category enum:
+ * INDUSTRIAL_AUTOMATION, DIGITAL_MANUFACTURING, DIGITAL_TWINS, MODELLING_SIMULATION,
+ * AR_VR, AI_DATA_ANALYTICS, ROBOTICS, PRODUCT_PROCESS_INNOVATION, QUALITY_RELIABILITY,
+ * ENERGY_SUSTAINABILITY, SAFETY_ERGONOMICS, CUSTOMER_BUSINESS_SOLUTIONS
+ */
+export const CATEGORY_CODE_MAP: Record<string, string> = {
+  'Artificial Intelligence & Data Analytics': 'AI_DATA_ANALYTICS',
+  'Industrial Automation & Control': 'INDUSTRIAL_AUTOMATION',
+  'Digital Manufacturing & Smart Factories': 'DIGITAL_MANUFACTURING',
+  'Digital Twins': 'DIGITAL_TWINS',
+  'Modelling & Simulation': 'MODELLING_SIMULATION',
+  'Augmented & Virtual Reality (AR/VR)': 'AR_VR',
+  'Robotics & Intelligent Systems': 'ROBOTICS',
+  'Product & Process Innovation': 'PRODUCT_PROCESS_INNOVATION',
+  'Quality & Reliability': 'QUALITY_RELIABILITY',
+  'Energy Efficiency & Sustainability': 'ENERGY_SUSTAINABILITY',
+  'Safety & Ergonomics': 'SAFETY_ERGONOMICS',
+  'Customer & Business Solutions': 'CUSTOMER_BUSINESS_SOLUTIONS',
+};
+
 const DRAFT_KEY = 'inventx_idea_draft';
 
 export const saveIdeaDraft = async (draft: Partial<IdeaSubmission>): Promise<boolean> => {
@@ -90,22 +117,42 @@ export const getIdeaDraft = async (): Promise<Partial<IdeaSubmission> | null> =>
   return null;
 };
 
-export const submitIdea = async (submission: IdeaSubmission): Promise<{ success: boolean; id: string }> => {
-  const newId = `idea-${Date.now()}`;
-  const ideaWithId = { ...submission, id: newId };
-
-  try {
-    if (typeof window !== 'undefined') {
-      const existing = localStorage.getItem(STORAGE_KEY);
-      const list = existing ? JSON.parse(existing) : [];
-      list.unshift(ideaWithId);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-      // Clear draft on submission
-      localStorage.removeItem(DRAFT_KEY);
-    }
-  } catch (error) {
-    console.error('Failed to store submission:', error);
-  }
-
-  return { success: true, id: newId };
+/**
+ * Create a DRAFT idea via POST /api/ideas
+ */
+export const createIdea = async (data: IdeaCreateRequest): Promise<IdeaCreateResponse> => {
+  const response = await PostAPIRequest({
+    url: IDEAS_ENDPOINT,
+    data,
+  });
+  return response as IdeaCreateResponse;
 };
+
+/**
+ * Transition idea from DRAFT to SUBMITTED via POST /api/ideas/{id}/submit
+ */
+export const submitDraftIdea = async (ideaId: string): Promise<any> => {
+  return PostAPIRequest({
+    url: `${IDEAS_ENDPOINT}/${ideaId}/submit`,
+  });
+};
+
+/**
+ * Upload poster via POST /api/ideas/{id}/poster
+ */
+export const uploadIdeaPoster = async (ideaId: string, file: File): Promise<any> => {
+  const formData = new FormData();
+  formData.append('file', file);
+  return fileUpload(`${IDEAS_ENDPOINT}/${ideaId}/poster`, formData);
+};
+
+/**
+ * Upload attachment via POST /api/ideas/{id}/attachments
+ */
+export const uploadIdeaAttachment = async (ideaId: string, file: File): Promise<any> => {
+  const formData = new FormData();
+  formData.append('file', file);
+  return fileUpload(`${IDEAS_ENDPOINT}/${ideaId}/attachments`, formData);
+};
+
+export { PutfileUpload };

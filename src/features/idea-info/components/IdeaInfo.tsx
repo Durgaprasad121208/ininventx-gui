@@ -17,6 +17,7 @@ import {
   Paperclip,
 } from 'lucide-react';
 import { getIdeaDetail } from '../services/ideaInfoApi';
+import { likeIdea, unlikeIdea } from '@/features/browse-ideas/services/browseIdeasApi';
 import type { IdeaDetailData, StageCode } from '../types/ideaInfo.types';
 import styles from './IdeaInfo.module.css';
 
@@ -48,14 +49,34 @@ export const IdeaInfo: React.FC<IdeaInfoProps> = ({ ideaId }) => {
     });
   }, [effectiveId]);
 
-  const handleToggleLike = () => {
-    if (hasLiked) {
-      setLikes((prev) => prev - 1);
-      setHasLiked(false);
-    } else {
-      setLikes((prev) => prev + 1);
-      setHasLiked(true);
-      message.success('Idea added to your liked collection');
+  const [likeLoading, setLikeLoading] = useState<boolean>(false);
+
+  const handleToggleLike = async () => {
+    if (!effectiveId || likeLoading) return;
+    const isCurrentlyLiked = hasLiked;
+    const nextLiked = !isCurrentlyLiked;
+    const delta = nextLiked ? 1 : -1;
+
+    setLikeLoading(true);
+    // Optimistic UI update
+    setHasLiked(nextLiked);
+    setLikes((prev) => Math.max(0, prev + delta));
+
+    try {
+      if (nextLiked) {
+        await likeIdea(effectiveId);
+        message.success('Idea added to your liked collection');
+      } else {
+        await unlikeIdea(effectiveId);
+        message.info('Idea removed from your liked collection');
+      }
+    } catch (err) {
+      console.error(`[IdeaInfo] Failed to toggle like for idea ${effectiveId}:`, err);
+      // Revert on error
+      setHasLiked(isCurrentlyLiked);
+      setLikes((prev) => Math.max(0, prev - delta));
+    } finally {
+      setLikeLoading(false);
     }
   };
 
@@ -269,6 +290,7 @@ export const IdeaInfo: React.FC<IdeaInfoProps> = ({ ideaId }) => {
             <button
               type="button"
               className={styles.likesBtn}
+              disabled={likeLoading}
               onClick={handleToggleLike}
               aria-label="Like idea"
             >

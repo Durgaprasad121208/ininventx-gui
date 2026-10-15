@@ -1,4 +1,4 @@
-import { GetAPIRequest } from '@/api-client/apiClient';
+import { GetAPIRequest, PostAPIRequest, DeleteAPIRequest } from '@/api-client/apiClient';
 import { IDEAS_ENDPOINT } from '@/constants/endpoints';
 import { BackendIdeasPageResponse, GetIdeasParams } from '../types/browseIdeas.types';
 
@@ -76,3 +76,28 @@ export const getBrowseIdeas = async (
     };
   }
 };
+
+/**
+ * Like an idea (POST /api/ideas/{id}/like)
+ */
+export const likeIdea = async (id: string): Promise<any> => {
+  try {
+    return await PostAPIRequest({ url: `${IDEAS_ENDPOINT}/${id}/like` });
+  } catch (err) {
+    console.error(`[browseIdeasApi] Failed to like idea ${id}:`, err);
+    throw err;
+  }
+};
+
+/**
+ * Unlike an idea (DELETE /api/ideas/{id}/like)
+ */
+export const unlikeIdea = async (id: string): Promise<any> => {
+  try {
+    return await DeleteAPIRequest({ url: `${IDEAS_ENDPOINT}/${id}/like` });
+  } catch (err) {
+    console.error(`[browseIdeasApi] Failed to unlike idea ${id}:`, err);
+    throw err;
+  }
+};
+

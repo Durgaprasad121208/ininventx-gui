@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { SubmitButton } from '@/components/ui/app-button/AppButton';
 import { renderIdeaThumbnail } from '@/assets/IdeaThumbnails';
-import { getBrowseIdeas } from '../services/browseIdeasApi';
+import { getBrowseIdeas, likeIdea, unlikeIdea } from '../services/browseIdeasApi';
 import type {
   IdeaItem,
   IdeaStatus,
@@ -154,6 +154,7 @@ export const Idea: React.FC = () => {
   // Interactive like states
   const [likesMap, setLikesMap] = useState<Record<string, number>>({});
   const [hasLikedMap, setHasLikedMap] = useState<Record<string, boolean>>({});
+  const [likeLoadingMap, setLikeLoadingMap] = useState<Record<string, boolean>>({});
 
   const fetchIdeas = useCallback(async (targetPage = page, targetSize = size, targetSort = sortBy) => {
     setLoading(true);
@@ -193,13 +194,38 @@ export const Idea: React.FC = () => {
     fetchIdeas(page, size, sortBy);
   }, [fetchIdeas, page, size, sortBy]);
 
-  const handleToggleLike = (ideaId: string) => {
-    const isCurrentlyLiked = hasLikedMap[ideaId];
-    setHasLikedMap((prev) => ({ ...prev, [ideaId]: !isCurrentlyLiked }));
+  const handleToggleLike = async (ideaId: string) => {
+    if (likeLoadingMap[ideaId]) return;
+
+    const isCurrentlyLiked = Boolean(hasLikedMap[ideaId]);
+    const nextLiked = !isCurrentlyLiked;
+    const delta = nextLiked ? 1 : -1;
+
+    setLikeLoadingMap((prev) => ({ ...prev, [ideaId]: true }));
+    // Optimistic UI update
+    setHasLikedMap((prev) => ({ ...prev, [ideaId]: nextLiked }));
     setLikesMap((prev) => ({
       ...prev,
-      [ideaId]: (prev[ideaId] || 0) + (isCurrentlyLiked ? -1 : 1),
+      [ideaId]: Math.max(0, (prev[ideaId] || 0) + delta),
     }));
+
+    try {
+      if (nextLiked) {
+        await likeIdea(ideaId);
+      } else {
+        await unlikeIdea(ideaId);
+      }
+    } catch (err) {
+      console.error(`[Idea Component] Failed to toggle like for idea ${ideaId}:`, err);
+      // Revert optimistic update on failure
+      setHasLikedMap((prev) => ({ ...prev, [ideaId]: isCurrentlyLiked }));
+      setLikesMap((prev) => ({
+        ...prev,
+        [ideaId]: Math.max(0, (prev[ideaId] || 0) - delta),
+      }));
+    } finally {
+      setLikeLoadingMap((prev) => ({ ...prev, [ideaId]: false }));
+    }
   };
 
   const getStatusClass = (status: IdeaStatus) => {
@@ -423,6 +449,7 @@ export const Idea: React.FC = () => {
 
                             <button
                               type="button"
+                              disabled={likeLoadingMap[idea.id]}
                               onClick={() => handleToggleLike(idea.id)}
                               className={`${styles.likeBtn} ${isLiked ? styles.likeBtnActive : ''}`}
                               aria-label={`Like ${idea.title}`}

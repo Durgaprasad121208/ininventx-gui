@@ -529,6 +529,176 @@
 }
 
 /* ==========================================================================
+   Team Card Styles
+   ========================================================================== */
+.cardTitleWithIcon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+
+.teamSubtitle {
+  font-size: 11.5px;
+  color: #94a3b8;
+  margin-bottom: 18px;
+  line-height: 1.4;
+}
+
+.ownerRow {
+  background: #040914;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ownerInfo {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.ownerBadge {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.memberRow {
+  background: #040914;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 8px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.memberInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #f1f5f9;
+  flex-wrap: wrap;
+}
+
+.memberSubText {
+  font-size: 10.5px;
+  color: #64748b;
+}
+
+.memberDeleteBtn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  transition: color var(--transition-fast);
+}
+
+.memberDeleteBtn:hover {
+  color: #ef4444;
+}
+
+.addMemberRow {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.companySelect {
+  width: 100% !important;
+  height: 36px !important;
+}
+
+.companySelect :global(.ant-select-selector) {
+  height: 36px !important;
+  background: #040914 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  font-size: 11.5px !important;
+  padding: 0 10px !important;
+}
+
+.companySelect:hover :global(.ant-select-selector),
+.companySelect:focus :global(.ant-select-selector) {
+  border-color: rgba(41, 201, 209, 0.5) !important;
+}
+
+.addMemberBtn {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  height: 36px !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.addMemberBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+.addMemberBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Light mode overrides for team card */
+:global([data-theme="light"]) .ownerRow,
+:global(body.light-theme) .ownerRow,
+:global([data-theme="light"]) .memberRow,
+:global(body.light-theme) .memberRow {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+:global([data-theme="light"]) .ownerInfo,
+:global(body.light-theme) .ownerInfo {
+  color: #0f172a;
+}
+
+:global([data-theme="light"]) .cardTitleWithIcon,
+:global(body.light-theme) .cardTitleWithIcon {
+  color: #0f172a;
+}
+
+:global([data-theme="light"]) .companySelect :global(.ant-select-selector),
+:global(body.light-theme) .companySelect :global(.ant-select-selector) {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .addMemberBtn,
+:global(body.light-theme) .addMemberBtn {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+/* ==========================================================================
    Responsive Adaptations
    ========================================================================== */
 @media (max-width: 991px) {
@@ -540,5 +710,10 @@
 @media (max-width: 576px) {
   .pageTitle {
     font-size: 20px;
+  }
+
+  .ownerRow,
+  .memberRow {
+    padding: 8px 10px;
   }
 }
