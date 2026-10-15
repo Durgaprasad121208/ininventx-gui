@@ -28,3 +28,24 @@ export const getMyIdeas = async (): Promise<BackendMyIdeaItem[]> => {
   }
 };
 
+/**
+ * Fetch a single idea detail by ID (GET /api/ideas/{id})
+ */
+export const getMyIdeaDetail = async (id: string): Promise<any> => {
+  try {
+    const res = await GetAPIRequest({ url: `${IDEAS_ENDPOINT}/${id}` });
+    return res;
+  } catch (error) {
+    console.error(`[myIdeasApi] Failed to fetch idea details for ${id}:`, error);
+    // If specific endpoint fails, try to find in my ideas list
+    try {
+      const allMine = await getMyIdeas();
+      const match = allMine.find((item) => String(item.id) === String(id));
+      if (match) return match;
+    } catch {
+      // ignore
+    }
+    throw error;
+  }
+};
+

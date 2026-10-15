@@ -1,0 +1,718 @@
+/* ==========================================================================
+   MyIdeaInfo Component Styles (Theme Responsive & Pixel-Perfect)
+   ========================================================================== */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 4px 48px;
+  box-sizing: border-box;
+}
+
+/* Back Navigation Link */
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  width: fit-content;
+  transition: color var(--transition-fast, 0.15s ease);
+}
+
+.backLink:hover {
+  color: #38bdf8;
+}
+
+/* ==========================================================================
+   1. Hero Banner Card
+   ========================================================================== */
+.heroBannerCard {
+  background: linear-gradient(135deg, #071224 0%, #050d1a 60%, #030814 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  position: relative;
+  overflow: hidden;
+  width: 100% !important;
+}
+
+.heroBannerCard :global(.ant-card-body) {
+  padding: 28px 32px !important;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Badges Row */
+.bannerBadgesRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.stageBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(14, 165, 233, 0.15);
+  border: 1px solid rgba(14, 165, 233, 0.35);
+  color: #38bdf8;
+  letter-spacing: 0.01em;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+}
+
+.statusUnderReview {
+  background: rgba(45, 212, 191, 0.15) !important;
+  border-color: rgba(45, 212, 191, 0.35) !important;
+  color: #2dd4bf !important;
+}
+
+.statusApproved {
+  background: rgba(16, 185, 129, 0.15) !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  color: #34d399 !important;
+}
+
+.statusDraft {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #94a3b8 !important;
+}
+
+.statusChangesRequested {
+  background: rgba(245, 158, 11, 0.15) !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+  color: #fbbf24 !important;
+}
+
+.demoContentTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #fbbf24;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Idea Title */
+.ideaTitle {
+  font-size: clamp(22px, 3.2vw, 32px);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin-top: 14px;
+  margin-bottom: 6px;
+}
+
+.categorySubtitle {
+  font-size: 14px;
+  color: #94a3b8;
+  margin-bottom: 18px;
+  font-weight: 500;
+}
+
+/* Banner Meta Row */
+.bannerMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.likesBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 5px 12px;
+  color: #cbd5e1;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.15s ease);
+}
+
+.likesBtn:hover {
+  border-color: #38bdf8;
+  color: #38bdf8;
+  transform: translateY(-1px);
+}
+
+.editIdeaBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #0f1d33;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 8px;
+  padding: 5px 14px;
+  color: #e2e8f0;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.15s ease);
+}
+
+.editIdeaBtn:hover {
+  background: #172a48;
+  border-color: #38bdf8;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.metaDates {
+  font-size: 12.5px;
+  color: #64748b;
+}
+
+/* ==========================================================================
+   2. Stage Progress Stepper Card
+   ========================================================================== */
+.stepperCard {
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  width: 100% !important;
+}
+
+.stepperCard :global(.ant-card-body) {
+  padding: 20px 24px !important;
+}
+
+.stepperGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+.stepSegment {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.stepBar {
+  height: 4px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  transition: all var(--transition-fast, 0.15s ease);
+}
+
+.stepBarActive {
+  background: linear-gradient(90deg, #38bdf8, #2dd4bf);
+}
+
+.stepLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stepLabelActive {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   3. Main Two-Column Layout
+   ========================================================================== */
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 20px;
+  align-items: start;
+  width: 100%;
+}
+
+.leftCol,
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+/* Generic Section Card */
+.sectionCard {
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  width: 100% !important;
+}
+
+.sectionCard :global(.ant-card-body) {
+  padding: 24px !important;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+
+/* Description Section */
+.descriptionText {
+  font-size: 14px;
+  color: #cbd5e1;
+  line-height: 1.65;
+  margin-bottom: 22px;
+}
+
+.subSectionHeader {
+  font-size: 11px;
+  font-weight: 800;
+  color: #94a3b8;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.subSectionText {
+  font-size: 13.5px;
+  color: #e2e8f0;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.subSectionText:last-child {
+  margin-bottom: 0;
+}
+
+/* ==========================================================================
+   4. Team Members Card
+   ========================================================================== */
+.teamCardTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.membersList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.memberItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.memberItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.memberNameRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.memberName {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.ownerBadge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.memberMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.companyDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.teamSummaryFooter {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 14px;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   5. Stage History Card
+   ========================================================================== */
+.historyTimeline {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: relative;
+  padding-left: 18px;
+}
+
+.timelineEntry {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  gap: 4px;
+}
+
+.timelineVerticalBar {
+  position: absolute;
+  left: -18px;
+  top: 4px;
+  bottom: -18px;
+  width: 2px;
+  background: #0284c7;
+}
+
+.timelineEntry:last-child .timelineVerticalBar {
+  bottom: 0;
+}
+
+.timelineActionRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.timelineReason {
+  font-size: 12.5px;
+  color: #94a3b8;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.timelineMeta {
+  font-size: 11.5px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   6. Attachments Card
+   ========================================================================== */
+.attachmentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.attachmentItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 12px;
+}
+
+.attachmentLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.attachmentIconBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  flex-shrink: 0;
+}
+
+.attachmentInfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.attachmentName {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachmentSize {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.downloadBtn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast, 0.15s ease);
+}
+
+.downloadBtn:hover {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+}
+
+.noAttachments {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Category Bottom Pill */
+.categoryBottomPill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  font-size: 12.5px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+/* Loading & Empty State Containers */
+.loadingContainer,
+.emptyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  text-align: center;
+  gap: 16px;
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 992px) {
+  .mainGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroBannerCard :global(.ant-card-body) {
+    padding: 20px 18px !important;
+  }
+
+  .sectionCard :global(.ant-card-body) {
+    padding: 18px !important;
+  }
+
+  .stepperCard :global(.ant-card-body) {
+    padding: 16px !important;
+  }
+
+  .stepperGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .bannerMetaRow {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroBannerCard :global(.ant-card-body) {
+    padding: 16px 14px !important;
+  }
+
+  .sectionCard :global(.ant-card-body) {
+    padding: 14px !important;
+  }
+
+  .stepperGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .stepLabel {
+    font-size: 11px;
+  }
+
+  .bannerBadgesRow {
+    gap: 6px;
+  }
+
+  .bannerMetaRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+/* ==========================================================================
+   Light Mode Overrides
+   ========================================================================== */
+:global([data-theme="light"]) .heroBannerCard,
+:global(body.light-theme) .heroBannerCard {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+:global([data-theme="light"]) .stepperCard,
+:global(body.light-theme) .stepperCard,
+:global([data-theme="light"]) .sectionCard,
+:global(body.light-theme) .sectionCard {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+:global([data-theme="light"]) .ideaTitle,
+:global(body.light-theme) .ideaTitle,
+:global([data-theme="light"]) .sectionTitle,
+:global(body.light-theme) .sectionTitle,
+:global([data-theme="light"]) .teamCardTitle,
+:global(body.light-theme) .teamCardTitle,
+:global([data-theme="light"]) .memberName,
+:global(body.light-theme) .memberName,
+:global([data-theme="light"]) .attachmentName,
+:global(body.light-theme) .attachmentName,
+:global([data-theme="light"]) .timelineActionRow,
+:global(body.light-theme) .timelineActionRow {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .categorySubtitle,
+:global(body.light-theme) .categorySubtitle,
+:global([data-theme="light"]) .descriptionText,
+:global(body.light-theme) .descriptionText,
+:global([data-theme="light"]) .subSectionText,
+:global(body.light-theme) .subSectionText {
+  color: #334155 !important;
+}
+
+:global([data-theme="light"]) .subSectionHeader,
+:global(body.light-theme) .subSectionHeader {
+  color: #0284c7 !important;
+}
+
+:global([data-theme="light"]) .stepBar,
+:global(body.light-theme) .stepBar {
+  background: #e2e8f0;
+}
+
+:global([data-theme="light"]) .stepLabel,
+:global(body.light-theme) .stepLabel {
+  color: #64748b;
+}
+
+:global([data-theme="light"]) .stepLabelActive,
+:global(body.light-theme) .stepLabelActive {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .likesBtn,
+:global(body.light-theme) .likesBtn {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+:global([data-theme="light"]) .editIdeaBtn,
+:global(body.light-theme) .editIdeaBtn {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+:global([data-theme="light"]) .attachmentItem,
+:global(body.light-theme) .attachmentItem {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+:global([data-theme="light"]) .categoryBottomPill,
+:global(body.light-theme) .categoryBottomPill {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #475569;
+}
+
+:global([data-theme="light"]) .memberItem,
+:global(body.light-theme) .memberItem {
+  border-bottom-color: #f1f5f9;
+}

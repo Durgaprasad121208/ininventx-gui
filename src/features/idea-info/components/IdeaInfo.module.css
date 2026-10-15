@@ -333,24 +333,26 @@
 
 /* Promote Primary Button */
 .promotePrimaryBtn {
-  width: 100%;
-  height: 38px;
-  font-size: 12.5px;
-  font-weight: 600;
-  background: #0284c7;
-  border: none;
-  color: #ffffff;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
+  width: 100% !important;
+  height: 38px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  background: #0284c7 !important;
+  border: 1px solid #0284c7 !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
-.promotePrimaryBtn:hover {
-  background: #0369a1;
+.promotePrimaryBtn:hover:not(:disabled) {
+  background: #0369a1 !important;
+  border-color: #0369a1 !important;
+  color: #ffffff !important;
 }
 
 /* 2x2 Action Button Grid */
@@ -358,38 +360,66 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
+  margin-top: 8px;
 }
 
 .actionBtn {
-  height: 34px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  color: #cbd5e1;
-  font-size: 11.5px;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
+  width: 100% !important;
+  height: 36px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 6px !important;
+  color: #cbd5e1 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
-.actionBtn:hover {
-  background: rgba(255, 255, 255, 0.07);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.2);
+.actionBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
 }
 
 .actionBtnReject {
   background: #ef4444 !important;
-  border: none !important;
+  border: 1px solid #ef4444 !important;
   color: #ffffff !important;
 }
 
-.actionBtnReject:hover {
+.actionBtnReject:hover:not(:disabled) {
   background: #dc2626 !important;
+  border-color: #dc2626 !important;
+  color: #ffffff !important;
+}
+
+.restoreBtn {
+  width: 100% !important;
+  height: 36px !important;
+  margin-top: 8px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 6px !important;
+  color: #cbd5e1 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.restoreBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
 }
 
 .actionBtnFull {
@@ -559,17 +589,82 @@
   color: #334155 !important;
 }
 
+/* Light Mode Action Buttons */
 :global([data-theme="light"]) .actionBtn,
-:global(body.light-theme) .actionBtn {
-  background: #f1f5f9;
-  border-color: #e2e8f0;
-  color: #334155;
+:global(body.light-theme) .actionBtn,
+:global([data-theme="light"]) .restoreBtn,
+:global(body.light-theme) .restoreBtn {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
-:global([data-theme="light"]) .actionBtn:hover,
-:global(body.light-theme) .actionBtn:hover {
-  background: #e2e8f0;
-  color: #0f172a;
+:global([data-theme="light"]) .actionBtn svg,
+:global(body.light-theme) .actionBtn svg,
+:global([data-theme="light"]) .restoreBtn svg,
+:global(body.light-theme) .restoreBtn svg {
+  color: #334155 !important;
+  stroke: #334155 !important;
+}
+
+:global([data-theme="light"]) .actionBtn:hover:not(:disabled),
+:global(body.light-theme) .actionBtn:hover:not(:disabled),
+:global([data-theme="light"]) .restoreBtn:hover:not(:disabled),
+:global(body.light-theme) .restoreBtn:hover:not(:disabled) {
+  background-color: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+  color: #0284c7 !important;
+}
+
+:global([data-theme="light"]) .actionBtn:hover:not(:disabled) svg,
+:global(body.light-theme) .actionBtn:hover:not(:disabled) svg,
+:global([data-theme="light"]) .restoreBtn:hover:not(:disabled) svg,
+:global(body.light-theme) .restoreBtn:hover:not(:disabled) svg {
+  color: #0284c7 !important;
+  stroke: #0284c7 !important;
+}
+
+/* Reject Danger button in light mode */
+:global([data-theme="light"]) .actionBtnReject,
+:global(body.light-theme) .actionBtnReject {
+  background-color: #ef4444 !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
+}
+
+:global([data-theme="light"]) .actionBtnReject svg,
+:global(body.light-theme) .actionBtnReject svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+:global([data-theme="light"]) .actionBtnReject:hover:not(:disabled),
+:global(body.light-theme) .actionBtnReject:hover:not(:disabled) {
+  background-color: #dc2626 !important;
+  border-color: #dc2626 !important;
+  color: #ffffff !important;
+}
+
+:global([data-theme="light"]) .actionBtnReject:hover:not(:disabled) svg,
+:global(body.light-theme) .actionBtnReject:hover:not(:disabled) svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* Save metadata button in light mode */
+:global([data-theme="light"]) .saveMetaBtn,
+:global(body.light-theme) .saveMetaBtn {
+  background-color: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+:global([data-theme="light"]) .saveMetaBtn:hover:not(:disabled),
+:global(body.light-theme) .saveMetaBtn:hover:not(:disabled) {
+  background-color: #0369a1 !important;
+  border-color: #0369a1 !important;
+  color: #ffffff !important;
 }
 
 :global([data-theme="light"]) .adminInput,
@@ -584,6 +679,343 @@
 :global([data-theme="light"]) .stepLabelActive,
 :global(body.light-theme) .stepLabelActive {
   color: #0f172a !important;
+}
+
+/* ==========================================================================
+   Decision Modal Styles & Responsiveness
+   ========================================================================== */
+.decisionModal :global(.ant-modal-content) {
+  background: #0b1324 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 14px !important;
+  padding: 24px !important;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.75) !important;
+  overflow: hidden;
+}
+
+.decisionModal :global(.ant-modal-close) {
+  color: #94a3b8 !important;
+  top: 16px !important;
+  right: 16px !important;
+}
+
+.decisionModal :global(.ant-modal-close:hover) {
+  color: #ffffff !important;
+}
+
+:global([data-theme="light"]) .decisionModal :global(.ant-modal-content),
+:global(body.light-theme) .decisionModal :global(.ant-modal-content) {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.12) !important;
+}
+
+:global([data-theme="light"]) .decisionModal :global(.ant-modal-close),
+:global(body.light-theme) .decisionModal :global(.ant-modal-close) {
+  color: #64748b !important;
+}
+
+:global([data-theme="light"]) .decisionModal :global(.ant-modal-close:hover),
+:global(body.light-theme) .decisionModal :global(.ant-modal-close:hover) {
+  color: #0f172a !important;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.modalIconBox {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.modalTitleCol {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.modalTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.modalTitleText {
+  font-size: 16.5px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+:global([data-theme="light"]) .modalTitleText,
+:global(body.light-theme) .modalTitleText {
+  color: #0f172a !important;
+}
+
+.modalDecisionBadge {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+}
+
+.modalSubtitleText {
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.4;
+}
+
+:global([data-theme="light"]) .modalSubtitleText,
+:global(body.light-theme) .modalSubtitleText {
+  color: #64748b !important;
+}
+
+/* Modal Summary Banner */
+.modalSummaryBanner {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 11px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+:global([data-theme="light"]) .modalSummaryBanner,
+:global(body.light-theme) .modalSummaryBanner {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+.modalIdeaName {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:global([data-theme="light"]) .modalIdeaName,
+:global(body.light-theme) .modalIdeaName {
+  color: #0f172a !important;
+}
+
+.modalTransitionInfo {
+  font-size: 12px;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+:global([data-theme="light"]) .modalTransitionInfo,
+:global(body.light-theme) .modalTransitionInfo {
+  color: #475569 !important;
+}
+
+.modalStageHighlight {
+  color: #29c9d1;
+  font-weight: 600;
+}
+
+:global([data-theme="light"]) .modalStageHighlight,
+:global(body.light-theme) .modalStageHighlight {
+  color: #0284c7 !important;
+}
+
+/* Quick Reason Chips */
+.quickTemplatesSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quickTemplatesLabel {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.3px;
+}
+
+:global([data-theme="light"]) .quickTemplatesLabel,
+:global(body.light-theme) .quickTemplatesLabel {
+  color: #64748b !important;
+}
+
+.chipsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 120px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.templateChip {
+  font-size: 11.5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+  line-height: 1.35;
+  display: inline-flex;
+  align-items: center;
+}
+
+.templateChip:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+.templateChipActive {
+  background: rgba(41, 201, 209, 0.15) !important;
+  border-color: #29c9d1 !important;
+  color: #29c9d1 !important;
+  font-weight: 600;
+}
+
+:global([data-theme="light"]) .templateChip,
+:global(body.light-theme) .templateChip {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #334155 !important;
+}
+
+:global([data-theme="light"]) .templateChip:hover,
+:global(body.light-theme) .templateChip:hover {
+  background: #e2e8f0 !important;
+  border-color: #94a3b8 !important;
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .templateChipActive,
+:global(body.light-theme) .templateChipActive {
+  background: rgba(2, 132, 199, 0.12) !important;
+  border-color: #0284c7 !important;
+  color: #0284c7 !important;
+}
+
+/* Modal Input Area */
+.modalInputSection {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modalInputLabelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.modalInputLabel {
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+:global([data-theme="light"]) .modalInputLabel,
+:global(body.light-theme) .modalInputLabel {
+  color: #334155 !important;
+}
+
+.charCounter {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.counterValid {
+  color: #10b981;
+}
+
+.counterInvalid {
+  color: #f87171;
+}
+
+.modalTextarea {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 8px !important;
+  color: #ffffff !important;
+  font-size: 12.5px !important;
+  padding: 10px 12px !important;
+  line-height: 1.5 !important;
+  resize: vertical;
+  transition: all var(--transition-fast) !important;
+}
+
+.modalTextarea:focus,
+.modalTextarea:hover {
+  border-color: #29c9d1 !important;
+}
+
+:global([data-theme="light"]) .modalTextarea,
+:global(body.light-theme) .modalTextarea {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .modalTextarea:focus,
+:global(body.light-theme) .modalTextarea:focus {
+  border-color: #0284c7 !important;
+}
+
+/* Modal Actions Footer */
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+:global([data-theme="light"]) .modalFooter,
+:global(body.light-theme) .modalFooter {
+  border-top-color: #e2e8f0 !important;
+}
+
+.modalRejectBtn {
+  background-color: #ef4444 !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
+}
+
+.modalRejectBtn:hover:not(:disabled) {
+  background-color: #dc2626 !important;
+  border-color: #dc2626 !important;
+  color: #ffffff !important;
 }
 
 /* ==========================================================================
@@ -610,5 +1042,51 @@
 
   .actionBtnFull {
     grid-column: span 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    gap: 14px;
+    padding-bottom: 24px;
+  }
+
+  .heroBannerCard :global(.ant-card-body) {
+    padding: 18px 16px !important;
+  }
+
+  .stepperCard :global(.ant-card-body) {
+    padding: 12px 16px !important;
+  }
+
+  .sectionCard :global(.ant-card-body) {
+    padding: 16px 14px !important;
+  }
+
+  .decisionModal :global(.ant-modal-content) {
+    padding: 16px 12px !important;
+  }
+
+  .modalHeader {
+    gap: 8px;
+  }
+
+  .modalTitleText {
+    font-size: 15px;
+  }
+
+  .modalFooter {
+    flex-direction: column-reverse;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .modalFooter > button {
+    width: 100% !important;
+  }
+
+  .templateChip {
+    font-size: 11px;
+    padding: 4px 8px;
   }
 }

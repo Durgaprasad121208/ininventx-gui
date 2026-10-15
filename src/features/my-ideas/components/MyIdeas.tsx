@@ -232,59 +232,61 @@ export const MyIdeas: React.FC = () => {
             <Row gutter={[16, 16]}>
               {ideas.map((idea) => (
                 <Col key={idea.id} xs={24} sm={12} lg={8} xl={8}>
-                  <Card hoverable className={styles.ideaCard} variant="borderless">
-                    {/* Thumbnail banner with badges */}
-                    <div className={styles.thumbnailWrapper}>
-                      {renderIdeaThumbnail(idea.thumbnailType)}
+                  <Link href={`/my-ideas/${idea.id}`} className={styles.cardLink}>
+                    <Card hoverable className={styles.ideaCard} variant="borderless">
+                      {/* Thumbnail banner with badges */}
+                      <div className={styles.thumbnailWrapper}>
+                        {renderIdeaThumbnail(idea.thumbnailType)}
 
-                      <div className={styles.badgesOverlay}>
-                        <span className={styles.stageBadge}>{idea.stage}</span>
-                        {idea.stageBadge && (
-                          <span className={styles.demoBadge}>{idea.stageBadge}</span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Card Content Body */}
-                    <div className={styles.cardContent}>
-                      {/* Tags row */}
-                      <div className={styles.tagsRow}>
-                        <span className={styles.categoryTag}>{idea.category}</span>
-                        <span className={getStatusClass(idea.status)}>{idea.status}</span>
-                      </div>
-
-                      {/* Title & Description */}
-                      <h3 className={styles.cardTitle}>{idea.title}</h3>
-                      <p className={styles.cardDescription}>{idea.description}</p>
-
-                      {/* Author & Team Section */}
-                      <div className={styles.authorSection}>
-                        <span className={styles.authorName}>{idea.author}</span>
-                        <div className={styles.teamRow}>
-                          <span
-                            className={styles.statusDot}
-                            style={{ backgroundColor: idea.teamDotColor }}
-                          />
-                          <span>{idea.company}</span>
-                          <span>· {idea.team}</span>
+                        <div className={styles.badgesOverlay}>
+                          <span className={styles.stageBadge}>{idea.stage}</span>
+                          {idea.stageBadge && (
+                            <span className={styles.demoBadge}>{idea.stageBadge}</span>
+                          )}
                         </div>
                       </div>
 
-                      {/* Card Footer: Date & Attachments */}
-                      <div className={styles.cardFooter}>
-                        <span>{idea.date}</span>
+                      {/* Card Content Body */}
+                      <div className={styles.cardContent}>
+                        {/* Tags row */}
+                        <div className={styles.tagsRow}>
+                          <span className={styles.categoryTag}>{idea.category}</span>
+                          <span className={getStatusClass(idea.status)}>{idea.status}</span>
+                        </div>
 
-                        <div className={styles.footerActionsRight}>
-                          {idea.attachments ? (
-                            <span className={styles.attachmentBadge}>
-                              <Paperclip size={12} />
-                              <span>{idea.attachments}</span>
-                            </span>
-                          ) : null}
+                        {/* Title & Description */}
+                        <h3 className={styles.cardTitle}>{idea.title}</h3>
+                        <p className={styles.cardDescription}>{idea.description}</p>
+
+                        {/* Author & Team Section */}
+                        <div className={styles.authorSection}>
+                          <span className={styles.authorName}>{idea.author}</span>
+                          <div className={styles.teamRow}>
+                            <span
+                              className={styles.statusDot}
+                              style={{ backgroundColor: idea.teamDotColor }}
+                            />
+                            <span>{idea.company}</span>
+                            <span>· {idea.team}</span>
+                          </div>
+                        </div>
+
+                        {/* Card Footer: Date & Attachments */}
+                        <div className={styles.cardFooter}>
+                          <span>{idea.date}</span>
+
+                          <div className={styles.footerActionsRight}>
+                            {idea.attachments ? (
+                              <span className={styles.attachmentBadge}>
+                                <Paperclip size={12} />
+                                <span>{idea.attachments}</span>
+                              </span>
+                            ) : null}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Card>
+                    </Card>
+                  </Link>
                 </Col>
               ))}
             </Row>

@@ -92,6 +92,14 @@
   margin-top: 4px;
 }
 
+.cardLink {
+  text-decoration: none !important;
+  color: inherit !important;
+  display: block;
+  height: 100%;
+  cursor: pointer;
+}
+
 .ideaCard {
   background: #08101e !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;

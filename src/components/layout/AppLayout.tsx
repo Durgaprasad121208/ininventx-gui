@@ -46,6 +46,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Submit idea' }]
       : effectivePath === '/my-ideas'
       ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'My ideas' }]
+      : effectivePath.startsWith('/my-ideas/')
+      ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'My ideas', href: '/my-ideas' }, { label: 'Idea details' }]
       : effectivePath === '/announcements'
       ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Announcements' }]
       : effectivePath === '/guidelines'

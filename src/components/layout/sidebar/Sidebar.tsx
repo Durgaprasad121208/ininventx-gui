@@ -51,6 +51,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     if (activePath === itemKey) return true;
     if ((activePath === '/' || activePath === '/dashboard') && itemKey === '/user-dashboard') return true;
     if (activePath === '/user-dashboard' && itemKey === '/dashboard') return true;
+    if (itemKey === '/my-ideas' && activePath.startsWith('/my-ideas')) return true;
+    if (itemKey === '/browse-ideas' && (activePath.startsWith('/idea-info') || activePath.startsWith('/browse-ideas'))) return true;
     return false;
   };
 
