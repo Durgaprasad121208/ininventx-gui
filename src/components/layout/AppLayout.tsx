@@ -56,6 +56,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Organizer', href: '/organizer/overview' }, { label: 'Guidelines' }]
       : effectivePath === '/organizer/announcements'
       ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Organizer', href: '/organizer/overview' }, { label: 'Announcements' }]
+      : effectivePath === '/organizer/users'
+      ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Organizer', href: '/organizer/overview' }, { label: 'Users' }]
+      : effectivePath === '/organizer/settings'
+      ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Organizer', href: '/organizer/overview' }, { label: 'Settings' }]
       : effectivePath === '/idea-info' || effectivePath.startsWith('/idea-info')
       ? [{ label: 'Home', href: '/user-dashboard' }, { label: 'Idea details' }]
       : effectivePath.startsWith('/organizer')
@@ -89,6 +93,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       setCollapsed((prev) => !prev);
     }
   }, []);
+
+  const isAuthPage = effectivePath === '/login' || effectivePath === '/register';
+  if (isAuthPage) {
+    return <main style={{ minHeight: '100vh', width: '100%', overflowX: 'hidden' }}>{children}</main>;
+  }
 
   return (
     <Layout

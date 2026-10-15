@@ -1,0 +1,314 @@
+/* ==========================================================================
+   Organizer Settings Styles
+   ========================================================================== */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-bottom: 48px;
+}
+
+/* 1. Header Section */
+.headerSection {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.topRoleTag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.pageTitle {
+  font-size: 26px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* 2. Common Settings Card */
+.settingsCard {
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  padding: 24px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cardTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.cardSubtitle {
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+/* 3. Programme Rules Section */
+.rulesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.ruleBox {
+  background: #050a14;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color var(--transition-fast, 0.15s ease);
+}
+
+.ruleBox:focus-within,
+.ruleBox:hover {
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.ruleLabel {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+.ruleInput {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #ffffff !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  padding: 0 !important;
+  height: auto !important;
+  width: 100% !important;
+}
+
+.ruleInput input {
+  background: transparent !important;
+  color: #ffffff !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  padding: 0 !important;
+}
+
+/* 4. Judging Criteria Section */
+.criteriaList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.criterionRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.criterionNameInput {
+  flex: 1;
+  background: #050a14 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  height: 40px !important;
+  font-size: 13px !important;
+  color: #ffffff !important;
+  padding: 0 14px !important;
+  transition: all var(--transition-fast, 0.15s ease);
+}
+
+.criterionNameInput:hover,
+.criterionNameInput:focus,
+.criterionNameInput:focus-within {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25) !important;
+}
+
+.criterionNameInput input {
+  color: #ffffff !important;
+}
+
+.criterionWeightWrapper {
+  width: 90px;
+  flex-shrink: 0;
+}
+
+.criterionWeightInput {
+  background: #050a14 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  height: 40px !important;
+  font-size: 13px !important;
+  color: #ffffff !important;
+  text-align: right !important;
+  transition: all var(--transition-fast, 0.15s ease);
+}
+
+.criterionWeightInput:hover,
+.criterionWeightInput:focus,
+.criterionWeightInput:focus-within {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25) !important;
+}
+
+.criterionWeightInput input {
+  color: #ffffff !important;
+  text-align: right !important;
+  font-weight: 600 !important;
+}
+
+.criteriaFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  padding-top: 10px;
+}
+
+.totalText {
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.totalSuccess {
+  color: #34d399;
+}
+
+.totalError {
+  color: #f87171;
+}
+
+/* 5. API Connection Section */
+.apiSection {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.apiModeText {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.apiModeValue {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.resetBtn {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  color: #e2e8f0;
+  padding: 8px 16px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.15s ease);
+}
+
+.resetBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   Light Mode Overrides
+   ========================================================================== */
+:global([data-theme="light"]) .pageTitle,
+:global(body.light-theme) .pageTitle,
+:global([data-theme="light"]) .cardTitle,
+:global(body.light-theme) .cardTitle,
+:global([data-theme="light"]) .ruleValue,
+:global(body.light-theme) .ruleValue,
+:global([data-theme="light"]) .apiModeValue,
+:global(body.light-theme) .apiModeValue {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .cardSubtitle,
+:global(body.light-theme) .cardSubtitle,
+:global([data-theme="light"]) .ruleLabel,
+:global(body.light-theme) .ruleLabel,
+:global([data-theme="light"]) .apiModeText,
+:global(body.light-theme) .apiModeText {
+  color: #64748b !important;
+}
+
+:global([data-theme="light"]) .settingsCard,
+:global(body.light-theme) .settingsCard {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+:global([data-theme="light"]) .ruleBox,
+:global(body.light-theme) .ruleBox {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+:global([data-theme="light"]) .ruleInput input,
+:global(body.light-theme) .ruleInput input {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .criterionNameInput,
+:global(body.light-theme) .criterionNameInput,
+:global([data-theme="light"]) .criterionWeightInput,
+:global(body.light-theme) .criterionWeightInput {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .criterionNameInput input,
+:global(body.light-theme) .criterionNameInput input,
+:global([data-theme="light"]) .criterionWeightInput input,
+:global(body.light-theme) .criterionWeightInput input {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .resetBtn,
+:global(body.light-theme) .resetBtn {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+:global([data-theme="light"]) .resetBtn:hover,
+:global(body.light-theme) .resetBtn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}

@@ -1,0 +1,302 @@
+/* ==========================================================================
+   Organizer Users Styles
+   ========================================================================== */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-bottom: 48px;
+}
+
+/* 1. Header Section */
+.headerSection {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.topRoleTag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.pageTitle {
+  font-size: 26px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.pageSubtitle {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-top: 2px;
+  line-height: 1.5;
+}
+
+/* 2. Search Section */
+.searchWrapper {
+  max-width: 380px;
+  width: 100%;
+}
+
+.searchInput {
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 8px !important;
+  color: #ffffff !important;
+  height: 40px !important;
+  font-size: 13px !important;
+  padding: 0 14px !important;
+}
+
+.searchInput:hover,
+.searchInput:focus,
+.searchInput:focus-within {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25) !important;
+}
+
+.searchInput input {
+  color: #ffffff !important;
+}
+
+.searchInput input::placeholder {
+  color: #64748b !important;
+}
+
+/* 3. Users Table Container */
+.tableContainer {
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Ant Design Table Overrides */
+.tableContainer :global(.ant-table) {
+  background: transparent !important;
+  color: #cbd5e1 !important;
+  font-size: 12.5px !important;
+}
+
+.tableContainer :global(.ant-table-thead > tr > th) {
+  background: #08101e !important;
+  color: #94a3b8 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 10px 16px !important;
+  white-space: nowrap !important;
+}
+
+.tableContainer :global(.ant-table-thead > tr > th::before) {
+  display: none !important; /* Hide vertical column separator lines */
+}
+
+.tableContainer :global(.ant-table-tbody > tr > td) {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+  padding: 10px 16px !important;
+  white-space: nowrap !important;
+  transition: background var(--transition-fast, 0.15s ease);
+}
+
+.tableContainer :global(.ant-table-tbody > tr:hover > td) {
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+.tableContainer :global(.ant-table-tbody > tr:last-child > td) {
+  border-bottom: none !important;
+}
+
+/* Column Specific Cells (No wrap) */
+.nameCell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap !important;
+}
+
+.userName {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  white-space: nowrap !important;
+}
+
+.youBadge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  white-space: nowrap !important;
+}
+
+.emailCell {
+  color: #94a3b8;
+  font-size: 12.5px;
+  white-space: nowrap !important;
+}
+
+.companyCell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: #cbd5e1;
+  white-space: nowrap !important;
+}
+
+.departmentCell {
+  color: #94a3b8;
+  font-size: 12.5px;
+  white-space: nowrap !important;
+}
+
+.companyDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.companyDotMantix {
+  background-color: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+}
+
+.companyDotNexsys {
+  background-color: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+}
+
+.companyDotStability {
+  background-color: #f59e0b;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+}
+
+.departmentCell {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+/* Role Select */
+.roleSelect {
+  width: 140px !important;
+}
+
+.roleSelect :global(.ant-select-selector) {
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 8px !important;
+  color: #ffffff !important;
+  height: 34px !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+}
+
+.roleSelect:hover :global(.ant-select-selector),
+.roleSelect:focus :global(.ant-select-selector) {
+  border-color: #38bdf8 !important;
+}
+
+.roleSelectDisabled :global(.ant-select-selector) {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Empty State */
+.emptyContainer {
+  padding: 48px 24px;
+  text-align: center;
+  color: #64748b;
+  font-size: 13px;
+}
+
+/* ==========================================================================
+   Light Mode Overrides
+   ========================================================================== */
+:global([data-theme="light"]) .pageTitle,
+:global(body.light-theme) .pageTitle,
+:global([data-theme="light"]) .userName,
+:global(body.light-theme) .userName {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .pageSubtitle,
+:global(body.light-theme) .pageSubtitle,
+:global([data-theme="light"]) .emailCell,
+:global(body.light-theme) .emailCell,
+:global([data-theme="light"]) .departmentCell,
+:global(body.light-theme) .departmentCell {
+  color: #64748b !important;
+}
+
+:global([data-theme="light"]) .companyCell,
+:global(body.light-theme) .companyCell {
+  color: #334155 !important;
+}
+
+:global([data-theme="light"]) .searchInput,
+:global(body.light-theme) .searchInput {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .searchInput input,
+:global(body.light-theme) .searchInput input {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .searchInput input::placeholder,
+:global(body.light-theme) .searchInput input::placeholder {
+  color: #94a3b8 !important;
+}
+
+:global([data-theme="light"]) .tableContainer,
+:global(body.light-theme) .tableContainer {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+:global([data-theme="light"]) .tableContainer :global(.ant-table-thead > tr > th) {
+  background: #f8fafc !important;
+  color: #475569 !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+:global([data-theme="light"]) .tableContainer :global(.ant-table-tbody > tr > td) {
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+:global([data-theme="light"]) .tableContainer :global(.ant-table-tbody > tr:hover > td) {
+  background: #f8fafc !important;
+}
+
+:global([data-theme="light"]) .roleSelect :global(.ant-select-selector) {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .roleSelectDisabled :global(.ant-select-selector) {
+  background: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}

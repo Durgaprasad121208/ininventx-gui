@@ -1,0 +1,432 @@
+/* ==========================================================================
+   Login Page Styles (Fully Responsive 2-Column Industrial Split Layout)
+   ========================================================================== */
+
+.pageContainer {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background-color: var(--color-body-bg, #030712);
+  overflow: hidden;
+}
+
+/* 1. Left Hero Panel */
+.heroPanel {
+  flex: 1.1;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(32px, 5vh, 56px) clamp(28px, 4.5vw, 56px);
+  padding-bottom: clamp(48px, 8vh, 80px);
+  overflow: hidden;
+  height: 100vh;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(3, 7, 18, 0.4) 0%,
+    rgba(3, 7, 18, 0.72) 45%,
+    rgba(3, 7, 18, 0.9) 85%,
+    #030712 100%
+  );
+  z-index: 1;
+}
+
+.heroEdgeGradient {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 120px;
+  background: linear-gradient(90deg, transparent 0%, #030712 100%);
+  z-index: 2;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.8vh, 18px);
+  max-width: 540px;
+}
+
+.hackathonTag {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #29c9d1;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: var(--font-mono, monospace), var(--font-inter), sans-serif;
+}
+
+.logoWrapper {
+  margin: 1px 0 4px;
+  display: inline-block;
+}
+
+.heroHeading {
+  font-size: clamp(20px, 2.2vw, 28px);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.heroSubtitle {
+  font-size: clamp(12px, 1vw, 13.5px);
+  color: #cbd5e1;
+  line-height: 1.55;
+  max-width: 460px;
+}
+
+.companyPillsRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.companyPill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 11px;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-size: 11px;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  transition: all var(--transition-fast, 0.15s ease);
+}
+
+.companyPill:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+  color: #ffffff;
+  background: rgba(15, 23, 42, 0.85);
+}
+
+/* 2. Right Form Panel */
+.formPanel {
+  flex: 0.9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 2.5vh, 32px) clamp(20px, 3.5vw, 40px);
+  background-color: var(--color-body-bg, #030712);
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.formCard {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Header */
+.formHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.formTitle {
+  font-size: clamp(20px, 2vw, 24px);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.formSubtitle {
+  font-size: 12.5px;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+/* Form inputs */
+.authForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.inputLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.helperText {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 1px;
+  line-height: 1.3;
+}
+
+.textInput,
+.passwordInput {
+  background: #08101e !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 7px !important;
+  color: #ffffff !important;
+  height: 38px !important;
+  font-size: 13px !important;
+  padding: 0 12px !important;
+  transition: all var(--transition-fast, 0.15s ease);
+}
+
+.textInput:hover,
+.textInput:focus,
+.textInput:focus-within,
+.passwordInput:hover,
+.passwordInput:focus,
+.passwordInput:focus-within {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25) !important;
+}
+
+.textInput input,
+.passwordInput input {
+  background: transparent !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+}
+
+.textInput input::placeholder,
+.passwordInput input::placeholder {
+  color: #64748b !important;
+}
+
+.passwordInput :global(.ant-input-password-icon) {
+  color: #64748b !important;
+}
+
+.passwordInput :global(.ant-input-password-icon:hover) {
+  color: #38bdf8 !important;
+}
+
+/* Override browser autofill styling so inputs stay dark */
+.textInput:-webkit-autofill,
+.textInput:-webkit-autofill:hover,
+.textInput:-webkit-autofill:focus,
+.textInput:-webkit-autofill:active,
+.textInput input:-webkit-autofill,
+.textInput input:-webkit-autofill:hover,
+.textInput input:-webkit-autofill:focus,
+.textInput input:-webkit-autofill:active,
+.passwordInput input:-webkit-autofill,
+.passwordInput input:-webkit-autofill:hover,
+.passwordInput input:-webkit-autofill:focus,
+.passwordInput input:-webkit-autofill:active,
+:global(.ant-input:-webkit-autofill),
+:global(.ant-input-affix-wrapper input:-webkit-autofill) {
+  -webkit-box-shadow: 0 0 0 1000px #08101e inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  box-shadow: 0 0 0 1000px #08101e inset !important;
+  caret-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+/* Submit button */
+.signInBtn {
+  width: 100% !important;
+  height: 38px !important;
+  border-radius: 7px !important;
+  background: #0284c7 !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  margin-top: 4px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25) !important;
+  transition: all var(--transition-fast, 0.15s ease);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signInBtn:hover {
+  background: #0369a1 !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35) !important;
+  transform: translateY(-1px);
+}
+
+.signInBtn:active {
+  transform: translateY(0);
+}
+
+/* Register link */
+.registerRow {
+  text-align: center;
+  font-size: 12.5px;
+  color: #94a3b8;
+  margin-top: -2px;
+}
+
+.registerLink {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #38bdf8;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 4px;
+  cursor: pointer;
+  display: inline;
+  transition: color var(--transition-fast, 0.15s ease);
+}
+
+.registerLink:hover {
+  color: #7dd3fc;
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   Light Mode Overrides
+   ========================================================================== */
+:global([data-theme="light"]) .formPanel,
+:global(body.light-theme) .formPanel {
+  background-color: #ffffff !important;
+}
+
+:global([data-theme="light"]) .formTitle,
+:global(body.light-theme) .formTitle {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .formSubtitle,
+:global(body.light-theme) .formSubtitle,
+:global([data-theme="light"]) .registerRow,
+:global(body.light-theme) .registerRow,
+:global([data-theme="light"]) .helperText,
+:global(body.light-theme) .helperText {
+  color: #64748b !important;
+}
+
+:global([data-theme="light"]) .inputLabel,
+:global(body.light-theme) .inputLabel {
+  color: #334155 !important;
+}
+
+:global([data-theme="light"]) .textInput,
+:global(body.light-theme) .textInput,
+:global([data-theme="light"]) .passwordInput,
+:global(body.light-theme) .passwordInput {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .textInput input,
+:global(body.light-theme) .textInput input,
+:global([data-theme="light"]) .passwordInput input,
+:global(body.light-theme) .passwordInput input {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .textInput input::placeholder,
+:global(body.light-theme) .textInput input::placeholder,
+:global([data-theme="light"]) .passwordInput input::placeholder,
+:global(body.light-theme) .passwordInput input::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+/* Tablet landscape */
+@media (max-width: 1024px) and (min-width: 851px) {
+  .heroPanel {
+    flex: 0.95;
+    padding: 28px 24px;
+  }
+  .formPanel {
+    flex: 1.05;
+    padding: 24px 20px;
+  }
+}
+
+/* Tablet portrait & Mobile */
+@media (max-width: 850px) {
+  .pageContainer {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+
+  .heroPanel {
+    flex: none;
+    height: auto;
+    min-height: auto;
+    padding: 32px 20px 24px;
+  }
+
+  .heroEdgeGradient {
+    display: none;
+  }
+
+  .formPanel {
+    flex: 1;
+    height: auto;
+    min-height: auto;
+    padding: 28px 20px 40px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .formCard {
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroPanel {
+    padding: 20px 16px 16px;
+  }
+
+  .heroHeading {
+    font-size: 19px;
+  }
+
+  .formCard {
+    max-width: 100%;
+  }
+}
+
+/* Short height viewports */
+@media (max-height: 800px) and (min-width: 851px) {
+  .formPanel {
+    padding: 12px 20px;
+  }
+
+  .formCard {
+    gap: 10px;
+  }
+
+  .authForm {
+    gap: 8px;
+  }
+}
