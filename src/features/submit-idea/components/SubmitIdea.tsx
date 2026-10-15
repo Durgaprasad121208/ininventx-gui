@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Card, Row, Col, Input, Select, App } from 'antd';
-import { useRouter } from 'next/navigation';
+import { Card, Row, Col, Input, Select, App, Spin } from 'antd';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Image as ImageIcon,
   Plus,
@@ -20,18 +20,62 @@ import {
   saveIdeaDraft,
   getIdeaDraft,
   createIdea,
+  updateIdea,
   submitDraftIdea,
   uploadIdeaPoster,
   uploadIdeaAttachment,
 } from '../services/submitIdeaApi';
+import { getMyIdeaDetail } from '@/features/my-ideas/services/myIdeasApi';
 import type { AttachmentFile, TeamMember, IdeaCreateRequest } from '../types/submitIdea.types';
 import styles from './SubmitIdea.module.css';
 
 const { TextArea } = Input;
 
+/**
+ * Matches backend category code, slug or title to the frontend category option title
+ */
+const findMatchingCategory = (raw?: string): string => {
+  if (!raw) return '';
+  const trimmed = raw.trim();
+
+  // 1. Direct match with cat.title
+  const direct = PRIMARY_CATEGORIES.find(
+    (c) => c.title.toLowerCase() === trimmed.toLowerCase()
+  );
+  if (direct) return direct.title;
+
+  // 2. Direct match with cat.id
+  const idMatch = PRIMARY_CATEGORIES.find(
+    (c) => c.id.toLowerCase() === trimmed.toLowerCase()
+  );
+  if (idMatch) return idMatch.title;
+
+  // 3. Match via CATEGORY_CODE_MAP values
+  const normalizedKey = trimmed.toUpperCase().replace(/[^A-Z0-9]+/g, '_');
+  for (const [title, code] of Object.entries(CATEGORY_CODE_MAP)) {
+    if (code === normalizedKey || code === trimmed.toUpperCase()) {
+      return title;
+    }
+  }
+
+  // 4. Loose substring matching
+  const loose = PRIMARY_CATEGORIES.find(
+    (c) =>
+      c.title.toLowerCase().includes(trimmed.toLowerCase()) ||
+      trimmed.toLowerCase().includes(c.title.toLowerCase())
+  );
+  if (loose) return loose.title;
+
+  return '';
+};
+
 export const SubmitIdea: React.FC = () => {
   const { message } = App.useApp();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const editId = searchParams?.get('edit') || searchParams?.get('id') || null;
+  const isEditMode = Boolean(editId);
+  const [loadingIdea, setLoadingIdea] = useState(false);
 
   const [isMounted, setIsMounted] = useState(false);
 
@@ -83,28 +127,111 @@ export const SubmitIdea: React.FC = () => {
   const posterInputRef = useRef<HTMLInputElement>(null);
   const attachmentInputRef = useRef<HTMLInputElement>(null);
 
-  // Load existing draft if present
+  // Load idea details if in edit mode, or reset to clean new form if submitting new idea
   useEffect(() => {
-    getIdeaDraft().then((draft) => {
-      if (draft) {
-        if (draft.title) setTitle(draft.title);
-        if (draft.summary) setSummary(draft.summary);
-        if (draft.description) setDescription(draft.description);
-        if (draft.problemStatement) setProblemStatement(draft.problemStatement);
-        if (draft.expectedBusinessValue) setExpectedValue(draft.expectedBusinessValue);
-        if (draft.primaryCategory) setSelectedCategory(draft.primaryCategory);
-        if (draft.teamName) setTeamEntryName(draft.teamName);
-        if (draft.teamMembers && Array.isArray(draft.teamMembers)) {
-          setTeamMembers(draft.teamMembers);
-        }
-        if (draft.posterUrl) {
-          setPosterUrl(draft.posterUrl);
-          setPosterName(draft.posterName || 'poster.png');
-        }
-        if (draft.attachments) setAttachments(draft.attachments);
-      }
-    });
-  }, []);
+    if (editId) {
+      setLoadingIdea(true);
+      getMyIdeaDetail(editId)
+        .then((data: any) => {
+          if (!data) return;
+
+          // Only set values that exist in the get call
+          setTitle(data.title || '');
+          setSummary(data.summary || '');
+          setDescription(data.description || '');
+
+          const targetCust = data.problemStatement || data.targetCustomer || '';
+          setProblemStatement(targetCust);
+
+          const businessVal = data.expectedBusinessValue || data.businessImpact || '';
+          setExpectedValue(businessVal);
+
+          const rawCat = data.category || data.primaryCategory || '';
+          const matchedCategory = findMatchingCategory(rawCat);
+          setSelectedCategory(matchedCategory || '');
+
+          const tName = data.teamName || data.team || data.teamEntryName || '';
+          setTeamEntryName(tName);
+
+          if (Array.isArray(data.teamMembers) && data.teamMembers.length > 0) {
+            const members: TeamMember[] = data.teamMembers
+              .filter((m: any) => {
+                const role = String(m.roleInTeam || m.role || '').toLowerCase();
+                return role !== 'owner' && !m.isOwner;
+              })
+              .map((m: any) => ({
+                name: m.name || m.userName || '',
+                email: m.email || '',
+                department: m.department || m.company || '',
+                roleInTeam: m.roleInTeam || 'Contributor',
+              }));
+            setTeamMembers(members);
+          } else {
+            setTeamMembers([]);
+          }
+
+          const poster = data.posterUrl || data.posterImage || data.poster || null;
+          if (poster) {
+            setPosterUrl(poster);
+            setPosterName(data.posterName || poster.split('/').pop() || 'poster');
+          } else {
+            setPosterUrl(null);
+            setPosterName(null);
+          }
+          setPosterFile(null);
+
+          if (Array.isArray(data.attachments) && data.attachments.length > 0) {
+            const atts: AttachmentFile[] = data.attachments.map((att: any, idx: number) => {
+              if (typeof att === 'string') {
+                return {
+                  id: `att-edit-${idx}`,
+                  name: att.split('/').pop() || `Attachment ${idx + 1}`,
+                  size: 0,
+                  type: 'application/octet-stream',
+                  url: att,
+                };
+              }
+              return {
+                id: att.id || `att-edit-${idx}`,
+                name: att.fileName || att.name || `Attachment ${idx + 1}`,
+                size: att.sizeBytes || att.size || 0,
+                type: att.contentType || att.type || 'application/octet-stream',
+                url: att.url,
+              };
+            });
+            setAttachments(atts);
+          } else {
+            setAttachments([]);
+          }
+          setAttachmentFiles([]);
+        })
+        .catch((err) => {
+          console.error('[SubmitIdea] Failed to load idea for editing:', err);
+          message.error('Failed to load idea details for editing');
+        })
+        .finally(() => {
+          setLoadingIdea(false);
+        });
+    } else {
+      // New Idea: show fresh clean form with all fields empty
+      setTitle('');
+      setSummary('');
+      setDescription('');
+      setProblemStatement('');
+      setExpectedValue('');
+      setSelectedCategory('');
+      setTeamEntryName('');
+      setTeamMembers([]);
+      setNewMemberName('');
+      setNewMemberEmail('');
+      setPosterFile(null);
+      setPosterUrl(null);
+      setPosterName(null);
+      setAttachmentFiles([]);
+      setAttachments([]);
+      setLoadingIdea(false);
+    }
+  }, [editId, message]);
 
   // Handle Poster Image Upload
   const handlePosterSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -253,22 +380,15 @@ export const SubmitIdea: React.FC = () => {
         CATEGORY_CODE_MAP[selectedCategory] ||
         selectedCategory.toUpperCase().replace(/[^A-Z0-9]+/g, '_');
 
-      const finalSummary =
-        summary.trim() ||
-        (description.trim().length > 150
-          ? `${description.trim().substring(0, 147)}...`
-          : description.trim());
-
-      const finalTargetCustomer =
-        problemStatement.trim() || 'All group operating entities';
-      const finalBusinessImpact =
-        expectedValue.trim() || 'Measurable engineering efficiency and operational impact';
+      const finalSummary = summary.trim();
+      const finalTargetCustomer = problemStatement.trim();
+      const finalBusinessImpact = expectedValue.trim();
 
       // Additional team members besides the owner (max 3 items as required by backend schema)
       const membersPayload: TeamMember[] = teamMembers.slice(0, 3).map((m) => ({
         name: m.name.trim(),
         email: m.email.trim(),
-        department: m.department || 'Engineering',
+        department: m.department || '',
         roleInTeam: m.roleInTeam || 'Contributor',
       }));
 
@@ -282,41 +402,52 @@ export const SubmitIdea: React.FC = () => {
         teamMembers: membersPayload,
       };
 
-      // 1. Post to http://localhost:8080/api/ideas (creates DRAFT idea)
-      const createdIdea = await createIdea(payload);
-      const ideaId = createdIdea?.id;
+      let currentIdeaId = editId;
 
-      if (!ideaId) {
-        throw new Error('No idea ID returned by server');
+      if (isEditMode && editId) {
+        await updateIdea(editId, payload);
+      } else {
+        // 1. Post to http://localhost:8080/api/ideas (creates DRAFT idea)
+        const createdIdea = await createIdea(payload);
+        currentIdeaId = createdIdea?.id;
+
+        if (!currentIdeaId) {
+          throw new Error('No idea ID returned by server');
+        }
       }
 
       // 2. Upload Poster if chosen (POST /api/ideas/{id}/poster)
-      if (posterFile) {
+      if (posterFile && currentIdeaId) {
         try {
-          await uploadIdeaPoster(ideaId, posterFile);
+          await uploadIdeaPoster(currentIdeaId, posterFile);
         } catch (posterErr) {
           console.error('Failed to upload poster:', posterErr);
-          message.warning('Idea created, but poster upload encountered an issue.');
+          message.warning('Idea saved, but poster upload encountered an issue.');
         }
       }
 
       // 3. Upload Attachments if chosen (POST /api/ideas/{id}/attachments)
-      if (attachmentFiles.length > 0) {
+      if (attachmentFiles.length > 0 && currentIdeaId) {
         for (const file of attachmentFiles) {
           try {
-            await uploadIdeaAttachment(ideaId, file);
+            await uploadIdeaAttachment(currentIdeaId, file);
           } catch (attErr) {
             console.error(`Failed to upload attachment ${file.name}:`, attErr);
           }
         }
       }
 
-      // 4. Note: Submit endpoint (/api/ideas/{id}/submit) omitted per requirement
-
-      message.success('Idea created successfully!');
-      setTimeout(() => {
-        router.push('/browse-ideas');
-      }, 800);
+      if (isEditMode && editId) {
+        message.success('Idea updated successfully!');
+        setTimeout(() => {
+          router.push(`/my-ideas/${editId}`);
+        }, 800);
+      } else {
+        message.success('Idea created successfully!');
+        setTimeout(() => {
+          router.push('/browse-ideas');
+        }, 800);
+      }
     } catch (err: any) {
       console.error('[SubmitIdea Error]:', err?.data || err?.response?.data || err);
       const serverMessage =
@@ -336,14 +467,19 @@ export const SubmitIdea: React.FC = () => {
     <div className={styles.submitContainer}>
       {/* 1. Header Section */}
       <div className={styles.headerSection}>
-        <h1 className={styles.pageTitle}>Submit an idea</h1>
+        <h1 className={styles.pageTitle}>
+          {isEditMode ? 'Edit idea' : 'Submit an idea'}
+        </h1>
         <p className={styles.pageSubtitle}>
-          Combine capabilities across the group. Save a draft anytime — only submitted ideas enter screening.
+          {isEditMode
+            ? 'Update your idea details, team members, category, and attachments.'
+            : 'Combine capabilities across the group. Save a draft anytime — only submitted ideas enter screening.'}
         </p>
       </div>
 
-      {/* Main 2-Column Responsive Grid */}
-      <Row gutter={[20, 20]} align="top">
+      <Spin spinning={loadingIdea} size="large">
+        {/* Main 2-Column Responsive Grid */}
+        <Row gutter={[20, 20]} align="top">
         {/* Left Column: Form Details, Team & Category */}
         <Col xs={24} lg={16} xl={16}>
           <div className={styles.leftColWrapper}>
@@ -679,7 +815,7 @@ export const SubmitIdea: React.FC = () => {
                 loading={isSubmitting}
                 className={styles.fullWidthBtn}
               >
-                Submit idea
+                {isEditMode ? 'Save changes' : 'Submit idea'}
               </SubmitButton>
 
               {/* <DarkButton onClick={handleSaveDraft} className={styles.fullWidthBtn}>
@@ -693,6 +829,7 @@ export const SubmitIdea: React.FC = () => {
           </div>
         </Col>
       </Row>
+    </Spin>
     </div>
   );
 };

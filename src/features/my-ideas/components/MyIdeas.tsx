@@ -2,8 +2,9 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Card, Row, Col, Spin } from 'antd';
-import { PlusCircle, Paperclip, Inbox } from 'lucide-react';
+import { PlusCircle, Paperclip, Inbox, Edit2 } from 'lucide-react';
 import { SubmitButton } from '@/components/ui/app-button/AppButton';
 import { renderIdeaThumbnail } from '@/assets/IdeaThumbnails';
 import { getMyIdeas } from '../services/myIdeasApi';
@@ -132,6 +133,7 @@ const mapBackendIdeaToMyIdea = (item: BackendMyIdeaItem, index: number): MyIdeaI
 };
 
 export const MyIdeas: React.FC = () => {
+  const router = useRouter();
   const [ideas, setIdeas] = useState<MyIdeaItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const maxAllowance = 5;
@@ -271,7 +273,7 @@ export const MyIdeas: React.FC = () => {
                           </div>
                         </div>
 
-                        {/* Card Footer: Date & Attachments */}
+                        {/* Card Footer: Date & Attachments & Edit Action */}
                         <div className={styles.cardFooter}>
                           <span>{idea.date}</span>
 
@@ -282,6 +284,20 @@ export const MyIdeas: React.FC = () => {
                                 <span>{idea.attachments}</span>
                               </span>
                             ) : null}
+
+                            <button
+                              type="button"
+                              className={styles.cardEditBtn}
+                              title="Edit idea"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                router.push(`/submit-idea?edit=${idea.id}`);
+                              }}
+                            >
+                              <Edit2 size={11} />
+                              <span>Edit</span>
+                            </button>
                           </div>
                         </div>
                       </div>

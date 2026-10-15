@@ -6,7 +6,16 @@ export interface OrgGuidelineItem {
   publishDate: string;
   fileName?: string;
   fileSize?: string;
+  fileUrl?: string;
   isPublished: boolean;
+}
+
+export interface GuidelineInputDto {
+  title: string;
+  description: string;
+  version?: string;
+  publishDate?: string;
+  isPublished?: boolean;
 }
 
 export interface GuidelineFormData {
@@ -17,4 +26,5 @@ export interface GuidelineFormData {
   isPublished: boolean;
   fileName?: string;
   fileSize?: string;
+  file?: File;
 }

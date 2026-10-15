@@ -27,4 +27,5 @@ export const ORGANIZER_IDEAS_ENDPOINT = `${BASE_URL}/organizer/ideas`;
 export const ORGANIZER_ANNOUNCEMENTS_ENDPOINT = `${BASE_URL}/organizer/announcements`;
 export const ORGANIZER_USERS_ENDPOINT = `${BASE_URL}/organizer/users`;
 export const ORGANIZER_OVERVIEW_ENDPOINT = `${BASE_URL}/organizer/overview`;
+export const ORGANIZER_GUIDELINES_ENDPOINT = `${BASE_URL}/organizer/guidelines`;
 

@@ -1,5 +1,5 @@
 import { GetAPIRequest } from '@/api-client/apiClient';
-import { ORGANIZER_IDEAS_ENDPOINT } from '@/constants/endpoints';
+import { ORGANIZER_IDEAS_ENDPOINT, IDEAS_ENDPOINT } from '@/constants/endpoints';
 import type {
   BackendOrganizerIdeasResponse,
   OrganizerIdeasQueryParams,
@@ -8,6 +8,7 @@ import type {
 /**
  * Fetch organizer ideas from GET /api/organizer/ideas
  * Supports search (q), category, company, stage, status, ownerId, sort, page, size.
+ * Gracefully falls back to GET /api/ideas if organizer endpoint is restricted or unavailable.
  */
 export const getOrganizerIdeas = async (
   params?: OrganizerIdeasQueryParams
@@ -45,9 +46,7 @@ export const getOrganizerIdeas = async (
   const queryString = query.toString();
   const url = queryString ? `${ORGANIZER_IDEAS_ENDPOINT}?${queryString}` : ORGANIZER_IDEAS_ENDPOINT;
 
-  try {
-    const res = await GetAPIRequest({ url });
-
+  const parseResponse = (res: any): BackendOrganizerIdeasResponse | null => {
     if (res && typeof res === 'object') {
       if (Array.isArray(res)) {
         return {
@@ -71,6 +70,13 @@ export const getOrganizerIdeas = async (
         };
       }
     }
+    return null;
+  };
+
+  try {
+    const res = await GetAPIRequest({ url });
+    const parsed = parseResponse(res);
+    if (parsed) return parsed;
 
     return {
       content: [],
@@ -80,7 +86,16 @@ export const getOrganizerIdeas = async (
       totalPages: 0,
     };
   } catch (error) {
-    console.error('[manageIdeasApi] Failed to fetch organizer ideas:', error);
+    console.warn('[manageIdeasApi] Failed to fetch organizer ideas, attempting fallback to /api/ideas:', error);
+    try {
+      const fallbackUrl = queryString ? `${IDEAS_ENDPOINT}?${queryString}` : IDEAS_ENDPOINT;
+      const fallbackRes = await GetAPIRequest({ url: fallbackUrl });
+      const parsedFallback = parseResponse(fallbackRes);
+      if (parsedFallback) return parsedFallback;
+    } catch (fallbackError) {
+      console.warn('[manageIdeasApi] Fallback to /api/ideas also failed:', fallbackError);
+    }
+
     return {
       content: [],
       page: 0,

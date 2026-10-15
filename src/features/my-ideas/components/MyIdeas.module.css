@@ -322,6 +322,27 @@
   font-size: 10px;
 }
 
+.cardEditBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(14, 165, 233, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(14, 165, 233, 0.28);
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cardEditBtn:hover {
+  background: rgba(14, 165, 233, 0.25);
+  border-color: #38bdf8;
+  color: #ffffff;
+}
+
 /* 4. Empty State */
 .emptyCard {
   background: #08101e !important;
@@ -435,6 +456,19 @@
   background: #f1f5f9;
   border-color: #e2e8f0;
   color: #64748b;
+}
+
+:global([data-theme="light"]) .cardEditBtn,
+:global(body.light-theme) .cardEditBtn {
+  background: #e0f2fe;
+  border-color: #bae6fd;
+  color: #0284c7;
+}
+
+:global([data-theme="light"]) .cardEditBtn:hover,
+:global(body.light-theme) .cardEditBtn:hover {
+  background: #0284c7;
+  color: #ffffff;
 }
 
 /* ==========================================================================

@@ -1,4 +1,11 @@
-import { PostAPIRequest, fileUpload, PutfileUpload } from '@/api-client/apiClient';
+import {
+  GetAPIRequest,
+  PostAPIRequest,
+  PutAPIRequest,
+  PatchAPIRequest,
+  fileUpload,
+  PutfileUpload,
+} from '@/api-client/apiClient';
 import { IDEAS_ENDPOINT } from '@/constants/endpoints';
 import {
   CategoryOption,
@@ -153,6 +160,33 @@ export const uploadIdeaAttachment = async (ideaId: string, file: File): Promise<
   const formData = new FormData();
   formData.append('file', file);
   return fileUpload(`${IDEAS_ENDPOINT}/${ideaId}/attachments`, formData);
+};
+
+/**
+ * Fetch an idea by ID for editing (GET /api/ideas/{id})
+ */
+export const getIdeaById = async (id: string): Promise<any> => {
+  return GetAPIRequest({ url: `${IDEAS_ENDPOINT}/${id}` });
+};
+
+/**
+ * Update an existing idea via PUT /api/ideas/{id} (or PATCH fallback)
+ */
+export const updateIdea = async (
+  ideaId: string,
+  data: IdeaCreateRequest
+): Promise<any> => {
+  try {
+    return await PutAPIRequest({
+      url: `${IDEAS_ENDPOINT}/${ideaId}`,
+      data,
+    });
+  } catch (err) {
+    return await PatchAPIRequest({
+      url: `${IDEAS_ENDPOINT}/${ideaId}`,
+      data,
+    });
+  }
 };
 
 export { PutfileUpload };
