@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Avatar, Dropdown, Badge, Popover, Breadcrumb, type MenuProps } from 'antd';
 import {
   Bell,
@@ -19,6 +19,11 @@ import {
   CheckCheck,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useSelector, useDispatch } from 'react-redux';
+import { type RootState } from '@/redux/store';
+import { logout } from '@/redux/slices/authSlice';
+import { notify } from '@/utils/notify';
 import { useTheme } from '@/providers/theme/ThemeProvider';
 import styles from './Header.module.css';
 
@@ -30,11 +35,14 @@ export interface BreadcrumbItem {
 }
 
 export interface HeaderUser {
-  name: string;
-  role: string;
-  company: string;
-  initials: string;
+  name?: string;
+  role?: string;
+  company?: string;
+  initials?: string;
   avatarUrl?: string;
+  email?: string;
+  department?: string | null;
+  designation?: string | null;
 }
 
 export interface HeaderProps {
@@ -52,21 +60,78 @@ export const Header: React.FC<HeaderProps> = ({
     { label: 'Home', href: '/' },
     { label: 'Dashboard' },
   ],
-  user = {
-    name: 'Aarav Mehta (Demo)',
-    role: 'Employee',
-    company: 'MANTIX',
-    initials: 'AM',
-  },
+  user: propUser,
   notificationCount: initialNotificationCount = 6,
   onMenuToggle,
   collapsed = false,
   className,
   style,
 }) => {
+  const dispatch = useDispatch();
+  const router = useRouter();
   const { themeMode, mounted, toggleTheme } = useTheme();
   const [unreadCount, setUnreadCount] = useState<number>(initialNotificationCount);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+
+  // Retrieve user from Redux store
+  const authState = useSelector((state: RootState) => state?.auth);
+  const reduxUser = authState?.user || ((authState as any)?.id ? (authState as any) : null);
+
+  const [isMounted, setIsMounted] = useState<boolean>(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Hydration fallback from localStorage
+  const [localUser, setLocalUser] = useState<any>(null);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('inventx_user');
+        if (stored) {
+          setLocalUser(JSON.parse(stored));
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }, []);
+
+  const activeUser =
+    reduxUser?.name || reduxUser?.email ? reduxUser : (localUser || propUser);
+
+  const computeInitials = (name?: string): string => {
+    if (!name) return '';
+    const words = name.trim().split(/\s+/).filter(Boolean);
+    if (words.length === 0) return '';
+    if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+    return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+  };
+
+  const formatRole = (role?: string): string => {
+    if (!role) return '';
+    const upper = role.toUpperCase();
+    if (upper === 'EMPLOYEE') return 'Employee';
+    if (upper === 'ORGANISER' || upper === 'ORGANIZER') return 'Organizer';
+    return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
+  };
+
+  const displayName = isMounted ? (activeUser?.name || 'User') : '';
+  const displayRole = isMounted ? (formatRole(activeUser?.role) || 'Employee') : '';
+  const displayCompany = isMounted ? (activeUser?.company || '') : '';
+  const displayEmail = isMounted ? (activeUser?.email || '') : '';
+  const displayInitials = isMounted ? (propUser?.initials || computeInitials(activeUser?.name || '')) : '';
+  const displayAvatarUrl = isMounted ? (activeUser?.avatarUrl || activeUser?.avatar || propUser?.avatarUrl) : undefined;
+  const displayDepartment = isMounted ? (activeUser?.department || '') : '';
+  const displayDesignation = isMounted ? (activeUser?.designation || '') : '';
+
+  const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
+    if (key === 'logout') {
+      dispatch(logout());
+      notify.info('You have been signed out');
+      router.push('/login');
+    }
+  };
 
   // Demo notifications list
   const [notifications, setNotifications] = useState([
@@ -104,13 +169,23 @@ export const Header: React.FC<HeaderProps> = ({
       key: 'user-summary',
       type: 'group',
       label: (
-        <div style={{ padding: '2px 0' }}>
-          <div style={{ fontWeight: 600, color: 'var(--color-text-primary, #ffffff)', fontSize: 12 }}>
-            {user?.name || 'User'}
+        <div style={{ padding: '4px 2px' }}>
+          <div style={{ fontWeight: 600, color: 'var(--color-text-primary, #ffffff)', fontSize: 13 }}>
+            {displayName}
           </div>
-          <div style={{ fontSize: 10.5, color: 'var(--color-text-secondary, #94a3b8)' }}>
-            {user?.role || 'Employee'} · {user?.company || 'MANTIX'}
+          {displayEmail && (
+            <div style={{ fontSize: 11, color: 'var(--color-text-tertiary, #64748b)', marginTop: 2 }}>
+              {displayEmail}
+            </div>
+          )}
+          <div style={{ fontSize: 11, color: 'var(--color-text-secondary, #94a3b8)', marginTop: 3 }}>
+            {displayRole}{displayCompany ? ` · ${displayCompany}` : ''}
           </div>
+          {(displayDepartment || displayDesignation) && (
+            <div style={{ fontSize: 10.5, color: 'var(--color-text-muted, #64748b)', marginTop: 2 }}>
+              {[displayDesignation, displayDepartment].filter(Boolean).join(' | ')}
+            </div>
+          )}
         </div>
       ),
     },
@@ -265,7 +340,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* User Profile Pill with Dropdown */}
         <Dropdown
-          menu={{ items: userMenuItems }}
+          menu={{ items: userMenuItems, onClick: handleMenuClick }}
           trigger={['click']}
           placement="bottomRight"
           arrow={false}
@@ -276,19 +351,20 @@ export const Header: React.FC<HeaderProps> = ({
             tabIndex={0}
             aria-haspopup="true"
             aria-label="User account menu"
+            suppressHydrationWarning
           >
             <Avatar
               size={36}
-              src={user.avatarUrl}
+              src={displayAvatarUrl}
               className={styles.avatar}
             >
-              {user.initials}
+              <span suppressHydrationWarning>{displayInitials}</span>
             </Avatar>
 
-            <div className={styles.userInfo}>
-              <span className={styles.userName}>{user.name}</span>
-              <span className={styles.userSubtitle}>
-                {user.role} · {user.company}
+            <div className={styles.userInfo} suppressHydrationWarning>
+              <span className={styles.userName} suppressHydrationWarning>{displayName}</span>
+              <span className={styles.userSubtitle} suppressHydrationWarning>
+                {displayRole}{displayCompany ? ` · ${displayCompany}` : ''}
               </span>
             </div>
           </div>

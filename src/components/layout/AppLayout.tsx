@@ -3,9 +3,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { Layout, Drawer } from 'antd';
+import { useSelector } from 'react-redux';
+import { type RootState } from '@/redux/store';
 import { Header, type BreadcrumbItem, type HeaderUser } from './header/Header';
 import { Sidebar } from './sidebar/Sidebar';
-import { EMPLOYEE, type Role } from '@/lib/data/role';
+import { EMPLOYEE, ORGANISER, type Role } from '@/lib/data/role';
 
 const { Content } = Layout;
 
@@ -20,17 +22,19 @@ export interface AppLayoutProps {
 
 export const AppLayout: React.FC<AppLayoutProps> = ({
   children,
-  role = EMPLOYEE,
+  role: propRole,
   breadcrumbItems,
-  user = {
-    name: 'Priya',
-    role: 'Employee',
-    company: 'MANTIX',
-    initials: 'P',
-  },
+  user: propUser,
   notificationCount = 6,
   currentPath,
 }) => {
+  const authState = useSelector((state: RootState) => state?.auth);
+  const reduxUser = authState?.user || ((authState as any)?.id ? (authState as any) : null);
+
+  const rawRole = (reduxUser?.role || propRole || EMPLOYEE).toUpperCase();
+  const effectiveRole: Role =
+    rawRole === 'ORGANIZER' || rawRole === 'ORGANISER' ? ORGANISER : EMPLOYEE;
+
   const pathname = usePathname();
   const effectivePath = currentPath || pathname || '/user-dashboard';
   const effectiveBreadcrumbs: BreadcrumbItem[] =
@@ -111,7 +115,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
     >
       {/* Desktop Docked Sidebar (Hidden on <= 1024px: iPad Mini, Tablet, Mobile) */}
       <Sidebar
-        role={role}
+        role={effectiveRole}
         collapsed={collapsed}
         onCollapse={setCollapsed}
         currentPath={effectivePath}
@@ -137,7 +141,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         }}
       >
         <Sidebar
-          role={role}
+          role={effectiveRole}
           isDrawer={true}
           currentPath={effectivePath}
           onItemClick={() => setMobileDrawerOpen(false)}
@@ -161,7 +165,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         <Header
           collapsed={collapsed}
           breadcrumbItems={effectiveBreadcrumbs}
-          user={user}
+          user={propUser}
           notificationCount={notificationCount}
           onMenuToggle={handleMenuToggle}
         />

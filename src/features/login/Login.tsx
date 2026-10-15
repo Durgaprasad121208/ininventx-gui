@@ -4,10 +4,14 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
 import { Input } from 'antd';
+import { useDispatch } from 'react-redux';
+import Cookies from 'js-cookie';
 import heroBg from '@/assets/hero-CoiAJZs0.jpg';
 import inventxLogoWhite from '@/assets/inventx-logo-white.png';
 import { EMPLOYEE, ORGANISER } from '@/lib/data/role';
 import { notify } from '@/lib/utils/notification';
+import { loginStart, loginSuccess, loginFailure } from '@/redux/slices/authSlice';
+import { loginUser, registerUser, type LoginResponse } from './services/authApi';
 import styles from './Login.module.css';
 
 export interface LoginProps {
@@ -17,6 +21,7 @@ export interface LoginProps {
 export const Login: React.FC<LoginProps> = ({ initialMode }) => {
   const router = useRouter();
   const pathname = usePathname();
+  const dispatch = useDispatch();
 
   const [mode, setMode] = useState<'signin' | 'register'>(
     initialMode || (pathname === '/register' ? 'register' : 'signin')
@@ -47,7 +52,7 @@ export const Login: React.FC<LoginProps> = ({ initialMode }) => {
     router.push(newMode === 'register' ? '/register' : '/login', { scroll: false });
   };
 
-  const handleSignIn = (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) {
       notify.warning('Please enter your work email');
@@ -59,22 +64,57 @@ export const Login: React.FC<LoginProps> = ({ initialMode }) => {
     }
 
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
-      const isOrganizer =
-        email.toLowerCase().includes('organizer') || email.toLowerCase().includes('priya');
-      const role = isOrganizer ? ORGANISER : EMPLOYEE;
-      try {
-        localStorage.setItem('inventx_user_role', role);
-      } catch {
-        // ignore
+    dispatch(loginStart());
+
+    try {
+      const res: LoginResponse = await loginUser({
+        email: email.trim(),
+        password: password.trim(),
+      });
+
+      if (res?.accessToken && res?.user) {
+        // 1. Store auth credentials in Cookies
+        Cookies.set('accessToken', res.accessToken, { expires: 7 });
+        Cookies.set('userId', res.user.id, { expires: 7 });
+        Cookies.set('loginTimestamp', new Date().toISOString(), { expires: 7 });
+
+        // 2. Dispatch loginSuccess to Redux store
+        dispatch(loginSuccess(res.user));
+
+        // 3. Normalize role and persist in localStorage
+        const rawRole = (res.user.role || 'EMPLOYEE').toUpperCase();
+        const role =
+          rawRole === 'ORGANIZER' || rawRole === 'ORGANISER'
+            ? ORGANISER
+            : EMPLOYEE;
+
+        try {
+          localStorage.setItem('inventx_user_role', role);
+          localStorage.setItem('inventx_user', JSON.stringify(res.user));
+        } catch {
+          // ignore
+        }
+
+        notify.success(`Welcome back, ${res.user.name || 'User'}!`);
+        router.push(role === ORGANISER ? '/organizer/overview' : '/user-dashboard');
+      } else {
+        throw new Error('Invalid response received from authentication server');
       }
-      notify.success(`Signed in as ${isOrganizer ? 'Organizer' : 'Employee'}`);
-      router.push(isOrganizer ? '/organizer/overview' : '/user-dashboard');
-    }, 600);
+    } catch (err: any) {
+      console.error('[Login Error]:', err);
+      const errorMsg =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        err?.message ||
+        'Failed to sign in. Please verify your credentials.';
+      dispatch(loginFailure(errorMsg));
+      notify.error(errorMsg);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName.trim()) {
       notify.warning('Please enter your full name');
@@ -108,16 +148,27 @@ export const Login: React.FC<LoginProps> = ({ initialMode }) => {
     }
 
     setSubmitting(true);
-    setTimeout(() => {
+    try {
+      await registerUser({
+        name: fullName.trim(),
+        email: regEmail.trim(),
+        password: regPassword.trim(),
+      });
+
+      notify.success('Account created successfully! Please sign in.');
+      setMode('signin');
+      setEmail(regEmail);
+    } catch (err: any) {
+      console.error('[Register Error]:', err);
+      const errorMsg =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        err?.message ||
+        'Registration failed. Please try again.';
+      notify.error(errorMsg);
+    } finally {
       setSubmitting(false);
-      try {
-        localStorage.setItem('inventx_user_role', EMPLOYEE);
-      } catch {
-        // ignore
-      }
-      notify.success('Account created successfully! Welcome to invent/X.');
-      router.push('/user-dashboard');
-    }, 600);
+    }
   };
 
   return (

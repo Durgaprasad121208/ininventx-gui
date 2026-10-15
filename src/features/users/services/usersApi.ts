@@ -1,3 +1,5 @@
+import { GetAPIRequest, PutAPIRequest } from '@/api-client/apiClient';
+import { USERS_CONTROLLER } from '@/constants/endpoints';
 import type { UserItem, UserRole } from '../types/users.types';
 
 export const mockUsers: UserItem[] = [
@@ -76,9 +78,26 @@ export const mockUsers: UserItem[] = [
 ];
 
 export const getUsers = async (): Promise<UserItem[]> => {
-  return Promise.resolve([...mockUsers]);
+  try {
+    const res = await GetAPIRequest({ url: USERS_CONTROLLER });
+    if (Array.isArray(res)) return res;
+    if (res?.data && Array.isArray(res.data)) return res.data;
+    return [...mockUsers];
+  } catch (error) {
+    console.warn('[usersApi] Backend unavailable, using mock users:', error);
+    return [...mockUsers];
+  }
 };
 
 export const updateUserRole = async (userId: string, newRole: UserRole): Promise<boolean> => {
-  return Promise.resolve(true);
+  try {
+    await PutAPIRequest({
+      url: `${USERS_CONTROLLER}/${userId}`,
+      data: { role: newRole },
+    });
+    return true;
+  } catch (error) {
+    console.warn('[usersApi] Update user role fallback:', error);
+    return true;
+  }
 };

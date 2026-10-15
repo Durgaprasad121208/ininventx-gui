@@ -3,6 +3,8 @@
 import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 import { ConfigProvider, App } from 'antd';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
+import { Provider } from 'react-redux';
+import { store } from '@/redux/store';
 import { NotificationProvider } from '@/lib/utils/notification';
 import { darkThemeConfig, lightThemeConfig } from './themeConfig';
 
@@ -71,24 +73,26 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   }, [themeMode]);
 
   return (
-    <ThemeContext.Provider
-      value={{
-        themeMode,
-        mounted,
-        toggleTheme,
-        setThemeMode: setThemeModeState,
-      }}
-    >
-      <AntdRegistry>
-        <ConfigProvider theme={currentAntdTheme}>
-          <App>
-            <NotificationProvider>
-              {children}
-            </NotificationProvider>
-          </App>
-        </ConfigProvider>
-      </AntdRegistry>
-    </ThemeContext.Provider>
+    <Provider store={store}>
+      <ThemeContext.Provider
+        value={{
+          themeMode,
+          mounted,
+          toggleTheme,
+          setThemeMode: setThemeModeState,
+        }}
+      >
+        <AntdRegistry>
+          <ConfigProvider theme={currentAntdTheme}>
+            <App>
+              <NotificationProvider>
+                {children}
+              </NotificationProvider>
+            </App>
+          </ConfigProvider>
+        </AntdRegistry>
+      </ThemeContext.Provider>
+    </Provider>
   );
 };
 
